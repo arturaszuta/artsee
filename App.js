@@ -77,8 +77,6 @@ const App = () => {
     getUserLocation
   } = useApplicationData();
 
-  console.log("=|=|==> from App. state.location:", (state.userLocation))
-
   const [fontLoaded, setLoaded] = useState(false);
 
   useEffect(() => {
