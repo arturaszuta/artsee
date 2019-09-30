@@ -1,18 +1,27 @@
 import React from 'react';
-import { View, Text, Button, ImageBackground } from "react-native";
-import { Thumbnail, Icon } from 'native-base';
+import { AsyncStorage, View, Text, ImageBackground } from "react-native";
+import { Thumbnail, Icon, Content, Button } from 'native-base';
 
 const ProfileScreen = ({navigation}) => {
-  navigationOptions = {
-    title: 'Profile'
-  }
+  _handleLogout = async () => {
+    try {
+      await AsyncStorage.removeItem("token");
+      await AsyncStorage.removeItem("username");
+      // setToken("");
+      // setUsername("");
+      navigation.navigate('Auth');
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   return (
     <View>
       <ImageBackground
         style={{
           height: "70%",
           width: "100%",
-          alignItems:"center"
+          alignItems: "center"
         }}
       >
         <Thumbnail
@@ -35,8 +44,17 @@ const ProfileScreen = ({navigation}) => {
         <Text style={{ backgroundColor: "black", color: "white" }}>
           Location: Springfield, IL
         </Text>
-        <Icon type="FontAwesome5" name="user-plus" style={{alignSelf:'flex-start'}}/>
+        <Icon
+          type="FontAwesome5"
+          name="user-plus"
+          style={{ alignSelf: "flex-start" }}
+        />
       </ImageBackground>
+      <Content>
+        <Button onPress={() => _handleLogout()} block light>
+          <Text>Logout</Text>
+        </Button>
+      </Content>
     </View>
   );
 };

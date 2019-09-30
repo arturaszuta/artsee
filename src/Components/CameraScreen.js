@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Container, Content, Text, Button, Header, Left, Right, Body} from 'native-base';
-import { View, TouchableOpacity, Image, Platform } from 'react-native';
+import { Container, Content, Text, Button, Header, Left, Right, Body, Spinner} from 'native-base';
+import { View, TouchableOpacity, Image, Platform, TouchableHighlight, Modal, Dimensions } from 'react-native';
 import * as Permissions from 'expo-permissions';
 import * as Location from 'expo-location';
 import Constants from 'expo-constants';
 import { Camera } from 'expo-camera';
 import Icon from "react-native-vector-icons/MaterialIcons";
+import { NavigationEvents } from 'react-navigation';
 
 export default class CameraScreen extends React.Component {
 
@@ -14,8 +15,14 @@ export default class CameraScreen extends React.Component {
     type: Camera.Constants.Type.back,
     photo: null,
     location: null,
-    errorMessage: null
+    errorMessage: null,
+    view: null,
+    loaded: true,
+    modalVisible: false,
+    data: {}
   };
+
+  
 
   componentWillMount() {
     if (Platform.OS === 'android' && !Constants.isDevice) {
@@ -39,13 +46,15 @@ export default class CameraScreen extends React.Component {
     this.setState({ location });
   };
 
-
   async componentDidMount() {
     const { status } = await Permissions.askAsync(Permissions.CAMERA);
     this.setState({ hasCameraPermission: status === 'granted' });
   }
 
   async postData(data) {
+    data.latitude = this.state.location.coords.latitude;
+    data.longitude = this.state.location.coords.longitude;
+    console.log(data);
     fetch('https://artsee-back-end.herokuapp.com/arts', {
       method: 'POST',
       headers: {
@@ -57,35 +66,41 @@ export default class CameraScreen extends React.Component {
 
 
   async snapPhoto() {
+    this.setState({ view: 'takingPhoto' });
 
     let data = {
       user_id: 9,
       art_type: 'graffiti',
-      location: '43.653908, -79.384293',
       title: 'ossum possum'
     }       
 
-    console.log('Button Pressed');
     if (this.camera) {
        console.log('Taking photo');
-       const options = { quality: 0.5, base64: true, fixOrientation: true, 
-       exif: true, 
-       autoFocus: false,
+       const options = { 
+         quality: 0.5, 
+         base64: true, 
+         fixOrientation: true, 
+         exif: true, 
+         autoFocus: false,
       };
        await this.camera.takePictureAsync(options).then(photo => {
+          this.setState({ view: 'success' }) ;
           photo.exif.Orientation = 1;
-            console.log(photo);
-            data.file = photo.base64;
-
-            this.postData(data);  
-            
-              this.setState({ photo: 'data:image/jpg;base64,' + photo.base64 })
+          console.log(photo);
+          data.file = photo.base64;
+          this.setState({ data: data })
+          this.setState({ photo: 'data:image/jpg;base64,' + photo.base64 })
+          this.setState({ modalVisible: true }) ;
            });     
      }
     }
 
 
   render() {
+    const screenHeight = Math.round(Dimensions.get('window').height);
+    const screenWidth = Math.round(Dimensions.get('window').width);
+    const { loaded } = this.state;
+    const { view } = this.state;
     const { hasCameraPermission } = this.state;
     if (hasCameraPermission === null) {
       return <View />;
@@ -94,9 +109,36 @@ export default class CameraScreen extends React.Component {
     } else {
       return (
         <View style={{ flex: 1, width: '100%' }}>
-          <Text> Here is some text! </Text>
-          {this.state.photo ? <View><Image 
-          style={{width: 400, height: 400 }} source={{uri: this.state.photo}}/></View> : <Camera 
+          <Modal
+          animationType="slide"
+          transparent={false}
+          visible={this.state.modalVisible}>
+            <Image source= {{ uri : this.state.photo}} style={{ width: screenWidth, height: screenHeight * 0.85 }}>
+            </Image>
+            <Button
+            style={{ backgroundColor: 'lightgreen' }} 
+            onPress={() => {
+              this.postData(this.state.data);
+              this.setState({ modalVisible : false})}}>
+              <Text>
+                Looks Good!
+              </Text>
+            </Button>
+            <Button
+            style={{ backgroundColor: 'pink' }} 
+            onPress={() => {
+              this.setState({ modalVisible : false})
+              }}>
+              <Text>
+                Take another one!
+              </Text>
+            </Button>
+          </Modal>
+           <NavigationEvents
+            onWillFocus={payload => this.setState({loaded: true})}
+            onDidBlur={payload => this.setState({loaded: false})}/>
+          {loaded && (
+          <Camera 
           style={{ flex: 1 }}
           ratio='16:9' 
           type={this.state.type}
@@ -110,6 +152,7 @@ export default class CameraScreen extends React.Component {
                 backgroundColor: 'transparent',
                 flexDirection: 'row',
               }}>
+                
               {/* <TouchableOpacity
                 style={{
                   flex: 0.1,
@@ -126,6 +169,8 @@ export default class CameraScreen extends React.Component {
                 }}>
                 <Text style={{ fontSize: 18, marginBottom: 10, color: 'white' }}> Flip </Text>
               </TouchableOpacity> */}
+              
+
               <TouchableOpacity
                 style={{
                   flex: 1,
@@ -135,11 +180,16 @@ export default class CameraScreen extends React.Component {
                 >
                 <Button style={{ width: 75, alignItems: 'center', flex: 0.09, backgroundColor: 'white', borderRadius: 500, marginBottom: 10 }}
                 onPress={this.snapPhoto.bind(this)}>
-                  <Icon name='camera' size={ 50 } color='black' style={{ marginLeft: 12.5 }} /> 
+                  {view === 'takingPhoto' && (
+                    <Spinner color='blue' size={50} style={{marginLeft: 12.5}} />
+                    )}
+                    {view !== 'takingPhoto' && (
+                      <Icon name='camera' size={ 50 } color='black' style={{ marginLeft: 12.5 }} /> 
+                    )}
                 </Button>
               </TouchableOpacity>
             </View>
-          </Camera> } 
+          </Camera> )} 
         </View>
       );
     }
