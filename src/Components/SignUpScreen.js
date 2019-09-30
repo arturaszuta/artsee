@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import {
   AsyncStorage,
   StyleSheet,
@@ -8,7 +8,8 @@ import {
 import { Content, Item, Input, Button } from "native-base";
 
 export default function SignupScreen({navigation}) {
-  let [token, setToken] = useState("no token yet");
+  let [token, setToken] = useState('');
+  let [errorMessage, setErrorMessage] = useState("");
   let [email, setEmail] = useState("Email");
   let [password, setPassword] = useState("Password");
   let [password_confirmation, setPasswordConfirmation] = useState(
@@ -16,7 +17,7 @@ export default function SignupScreen({navigation}) {
   );
   let [user, setUsername] = useState("");
   let [name, setName] = useState("Name");
-  let [errorMessage, setErrorMessage] = useState("");
+
 
   _handleSignup = () => {
     console.log("=======handle signup", name, email, password, password_confirmation);
@@ -40,32 +41,19 @@ export default function SignupScreen({navigation}) {
         .then(data => {
           _storeToken(data);
         })
+        .then(navigation.navigate('Login'))
         .catch(err => console.error(err));
     } else {
-      setErrorMessage("Passwords do not match");
+      setErrorMessage('Passwords do not match');
     }
     
   };
 
   _storeToken = async data => {
     try {
+      console.log('======data=====', data)
       await AsyncStorage.setItem("token", data.token);
       await AsyncStorage.setItem("username", data.username);
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  _fetchToken = async () => {
-    try {
-      const token = await AsyncStorage.getItem("token");
-      const username = await AsyncStorage.getItem("username");
-      if (token && username) {
-        setToken(token);
-        setUsername(username);
-      } else {
-        console.log("nothing in storage");
-      }
     } catch (err) {
       console.error(err);
     }
@@ -98,7 +86,7 @@ export default function SignupScreen({navigation}) {
         <Button onPress={() => _handleSignup()} block light>
           <Text>Create An Account</Text>
         </Button>
-        <Button onPress={() => navigation.navigate("Login")} block light>
+        <Button onPress={() => navigation.navigate('Login')} block light>
           <Text>Login</Text>
         </Button>
       </Content>
