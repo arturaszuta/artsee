@@ -5,20 +5,20 @@ import axios from 'axios';
 const FeedScreen = ({navigation}) => {
   let [photos, setPhotos] = useState([]);
 
-   useEffect(() => {
-    axios
-      .all([
-        axios.get('https://source.unsplash.com/random/400x350'),
-        axios.get('https://source.unsplash.com/random/400x350'),
-        axios.get('https://source.unsplash.com/random/400x350'),
-        axios.get('https://source.unsplash.com/random/400x350'),
-        axios.get('https://source.unsplash.com/random/400x350')
-      ])
-      .then(data => {
-        console.log(data[0]);
-      })
-      .catch(err => console.error(err));
-   }, [])
+  //  useEffect(() => {
+  //   axios
+  //     .all([
+  //       axios.get('https://source.unsplash.com/random/400x350'),
+  //       axios.get('https://source.unsplash.com/random/400x350'),
+  //       axios.get('https://source.unsplash.com/random/400x350'),
+  //       axios.get('https://source.unsplash.com/random/400x350'),
+  //       axios.get('https://source.unsplash.com/random/400x350')
+  //     ])
+  //     .then(data => {
+  //       console.log(data[0]);
+  //     })
+  //     .catch(err => console.error(err));
+  //  }, [])
 
    return (
     <Container>

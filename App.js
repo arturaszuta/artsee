@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { createAppContainer } from "react-navigation";
+import { createAppContainer, createSwitchNavigator } from "react-navigation";
+import { createStackNavigator } from 'react-navigation-stack';
 import { createBottomTabNavigator } from "react-navigation-tabs";
 import Icon from "react-native-vector-icons/FontAwesome5";
 
@@ -9,8 +10,11 @@ import { AppLoading } from "expo";
 import MapScreen from "./src/Components/MapScreen";
 import ProfileScreen from "./src/Components/ProfileScreen";
 import FeedScreen from "./src/Components/FeedScreen";
+import LoginScreen from "./src/Components/LoginScreen";
+import SignUpScreen from "./src/Components/SignUpScreen";
+import AuthLoadingScreen from "./src/Components/AuthLoadingScreen";
 
-const BottomNav = createBottomTabNavigator(
+const AppStack = createBottomTabNavigator(
   {
     Map: MapScreen,
     Feed: FeedScreen,
@@ -51,23 +55,47 @@ const BottomNav = createBottomTabNavigator(
   }
 );
 
-const Main = createAppContainer(BottomNav);
+const AuthStack = createStackNavigator({
+  Login: {
+    screen: LoginScreen,
+    navigationOptions: {
+      header: null
+    }
+  },
+  SignUp: {
+    screen: SignUpScreen,
+    navigationOptions: {
+      header: null
+    }
+  }
+});
 
-const App = () => {
-  const [fontLoaded, setLoaded] = useState(false);
+// const App = () => {
+//   const [fontLoaded, setLoaded] = useState(false);
 
-  useEffect(() => {
-    loadFonts();
-  }, []);
+//   useEffect(() => {
+//     loadFonts();
+//   }, []);
 
-  const loadFonts = async () => {
-    await Font.loadAsync({
-      Roboto: require("native-base/Fonts/Roboto.ttf"),
-      Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf")
-    });
-    setLoaded(true);
-  };
-  return !fontLoaded ? <AppLoading /> : <Main />;
-};
+//   const loadFonts = async () => {
+//     await Font.loadAsync({
+//       Roboto: require("native-base/Fonts/Roboto.ttf"),
+//       Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf")
+//     });
+//     setLoaded(true);
+//   };
+//   return !fontLoaded ? <AppLoading /> : <Main />;
+// };
 
-export default App;
+export default createAppContainer(
+  createSwitchNavigator(
+    {
+      AuthLoading: AuthLoadingScreen,
+      App: AppStack,
+      Auth: AuthStack
+    },
+    {
+      initialRouteName: "AuthLoading"
+    }
+  )
+);
