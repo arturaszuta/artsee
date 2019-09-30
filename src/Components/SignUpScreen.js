@@ -8,16 +8,8 @@ import {
 import { Content, Item, Input, Button } from "native-base";
 
 export default function SignupScreen({navigation}) {
-  let [token, setToken] = useState('');
   let [errorMessage, setErrorMessage] = useState("");
-  let [email, setEmail] = useState("Email");
-  let [password, setPassword] = useState("Password");
-  let [password_confirmation, setPasswordConfirmation] = useState(
-    "Password Confirmation"
-  );
-  let [user, setUsername] = useState("");
-  let [name, setName] = useState("Name");
-
+  let email, password, password_confirmation, name = '';
 
   _handleSignup = () => {
     console.log("=======handle signup", name, email, password, password_confirmation);
@@ -37,10 +29,6 @@ export default function SignupScreen({navigation}) {
           }
         })
       })
-        .then(res => res.json())
-        .then(data => {
-          _storeToken(data);
-        })
         .then(navigation.navigate('Login'))
         .catch(err => console.error(err));
     } else {
@@ -49,36 +37,26 @@ export default function SignupScreen({navigation}) {
     
   };
 
-  _storeToken = async data => {
-    try {
-      console.log('======data=====', data)
-      await AsyncStorage.setItem("token", data.token);
-      await AsyncStorage.setItem("username", data.username);
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
   return (
     <View style={styles.container}>
-      <Content style={{ marginTop: 100, width: "100%" }}>
+      <Content style={{ marginTop: 100, width: '100%' }}>
         <Item rounded>
-          <Input placeholder="name" onChangeText={text => setName(text)} />
+          <Input placeholder='name' onChangeText={text => name = text} />
         </Item>
         <Item rounded>
-          <Input placeholder="Email" onChangeText={text => setEmail(text)} />
+          <Input placeholder='Email' onChangeText={text => email = text } />
         </Item>
         <Item rounded>
           <Input
-            placeholder="Password"
-            onChangeText={text => setPassword(text)}
+            placeholder='Password'
+            onChangeText={text => password = text}
             secureTextEntry={true}
           />
         </Item>
         <Item rounded>
           <Input
-            placeholder="Password Confirmation"
-            onChangeText={text => setPasswordConfirmation(text)}
+            placeholder='Password Confirmation'
+            onChangeText={text => password_confirmation = text}
             secureTextEntry={true}
           />
         </Item>
@@ -97,8 +75,8 @@ export default function SignupScreen({navigation}) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center"
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center'
   }
 });
