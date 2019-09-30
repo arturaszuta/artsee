@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { createAppContainer } from "react-navigation";
 import { createBottomTabNavigator } from "react-navigation-tabs";
-import Icon from "react-native-vector-icons/FontAwesome5";
-
-import * as Font from "expo-font";
+import { View, Header } from "react-native";
 import { AppLoading } from "expo";
+
+import useApplicationData from './src/hooks/useApplicationData';
+
+import Icon from "react-native-vector-icons/FontAwesome5";
+import * as Font from "expo-font";
+import mainStyle from "./styles/main";
 
 import MapScreen from "./src/Components/MapScreen";
 import ProfileScreen from "./src/Components/ProfileScreen";
@@ -15,7 +19,7 @@ const BottomNav = createBottomTabNavigator(
     Map: MapScreen,
     Feed: FeedScreen,
     Camera: MapScreen,
-    Profile: ProfileScreen
+    Profile: ProfileScreen,
   },
   {
     defaultNavigationOptions: ({ navigation }) => ({
@@ -51,9 +55,30 @@ const BottomNav = createBottomTabNavigator(
   }
 );
 
-const Main = createAppContainer(BottomNav);
+const Foot = createAppContainer(BottomNav);
+
+const Main = () => {
+  return (
+    <View style={mainStyle.container}>
+      {/* <Header 
+        leftComponent={{
+            text: "artsee"
+        }}
+      /> */}
+      <Foot />
+    </View>
+  )
+}
+
 
 const App = () => {
+  const {
+    state,
+    getUserLocation
+  } = useApplicationData();
+
+  console.log("=|=|==> from App. state.location:", (state.userLocation))
+
   const [fontLoaded, setLoaded] = useState(false);
 
   useEffect(() => {
@@ -67,7 +92,7 @@ const App = () => {
     });
     setLoaded(true);
   };
-  return !fontLoaded ? <AppLoading /> : <Main />;
+  return !fontLoaded ? <AppLoading /> : Main();
 };
 
 export default App;

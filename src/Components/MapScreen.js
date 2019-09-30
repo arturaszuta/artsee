@@ -8,10 +8,10 @@ const MapScreen = ({navigation}) => {
 
    return (
     <Container>
-       <Header style={{backgroundColor:'#f46036'}}>
+       <Header style={{backgroundColor:'dodgerblue'}}>
         <Left style={{flex:1}}/>
         <Body style={{flex:1, alignItems:'center', justifyContent: "center"}}>
-          <Text style={{color:'#fdfffc', fontWeight:'bold', fontSize:20}}>Map</Text>
+          <Text style={{color:'#fdfffc', fontWeight:'bold', fontSize:18}}>Map</Text>
         </Body>
         <Right style={{flex:1}}/>
       </Header>
