@@ -9,12 +9,13 @@ import { AppLoading } from "expo";
 import MapScreen from "./src/Components/MapScreen";
 import ProfileScreen from "./src/Components/ProfileScreen";
 import FeedScreen from "./src/Components/FeedScreen";
+import CameraScreen from "./src/Components/CameraScreen";
 
 const BottomNav = createBottomTabNavigator(
   {
     Map: MapScreen,
     Feed: FeedScreen,
-    Camera: MapScreen,
+    Camera: CameraScreen,
     Profile: ProfileScreen
   },
   {
