@@ -1,16 +1,44 @@
 import React, { useEffect, useState } from "react";
 import { Container, Content, Text, Button, Header, Left, Right, Body} from 'native-base';
-import { View, TouchableOpacity, Image } from 'react-native';
+import { View, TouchableOpacity, Image, Platform } from 'react-native';
 import * as Permissions from 'expo-permissions';
+import * as Location from 'expo-location';
+import Constants from 'expo-constants';
 import { Camera } from 'expo-camera';
 import Icon from "react-native-vector-icons/MaterialIcons";
 
 export default class CameraScreen extends React.Component {
+
   state = {
     hasCameraPermission: null,
     type: Camera.Constants.Type.back,
-    photo: null
+    photo: null,
+    location: null,
+    errorMessage: null
   };
+
+  componentWillMount() {
+    if (Platform.OS === 'android' && !Constants.isDevice) {
+      this.setState({
+        errorMessage: 'Oops, this will not work on Sketch in an Android emulator. Try it on your device!',
+      });
+    } else {
+      this._getLocationAsync();
+    }
+  }
+
+  _getLocationAsync = async () => {
+    let { status } = await Permissions.askAsync(Permissions.LOCATION);
+    if (status !== 'granted') {
+      this.setState({
+        errorMessage: 'Permission to access location was denied',
+      });
+    }
+
+    let location = await Location.getCurrentPositionAsync({});
+    this.setState({ location });
+  };
+
 
   async componentDidMount() {
     const { status } = await Permissions.askAsync(Permissions.CAMERA);
@@ -24,7 +52,7 @@ export default class CameraScreen extends React.Component {
         Accept: 'application/json',
       'Content-Type': 'application/json'},
       body: JSON.stringify(data)
-    }).then((response) => response.json()).then(res =>{console.log(res)});           
+    }).then((response) => response.json()).then(res =>res);           
   }
 
 
@@ -67,8 +95,8 @@ export default class CameraScreen extends React.Component {
       return (
         <View style={{ flex: 1, width: '100%' }}>
           <Text> Here is some text! </Text>
-          {this.state.photo ? <Image 
-          style={{width: 400, height: 400 }} source={{uri: this.state.photo}}/> : <Camera 
+          {this.state.photo ? <View><Image 
+          style={{width: 400, height: 400 }} source={{uri: this.state.photo}}/></View> : <Camera 
           style={{ flex: 1 }}
           ratio='16:9' 
           type={this.state.type}
