@@ -14,10 +14,10 @@ export default function SignupScreen({navigation}) {
   _handleSignup = () => {
     console.log("=======handle signup", name, email, password, password_confirmation);
     if (password === password_confirmation) {
-      fetch("http://09d5ba02.ngrok.io/users", {
+      fetch("https://2187ab1e.ngrok.io/users", {
         method: "POST",
         headers: {
-          "Accept": "application/json",
+          Accept: "application/json",
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
@@ -29,7 +29,7 @@ export default function SignupScreen({navigation}) {
           }
         })
       })
-        .then(navigation.navigate('Login'))
+        .then(navigation.navigate("Login"))
         .catch(err => console.error(err));
     } else {
       setErrorMessage('Passwords do not match');

@@ -19,11 +19,11 @@ export default function LoginScreen({navigation}) {
 
   _handleLogin = () => {
     console.log("========handle login =====> ", email, password);
-    fetch('http://09d5ba02.ngrok.io/auth/login', {
-      method: 'POST',
+    fetch("https://2187ab1e.ngrok.io/auth/login", {
+      method: "POST",
       headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
+        Accept: "application/json",
+        "Content-Type": "application/json"
       },
       body: JSON.stringify({
         email,
@@ -32,16 +32,13 @@ export default function LoginScreen({navigation}) {
     })
       .then(res => res.json())
       .then(data => {
-        // if (data.error === unauthorized) {
-        //   console.log('unauthorized login')
-        //   setErrorMessage("Invalid email or password");
-        //   return;
-        // } else {
-        //   _storeToken(data);
-        // }
-        _storeToken(data);
+        if (data.error === 'unauthorized') {
+          setErrorMessage('Invalid email or password');
+        } else {
+          _storeToken(data)
+          .then(navigation.navigate('App'));
+        }
       })
-      .then(navigation.navigate('App'))
       .catch(err => console.error(err));
   };
 
@@ -50,25 +47,6 @@ export default function LoginScreen({navigation}) {
       await AsyncStorage.setItem('token', data.token);
       console.log(data);
     } catch (err) {
-      console.error(err);
-    }
-  };
-
-  _fetchToken = async () => {
-    try {
-      const token = await AsyncStorage.getItem('token');
-      if (token) {
-        setToken(token);
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  _handleLogout = async () => {
-    try {
-      await AsyncStorage.clear();
-    } catch(err) {
       console.error(err);
     }
   };
@@ -86,7 +64,7 @@ export default function LoginScreen({navigation}) {
             secureTextEntry={true}
           />
         </Item>
-        {errorMessage ? <Text>{errorMessage}</Text> : <Text />}
+        <Text>{errorMessage}</Text>
         <Button onPress={() => _handleLogin()} block light>
           <Text>Login</Text>
         </Button>

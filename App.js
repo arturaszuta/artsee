@@ -70,23 +70,6 @@ const AuthStack = createStackNavigator({
   }
 });
 
-// const App = () => {
-//   const [fontLoaded, setLoaded] = useState(false);
-
-//   useEffect(() => {
-//     loadFonts();
-//   }, []);
-
-//   const loadFonts = async () => {
-//     await Font.loadAsync({
-//       Roboto: require("native-base/Fonts/Roboto.ttf"),
-//       Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf")
-//     });
-//     setLoaded(true);
-//   };
-//   return !fontLoaded ? <AppLoading /> : <Main />;
-// };
-
 export default createAppContainer(
   createSwitchNavigator(
     {
