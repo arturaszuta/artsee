@@ -18,5 +18,8 @@ export default mainStyle = StyleSheet.create({
     padding: 10,
     paddingLeft: 30,
     paddingRight: 30
+  },
+  tabBar: {
+    height: 60 
   }
 });

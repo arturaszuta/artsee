@@ -4,8 +4,6 @@ import { createBottomTabNavigator } from "react-navigation-tabs";
 import { View, Header } from "react-native";
 import { AppLoading } from "expo";
 
-import useApplicationData from './src/hooks/useApplicationData';
-
 import Icon from "react-native-vector-icons/FontAwesome5";
 import * as Font from "expo-font";
 import mainStyle from "./styles/main";
@@ -50,7 +48,8 @@ const BottomNav = createBottomTabNavigator(
     }),
     tabBarOptions: {
       activeTintColor: "#39c2c9",
-      inactiveTintColor: "#363a43"
+      inactiveTintColor: "#363a43",
+      style: mainStyle.tabBar
     }
   }
 );
@@ -72,10 +71,6 @@ const Main = () => {
 
 
 const App = () => {
-  const {
-    state,
-    getUserLocation
-  } = useApplicationData();
 
   const [fontLoaded, setLoaded] = useState(false);
 

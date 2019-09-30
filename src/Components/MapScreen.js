@@ -3,14 +3,56 @@ import { Animated, Platform, StyleSheet, Text, View, ImageBackground, Button } f
 import { Container, Header, Left, Body, Right, Content } from 'native-base';
 import MapView, { Marker } from 'react-native-maps';
 
+import useApplicationData from '../hooks/useApplicationData';
+
 import mapStyles from '../../styles/map';
+import Icon from 'react-native-vector-icons/FontAwesome5';
+
+const flag = <Icon name="flag" size={23} color="#fff" />;
+const heart = <Icon name="heart" size={23} color="#fff" />;
+const eye = <Icon name="eye" size={23} color="#fff" />;
 
 const MapScreen = ({navigation}) => {
+  const {
+    state,
+    getUserLocation,
+    getNearestArts
+  } = useApplicationData();
+
   navigationOptions = {
     title: 'Map'
   };
 
-   return (
+  const NearestArt = () => {
+    return (
+      <Icon name="map-marked" size={30} color="#fff" onPress={e => getNearestArts()} style={mapStyles.nearButton} title="nearby" >
+      </Icon>
+    )
+  }
+
+  const marker = () => {
+    if (state.mapMarkers) {
+           
+      // console.log("==|==> from inside Map, marker(), mapMarkers: ", state.mapMarkers)
+      return state.mapMarkers.map(marker => {
+        return (
+          <Marker draggable
+            key = {marker.id}
+            coordinate={marker}
+            // onPress={e => {
+            //   this.setState({
+            //     component: true,
+            //     componentUrl: marker.url,
+            //     componentTitle: marker.title || "This piece has no title"
+            //   })
+            // }}
+          />
+        )
+      })
+    }
+  }
+
+  return (
     <Container style={{ flex: 1 }}>
        <Header style={{backgroundColor:'dodgerblue'}}>
         <Left style={{flex:1}}><Text style={{color:'#fdfffc', fontWeight:'bold', fontSize:18}}>artsee</Text></Left>
@@ -29,8 +71,9 @@ const MapScreen = ({navigation}) => {
               longitudeDelta: 0.0421,
             }}
           >
-            {/* {marker()} */}
+            {marker()}
           </MapView>
+            <NearestArt />
       </View>
     </Container>
   );

@@ -34,28 +34,24 @@ export default useApplicationData = () => {
   }, [])
 
   useEffect(() => {
-    Promise.all([
-      axios.get('https://artsee-back-end.herokuapp.com/arts/8'),
-      axios.get('https://artsee-back-end.herokuapp.com/arts/9'),
-      axios.get('https://artsee-back-end.herokuapp.com/arts/6'),
-      axios.get('https://artsee-back-end.herokuapp.com/arts/21'),
-      axios.get('https://artsee-back-end.herokuapp.com/arts/22'),
-      axios.get('https://artsee-back-end.herokuapp.com/arts/23'),
-      axios.get('https://artsee-back-end.herokuapp.com/arts/24')
-    ])
+    axios.get('https://artsee-back-end.herokuapp.com/arts')
     .then(values => {
-      markerList = [...state.mapMarkers]
-      values.forEach(res => {
-        console.log("==>> result from axios:", res.data)
-        markerList.push(res.data)
-      })
-
-      console.log("==|=> markerList:", markerList)
+      markerList = [...state.mapMarkers, ...markerListGenerator(values.data)]
 
       dispatch({ type: SET_MAP_MARKERS, value: markerList })
     })
     .catch(err => console.log("==|==>> error from axios:", err))
   }, [])
+
+  markerListGenerator = (list) => {
+    return list.map(item => {
+      let obj = item;
+      obj.latitude = Number(obj.latitude);
+      obj.longitude = Number(obj.longitude);
+      
+      return obj;
+    })
+  }
 
   getUserLocation = async () => {
     let { status } = await Permissions.askAsync(Permissions.LOCATION);
@@ -69,8 +65,21 @@ export default useApplicationData = () => {
     dispatch({ type: SET_USER_LOCATION, value: location.coords })
   };
 
+  getNearestArts = async () => {
+    await getUserLocation()
+    nearbyArts = await axios.get('https://artsee-back-end.herokuapp.com/api/nearest', {
+      params: {
+        latitude: state.userLocation.latitude,
+        longitude: state.userLocation.longitude
+      }
+    })
+
+    dispatch({ type: SET_MAP_MARKERS, value: markerListGenerator(nearbyArts.data) })
+  }
+
   return {
     state, 
-    getUserLocation
+    getUserLocation,
+    getNearestArts
   }
 }
