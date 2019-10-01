@@ -11,13 +11,15 @@ import {
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 
-import { Container, Header, Content, Card, CardItem, Text, Button, Left, Body, Right, Spinner, Toast, Root } from "native-base";
+
+import { Container, Header, Content, Card, CardItem, Text, Button, Left, Body, Right, Spinner, Toast, Root, Item } from "native-base";
 
 export default function FeedScreen() {
 
   const [cards, setCards] = useState([]);
   const [userId, setUserId] = useState(null);
   const [token, setToken] = useState(null);
+  const [artSocialStatus, setArtSocialStatus] = useState([]);
 
   let components = [];
 
@@ -43,23 +45,48 @@ export default function FeedScreen() {
     })
   }
 
+  const setStateForSocial = function(arr1, arr2) {
+     let newArr = [];
+     arr2.forEach((el1) => {
+       newArr.push({
+        id: el1.id,
+        visited: false,
+        seelist: false,
+        liked: false,
+       })
+       arr1.forEach((el2) => {
+         if(el2.art_id === el1.id) {
+          newArr.pop()
+          newArr.push({
+            id: el1.id,
+            visited: el2.visited,
+            seelist: el2.seelist,
+            liked: el2.liked
+          })
+         }
+       })
+     })
+     
+  }
+
+  const changeTagStatus = function(item) {
+   console.log(item);
+   
+  }
+
   const getTags = async function(initArray) {
 
     const usID = await AsyncStorage.getItem('userId');
-    console.log(usID)
-    
 
     let queryStr = '';
-    let newArr = [];
-
 
     initArray.forEach((el) => {
       queryStr += 'art_array[]=' + el.id + '&'
     })
-    console.log(queryStr);
 
     fetch('https://artsee-back-end.herokuapp.com/tags?user_id=' + usID + '&' + queryStr
         ).then((response) => response.json()).then(res =>{
+          setStateForSocial(res, initArray);
           console.log(res)
           console.log(initArray)
           components = initArray.map((comp)=>{
@@ -67,7 +94,7 @@ export default function FeedScreen() {
           res.forEach((el) => {
             if(el.art_id === comp.id) {
               artStatus = el;
-            }
+            } 
           })
           return <Card style={{flex: 0}} key={comp.id}>
           <CardItem>
@@ -91,9 +118,12 @@ export default function FeedScreen() {
           <CardItem>
             <Right style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-evenly' }}>
               <Button transparent textStyle={{color: '#87838B'}} onPress={() => {
-                showInfographic('Added to Seelist!')
+                showInfographic('Marked as visited!')
+                
               }}>
-                <Icon name={artStatus.seelist ? 'eye-check-outline' : 'eye-plus-outline' } size={55} />
+                <Icon name={artStatus.seelist ? 'eye-check-outline' : 'eye-plus-outline' } artID={comp.id} userID={comp.user_id} ref={ (c) => { this._icon = c}} size={55} onPress={() => { 
+                  this._icon.props.name = 'eye-check-outline'
+                  changeTagStatus(this._icon)}}  />
               </Button>
               <Button transparent textStyle={{color: '#87838B'}} onPress={() => {
                 showInfographic('Liked it!')
@@ -102,6 +132,7 @@ export default function FeedScreen() {
               </Button>
               <Button transparent textStyle={{color: '#87838B'}} onPress={() => {
                 showInfographic('Marked as visited!')
+                
               }}>
                 <Icon name={artStatus.visited ? 'check-circle' : 'check-circle-outline'} size={55} />
               </Button>
@@ -121,6 +152,7 @@ export default function FeedScreen() {
       } 
       )
     }
+
 
     useEffect(() => {
       _fetchDeviceStorage();
