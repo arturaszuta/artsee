@@ -60,8 +60,16 @@ export default function FeedScreen() {
 
     fetch('https://artsee-back-end.herokuapp.com/tags?user_id=' + usID + '&' + queryStr
         ).then((response) => response.json()).then(res =>{
-          components = res.map((comp)=> 
-          <Card style={{flex: 0}} key={comp.id}>
+          console.log(res)
+          console.log(initArray)
+          components = initArray.map((comp)=>{
+          let artStatus = {};
+          res.forEach((el) => {
+            if(el.art_id === comp.id) {
+              artStatus = el;
+            }
+          })
+          return <Card style={{flex: 0}} key={comp.id}>
           <CardItem>
             <Left>
               <Body>
@@ -85,21 +93,21 @@ export default function FeedScreen() {
               <Button transparent textStyle={{color: '#87838B'}} onPress={() => {
                 showInfographic('Added to Seelist!')
               }}>
-                <Icon name='eye-plus-outline' size={55} />
+                <Icon name={artStatus.seelist ? 'eye-check-outline' : 'eye-plus-outline' } size={55} />
               </Button>
               <Button transparent textStyle={{color: '#87838B'}} onPress={() => {
                 showInfographic('Liked it!')
               }}>
-                <Icon name='heart-circle-outline' size={55} />
+                <Icon name={artStatus.liked ? 'heart-circle' : 'heart-circle-outline'} size={55} />
               </Button>
               <Button transparent textStyle={{color: '#87838B'}} onPress={() => {
                 showInfographic('Marked as visited!')
               }}>
-                <Icon name='check-circle-outline' size={55} />
+                <Icon name={artStatus.visited ? 'check-circle' : 'check-circle-outline'} size={55} />
               </Button>
             </Right>
           </CardItem>
-        </Card>
+        </Card>}
     )
     setCards(components)
 
@@ -131,14 +139,6 @@ export default function FeedScreen() {
   </Root>
   );
 }
-
-takePicture = async() => {
-  if (this.camera) {
-    const options = { quality: 0.5, base64: true };
-    const data = await this.camera.takePictureAsync(options);
-    console.log(data.uri);
-  }
-};
 
 const styles = StyleSheet.create({
   container: {
