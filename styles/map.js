@@ -41,5 +41,13 @@ export default mapStyles = {
     textAlign: 'center',
     shadowColor: colors.color1,
     shadowRadius: 10
-  }
+  },
+  txt: {
+    backgroundColor: colors.color1,
+    color: colors.text,
+    width: "100%",
+    padding: 10,
+    paddingLeft: 30,
+    paddingRight: 30
+  },
 }

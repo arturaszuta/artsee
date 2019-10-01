@@ -1,5 +1,5 @@
-import React, { Component, useEffect, useState } from 'react';
-import { Animated, Platform, StyleSheet, Text, View, Shadow, Dimensions } from 'react-native';
+import React, { useState } from 'react';
+import { Text, View, ImageBackground, Button, Dimensions } from 'react-native';
 import { Container, Header, Left, Body, Right, Content } from 'native-base';
 import MapView, { Marker } from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
@@ -10,6 +10,7 @@ import useApplicationData from '../hooks/useApplicationData';
 import mapStyles from '../../styles/map';
 import { colors } from '../../styles/variables';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import FadeInView from '../Animations/FadeInView';
 
 const flag = <Icon name="flag" size={23} color="#fff" />;
 const heart = <Icon name="heart" size={23} color="#fff" />;
@@ -29,7 +30,11 @@ const MapScreen = ({navigation}) => {
 
   const [duration, setDuration] = useState(null);
   const [mapview, setMapview] = useState(null);
-  const [userCoordinates, setUserCoordinates] = useState({});
+  const [artPopup, setArtPopup] = useState({
+    component: null,
+    componentTitle: null,
+    componentUrl: null
+  });
 
   navigationOptions = {
     title: 'Map'
@@ -48,7 +53,7 @@ const MapScreen = ({navigation}) => {
         </Marker>
       )
     }
-  }
+  };
 
   // GET a collection of the nearest art/graffiti in a 3 km radius
   const NearestArtsButton = () => {
@@ -151,6 +156,37 @@ const MapScreen = ({navigation}) => {
     return null;
   }
 
+  const popup = () => {
+    if (artPopup.component) {
+
+      console.log("==>==> artPopup:",artPopup)
+
+      return (
+        <FadeInView>
+          <ImageBackground style={mapStyles.imgBack} onPress={e => setArtPopup({ component: false })} source={{ uri: artPopup.componentUrl }} imageStyle={mapStyles.imgStyle}>
+            <Text style={{...mapStyles.txt, backgroundColor: 'rgba(52, 52, 172, 0.8)'}}>
+              Artisteee
+            </Text>
+            <View style={mapStyles.mapsPopupInfo}>
+              <Text style={{...mapStyles.txt, backgroundColor: 'rgba(52, 52, 172, 0.8)'}}>
+                {artPopup.componentTitle}
+              </Text>
+              <Text style={mapStyles.popupIcons}>
+                {heart} {flag} {eye}
+              </Text>
+              <Button onPress={e => setArtPopup({ component: false })} title="X" />
+            </View>
+          </ImageBackground>
+        </FadeInView>
+      )
+    } else {
+      return (
+        <View></View>
+      )
+    }
+  }
+  
+
   const marker = () => {
     if (state.mapMarkers) {           
       // console.log("==|==> from inside Map, marker(), mapMarkers: ", state.mapMarkers)
@@ -159,13 +195,13 @@ const MapScreen = ({navigation}) => {
           <Marker draggable
             key = {marker.id}
             coordinate={marker}
-            // onPress={e => {
-            //   this.setState({
-            //     component: true,
-            //     componentUrl: marker.url,
-            //     componentTitle: marker.title || "This piece has no title"
-            //   })
-            // }}
+            onPress={e => {
+              setArtPopup({
+                component: true,
+                componentUrl: marker.img_url,
+                componentTitle: marker.title || "This piece has no title"
+              })
+            }}
           >
             {spraycan}
           </Marker>
@@ -201,6 +237,7 @@ const MapScreen = ({navigation}) => {
         <NearestArtsButton />
         <CenterOnMe />
         <Duration />
+        {popup()}
       </View>
     </Container>
   );
