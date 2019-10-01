@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { createAppContainer } from "react-navigation";
+import { createAppContainer, createSwitchNavigator } from "react-navigation";
+import { createStackNavigator } from 'react-navigation-stack';
 import { createBottomTabNavigator } from "react-navigation-tabs";
 import { View, Header } from "react-native";
 import { AppLoading } from "expo";
@@ -11,13 +12,22 @@ import mainStyle from "./styles/main";
 import MapScreen from "./src/Components/MapScreen/MapScreen";
 import ProfileScreen from "./src/Components/ProfileScreen";
 import FeedScreen from "./src/Components/FeedScreen";
+import CameraScreen from "./src/Components/CameraScreen";
+import LoginScreen from "./src/Components/LoginScreen";
+import SignUpScreen from "./src/Components/SignUpScreen";
+import AuthLoadingScreen from "./src/Components/AuthLoadingScreen";
 
-const BottomNav = createBottomTabNavigator(
+const AppStack = createBottomTabNavigator(
   {
     Map: MapScreen,
     Feed: FeedScreen,
+<<<<<<< HEAD
     Camera: MapScreen,
     Profile: ProfileScreen,
+=======
+    Camera: CameraScreen,
+    Profile: ProfileScreen
+>>>>>>> 0b6a6a831321c20c208ca200effbad3f67208b77
   },
   {
     defaultNavigationOptions: ({ navigation }) => ({
@@ -54,6 +64,7 @@ const BottomNav = createBottomTabNavigator(
   }
 );
 
+<<<<<<< HEAD
 const Foot = createAppContainer(BottomNav);
 
 const Main = () => {
@@ -72,11 +83,31 @@ const Main = () => {
 const App = () => {
 
   const [fontLoaded, setLoaded] = useState(false);
+=======
+const AuthStack = createStackNavigator({
+  Login: {
+    screen: LoginScreen,
+    navigationOptions: {
+      header: null
+    }
+  },
+  SignUp: {
+    screen: SignUpScreen,
+    navigationOptions: {
+      header: null
+    }
+  }
+});
 
-  useEffect(() => {
-    loadFonts();
-  }, []);
+// const App = () => {
+//   const [fontLoaded, setLoaded] = useState(false);
+>>>>>>> 0b6a6a831321c20c208ca200effbad3f67208b77
 
+//   useEffect(() => {
+//     loadFonts();
+//   }, []);
+
+<<<<<<< HEAD
   const loadFonts = async () => {
     await Font.loadAsync({
       Roboto: require("native-base/Fonts/Roboto.ttf"),
@@ -86,5 +117,27 @@ const App = () => {
   };
   return !fontLoaded ? <AppLoading /> : Main();
 };
+=======
+//   const loadFonts = async () => {
+//     await Font.loadAsync({
+//       Roboto: require("native-base/Fonts/Roboto.ttf"),
+//       Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf")
+//     });
+//     setLoaded(true);
+//   };
+//   return !fontLoaded ? <AppLoading /> : <Main />;
+// };
+>>>>>>> 0b6a6a831321c20c208ca200effbad3f67208b77
 
-export default App;
+export default createAppContainer(
+  createSwitchNavigator(
+    {
+      AuthLoading: AuthLoadingScreen,
+      App: AppStack,
+      Auth: AuthStack
+    },
+    {
+      initialRouteName: "AuthLoading"
+    }
+  )
+);
