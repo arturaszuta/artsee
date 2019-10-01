@@ -22,8 +22,8 @@ export default function LoginScreen({navigation}) {
     fetch('https://artsee-back-end.herokuapp.com/auth/login', {
       method: 'POST',
       headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
+        Accept: "application/json",
+        "Content-Type": "application/json"
       },
       body: JSON.stringify({
         email,
@@ -41,14 +41,15 @@ export default function LoginScreen({navigation}) {
         // }
         _storeToken(data);
       })
-      .then(navigation.navigate('App'))
+      .then(navigation.navigate("App"))
       .catch(err => console.error(err));
   };
 
   _storeToken = async data => {
+    console.log('===== data =====', data)
     try {
+      await AsyncStorage.setItem('userId', (data.user_id).toString());
       await AsyncStorage.setItem('token', data.token);
-      console.log(data);
     } catch (err) {
       console.error(err);
     }
