@@ -1,20 +1,47 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { AsyncStorage, View, Text, ImageBackground } from "react-native";
 import { Thumbnail, Icon, Content, Button } from 'native-base';
 
 const ProfileScreen = ({navigation}) => {
+  let [token, setToken] = useState('');
+  let [userId, setUserId] = useState('');
+
   _handleLogout = async () => {
     try {
-      await AsyncStorage.removeItem("token");
-      await AsyncStorage.removeItem("username");
-      // setToken("");
-      // setUsername("");
+      AsyncStorage.clear();
       navigation.navigate('Auth');
     } catch (err) {
       console.error(err);
     }
   };
 
+  _fetchDeviceStorage = async () => {
+    try {
+      const fetchedToken = await AsyncStorage.getItem('token');
+      console.log("========== fetch token ==========", fetchedToken);
+      setToken(fetchedToken);
+      const userId = await AsyncStorage.getItem('userId');
+      setUserId(userId);
+    } catch(err) {
+      console.error(err);
+    }
+  };
+
+  useEffect(() => {
+      fetch(`http://047934fb.ngrok.io/users/${userId}`, {
+        method: 'GET',
+        headers: {
+          'Accept': "application/json",
+          'Content-Type': "application/json",
+          'Authorization': token
+        }
+      })
+        .then(res => res.json())
+        .then(data => {
+          console.log(data);
+        });   
+  }, [userId, token]);
+  _fetchDeviceStorage();
   return (
     <View>
       <ImageBackground
@@ -36,7 +63,7 @@ const ProfileScreen = ({navigation}) => {
         <Text
           style={{ backgroundColor: "black", color: "white", fontSize: 20 }}
         >
-          Ralph Wiggum
+          {}
         </Text>
         <Text style={{ backgroundColor: "black", color: "white" }}>
           Me fail English? That's unpossible!
