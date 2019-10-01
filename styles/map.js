@@ -34,7 +34,7 @@ export default mapStyles = {
     bottom: 15,
     width: 200,
     left: width / 2 - 100,
-    backgroundColor: colors.color3,
+    backgroundColor: colors.color2,
     color: colors.text,
     padding: 10,
     borderRadius: 10,
@@ -43,7 +43,7 @@ export default mapStyles = {
     shadowRadius: 10
   },
   txt: {
-    backgroundColor: colors.color1,
+    backgroundColor: colors.color2,
     color: colors.text,
     width: "100%",
     padding: 10,

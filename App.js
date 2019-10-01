@@ -8,7 +8,7 @@ import Icon from "react-native-vector-icons/FontAwesome5";
 import * as Font from "expo-font";
 import mainStyle from "./styles/main";
 
-import MapScreen from "./src/Components/MapScreen";
+import MapScreen from "./src/Components/MapScreen/MapScreen";
 import ProfileScreen from "./src/Components/ProfileScreen";
 import FeedScreen from "./src/Components/FeedScreen";
 
