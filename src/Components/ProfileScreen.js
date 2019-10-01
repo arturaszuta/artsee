@@ -5,6 +5,7 @@ import { Thumbnail, Icon, Content, Button } from 'native-base';
 const ProfileScreen = ({navigation}) => {
   let [token, setToken] = useState('');
   let [userId, setUserId] = useState('');
+  let [data, setData] = useState({}); 
 
   _handleLogout = async () => {
     try {
@@ -18,67 +19,75 @@ const ProfileScreen = ({navigation}) => {
   _fetchDeviceStorage = async () => {
     try {
       const fetchedToken = await AsyncStorage.getItem('token');
-      console.log("========== fetch token ==========", fetchedToken);
       setToken(fetchedToken);
       const userId = await AsyncStorage.getItem('userId');
       setUserId(userId);
+      console.log("============== userId ========", userId);
+      console.log("===============token==========", token);
     } catch(err) {
       console.error(err);
     }
   };
 
   useEffect(() => {
-      fetch(`http://047934fb.ngrok.io/users/${userId}`, {
-        method: 'GET',
-        headers: {
-          'Accept': "application/json",
-          'Content-Type': "application/json",
-          'Authorization': token
-        }
-      })
-        .then(res => res.json())
-        .then(data => {
-          console.log(data);
-        });   
+      _fetchDeviceStorage();
+      if (userId) {
+         fetch(`http://204ae74c.ngrok.io/users/${userId}`, {
+           method: "GET",
+           headers: {
+             Accept: "application/json",
+             "Content-Type": "application/json",
+             Authorization: token
+           }
+         })
+           .then(res => res.json())
+           .then(data => {
+             setData(data);
+           })
+           .then(fetch(`http://204ae74c.ngrok.io/users/${userId}/following`, {
+            method: "GET",
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+              Authorization: token
+           }
+         })
+           .then(res => console.log(res.json()))
+           .then(data => console.log('======following=====', data))
+           .catch(err => console.error(err)));
+      }
+     
   }, [userId, token]);
-  _fetchDeviceStorage();
+
   return (
     <View>
       <ImageBackground
         style={{
-          height: "70%",
+          height: "65%",
           width: "100%",
-          alignItems: "center"
+          justifyContent: "space-between"
         }}
+        source={{ uri: data.background }}
       >
         <Thumbnail
           style={{
             height: 150,
             width: 150,
             borderRadius: 75,
-            borderColor: "black",
-            marginTop: 40
+            marginTop: 60,
+            marginLeft: 5
           }}
+          source={{ uri: data.avatar }}
         />
-        <Text
-          style={{ backgroundColor: "black", color: "white", fontSize: 20 }}
-        >
-          {}
-        </Text>
-        <Text style={{ backgroundColor: "black", color: "white" }}>
-          Me fail English? That's unpossible!
-        </Text>
-        <Text style={{ backgroundColor: "black", color: "white" }}>
-          Location: Springfield, IL
-        </Text>
-        <Icon
-          type="FontAwesome5"
-          name="user-plus"
-          style={{ alignSelf: "flex-start" }}
-        />
+        <Text style={{ fontSize: 20 }}>{data.name}</Text>
       </ImageBackground>
       <Content>
-        <Button onPress={() => _handleLogout()} block light>
+        <Button
+          onPress={() => _handleLogout()}
+          style={{ bottom: 0 }}
+          block
+          light
+        >
           <Text>Logout</Text>
         </Button>
       </Content>

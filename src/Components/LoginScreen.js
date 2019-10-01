@@ -19,11 +19,11 @@ export default function LoginScreen({navigation}) {
 
   _handleLogin = () => {
     console.log("========handle login =====> ", email, password);
-    fetch('http://047934fb.ngrok.io/auth/login', {
+    fetch("http://204ae74c.ngrok.io/auth/login", {
       method: "POST",
       headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
+        Accept: "application/json",
+        "Content-Type": "application/json"
       },
       body: JSON.stringify({
         email,
@@ -50,7 +50,6 @@ export default function LoginScreen({navigation}) {
     try {
       await AsyncStorage.setItem('userId', (data.user_id).toString());
       await AsyncStorage.setItem('token', data.token);
-      console.log(data);
     } catch (err) {
       console.error(err);
     }
