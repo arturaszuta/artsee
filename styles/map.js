@@ -24,7 +24,6 @@ export default mapStyles = {
   nearButton: {
     position: 'absolute', 
     bottom: 30, 
-    right: 15,
-    borderRadius: 20
+    right: 15
   }
 }
