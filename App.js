@@ -69,7 +69,6 @@ const Main = () => {
   )
 }
 
-
 const App = () => {
 
   const [fontLoaded, setLoaded] = useState(false);

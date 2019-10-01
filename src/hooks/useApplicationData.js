@@ -32,7 +32,7 @@ const reducer = (state, action) => {
         `Tried to reduce with unsupported action type: ${action.type}`
       );
   }
-}
+};
 
 
 export default useApplicationData = () => {
@@ -42,11 +42,11 @@ export default useApplicationData = () => {
     destination: {},
     loading: false,
     resolved: false
-  })
+  });
 
   useEffect(() => {
     getUserLocation()
-  }, [])
+  }, []);
 
   useEffect(() => {
     axios.get('https://artsee-back-end.herokuapp.com/arts')
@@ -55,8 +55,8 @@ export default useApplicationData = () => {
 
       dispatch({ type: SET_MAP_MARKERS, value: markerList })
     })
-    .catch(err => console.log("==|==>> error from axios:", err))
-  }, [])
+    .catch(err => console.log("==|==>> error from axios:", err));
+  }, []);
 
   markerListGenerator = (list) => {
     return list.map(item => {
@@ -73,31 +73,32 @@ export default useApplicationData = () => {
     let { status } = await Permissions.askAsync(Permissions.LOCATION);
     if (status !== 'granted') {
       console.log('Permission to access location was denied')
-    }
+    };
   
     let location = await Location.getCurrentPositionAsync({});
-    dispatch({ type: SET_USER_LOCATION, value: location.coords })
+    dispatch({ type: SET_USER_LOCATION, value: location.coords });
   };
 
   getNearestArts = async () => {
-    await getUserLocation()
-    nearbyArts = await getFromCurrentLocation('https://artsee-back-end.herokuapp.com/api/near')
+    await getUserLocation();
+    let nearbyArts = await getFromCurrentLocation('https://artsee-back-end.herokuapp.com/api/near');
 
-    dispatch({ type: SET_MAP_MARKERS, value: markerListGenerator(nearbyArts.data) })
-  }
+    dispatch({ type: SET_MAP_MARKERS, value: markerListGenerator(nearbyArts.data) });
+  };
 
   getNearestArt = async () => {
-    getUserLocation()
+    getUserLocation();
+    getNearestArts();
     console.log("==|> inside getNearestArt")
 
-    let nearest = await getFromCurrentLocation('https://artsee-back-end.herokuapp.com/api/nearest')
+    let nearest = await getFromCurrentLocation('https://artsee-back-end.herokuapp.com/api/nearest');
     
     let obj = nearest.data;
     obj.latitude = Number(obj.latitude);
     obj.longitude = Number(obj.longitude);
 
     dispatch({ type: SET_DESTINATION, value: obj })
-  }
+  };
 
   getFromCurrentLocation = (url) => {
     return axios.get(url, {
@@ -106,12 +107,12 @@ export default useApplicationData = () => {
         longitude: state.userLocation.longitude
       }
     })
-  }
+  };
 
   return {
     state, 
     getUserLocation,
     getNearestArts,
     getNearestArt
-  }
-}
+  };
+};
