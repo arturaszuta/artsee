@@ -19,8 +19,8 @@ export default function LoginScreen({navigation}) {
 
   _handleLogin = () => {
     console.log("========handle login =====> ", email, password);
-    fetch('https://artsee-back-end.herokuapp.com/auth/login', {
-      method: 'POST',
+    fetch("http://a7c53c97.ngrok.io/auth/login", {
+      method: "POST",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json"
@@ -51,25 +51,6 @@ export default function LoginScreen({navigation}) {
       await AsyncStorage.setItem('userId', (data.user_id).toString());
       await AsyncStorage.setItem('token', data.token);
     } catch (err) {
-      console.error(err);
-    }
-  };
-
-  _fetchToken = async () => {
-    try {
-      const token = await AsyncStorage.getItem('token');
-      if (token) {
-        setToken(token);
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  _handleLogout = async () => {
-    try {
-      await AsyncStorage.clear();
-    } catch(err) {
       console.error(err);
     }
   };
