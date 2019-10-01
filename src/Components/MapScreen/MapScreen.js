@@ -9,7 +9,7 @@ import mapStyles from '../../../styles/map';
 import { colors } from '../../../styles/variables';
 
 import CenterOnMe from './CenterOnMe';
-import { NearestArtButton, NearestArtsButton, nearestArtDirections, Duration } from './Nearest';
+import { NearestArtButton, NearestArtsButton, NearestArtDirections, Duration } from './Nearest';
 import { marker, Popup, userLocation } from './MapWidgets';
 
 const { width, height } = Dimensions.get('window');
@@ -24,6 +24,7 @@ const MapScreen = ({navigation}) => {
 
   const [duration, setDuration] = useState(null);
   const [mapview, setMapview] = useState(null);
+  const [directionOn, setDirectionState] = useState(false)
   const [artPopup, setArtPopup] = useState({
     component: null,
     componentTitle: null,
@@ -42,7 +43,7 @@ const MapScreen = ({navigation}) => {
 
   useEffect(() => {
     if (mapview) {
-      mapview.animateToRegion(region, 100)
+      mapview.animateToRegion(region, 50)
     }
   }, [region])
 
@@ -62,11 +63,11 @@ const MapScreen = ({navigation}) => {
         >
           {marker(state.mapMarkers, setArtPopup)}
           {userLocation(state.userLocation)}
-          {nearestArtDirections(state.userLocation, state.destination, setDuration, setRegion)}
+          <NearestArtDirections userLocation={state.userLocation} destination={state.destination} setDuration={setDuration} setRegion={setRegion} directionOn={directionOn} />
         </MapView>
-        <NearestArtButton getNearestArt={getNearestArt} />
+        <NearestArtButton getNearestArt={getNearestArt} setDirectionState={setDirectionState} />
         <NearestArtsButton getNearestArts={getNearestArts} />
-        <Duration duration={duration} />
+        <Duration duration={duration} setDuration={setDuration} setDirectionState={setDirectionState} setRegion={setRegion} />
         <CenterOnMe setRegion={setRegion} coordinates={{
           latitude: state.userLocation.latitude,
           longitude: state.userLocation.longitude

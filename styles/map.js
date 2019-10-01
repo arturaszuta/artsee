@@ -35,12 +35,15 @@ export default mapStyles = {
     width: 200,
     left: width / 2 - 100,
     backgroundColor: colors.color2,
-    color: colors.text,
     padding: 10,
     borderRadius: 10,
-    textAlign: 'center',
+    alignItems: 'center',
     shadowColor: colors.color1,
     shadowRadius: 10
+  },
+  durationText: {
+    textAlign: 'center',
+    color: colors.text,
   },
   txt: {
     backgroundColor: colors.color2,

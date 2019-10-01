@@ -13,6 +13,6 @@ const centerOnMe = (coordinates, setRegion) => {
 
 export default CenterOnMe = ({coordinates, setRegion}) => {
   return (
-    <Icon name="bullseye" size={30} color={colors.color3} onPress={e => centerOnMe(coordinates, setRegion)} style={{...mapStyles.nearButton, bottom: 110 }} title="onMe" />
+    <Icon name="bullseye" size={30} color={colors.color3} onPress={e => centerOnMe(coordinates, setRegion)} style={{...mapStyles.nearButton, bottom: 130 }} title="onMe" />
   )
 }

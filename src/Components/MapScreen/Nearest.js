@@ -19,15 +19,18 @@ export const NearestArtsButton = ({getNearestArts}) => {
   )
 }
 
-export const NearestArtButton = ({getNearestArt}) => {
+export const NearestArtButton = ({getNearestArt, setDirectionState}) => {
   return (
-    <Icon name="crow" size={30} color={colors.color3} onPress={e => getNearestArt()} style={{...mapStyles.nearButton, bottom: 70}} title="nearest" >
+    <Icon name="crow" size={30} color={colors.color3} onPress={e => {
+      getNearestArt()
+      setDirectionState(true)
+    }} style={{...mapStyles.nearButton, bottom: 80}} title="nearest" >
     </Icon>
   )
 }
 
-export const nearestArtDirections = (userLocation, destination, setDuration, setRegion) => {
-  if(userLocation && userLocation.latitude && destination && destination.latitude) {
+export const NearestArtDirections = ({userLocation, destination, setDuration, setRegion, directionOn, setDirectionState}) => {
+  if(userLocation && userLocation.latitude && destination && destination.latitude && directionOn) {
     let originPoint = {
       latitude: userLocation.latitude,
       longitude: userLocation.longitude
@@ -55,11 +58,19 @@ export const nearestArtDirections = (userLocation, destination, setDuration, set
               console.log("Coordinates: ",result.coordinates[0])
               setDuration(result.duration)
 
+              const pathRegion = {
+                latitude: (result.coordinates[0].latitude + result.coordinates[result.coordinates.length - 1].latitude) / 2,
+                longitude: (result.coordinates[0].longitude + result.coordinates[result.coordinates.length - 1].longitude) / 2,
+                longitudeDelta: Math.abs(result.coordinates[0].latitude - result.coordinates[result.coordinates.length - 1].latitude) * 1.3,
+                latitudeDelta: Math.abs(result.coordinates[0].longitude - result.coordinates[result.coordinates.length - 1].longitude) * 1.3
+              }
+
               if (result.duration === 0) {
-                setDuration(null)
+                setDuration(null);
+                setDirectionState(false)
               }
           
-              setRegion({...result.coordinates[0], longitudeDelta: 0.0325, latitudeDelta: 0.0325});
+              setRegion(pathRegion);
             }}
             onError={(errorMessage) => {
               console.log("we got an error during directing these kind folks:", errorMessage);
@@ -68,16 +79,30 @@ export const nearestArtDirections = (userLocation, destination, setDuration, set
       </View>
     )
   }
+  return null
 }
 
-export const Duration = ({duration}) => {
+export const Duration = ({duration, setDuration, setDirectionState, setRegion}) => {
   if (duration) {
     return (
-      <Text style={mapStyles.duration}>
-        You are {'\n'}
-        <Text style={{ fontSize: 30 }} >{Math.floor(duration)}</Text> {'\n'}
-        minutes away from beauty
-      </Text>
+      <View style={mapStyles.duration}>
+        <Text style={mapStyles.durationText}>
+          You are {'\n'}
+          <Text style={{ fontSize: 30 }} >{Math.floor(duration)}</Text> {'\n'}
+          minutes away from beauty
+          {'\n\n'}
+        </Text>
+        <Icon name="times" onPress={e => {
+          setDirectionState(false);
+          setDuration(null);
+          setRegion({
+            latitude: 43.644913,
+            longitude: -79.402520,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421,
+          });
+        }} size={30} color="red" title="endDirections" />
+      </View>
     )
   };
 
