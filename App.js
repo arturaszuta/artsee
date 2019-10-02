@@ -103,7 +103,7 @@ const App = () => {
     });
     setLoaded(true);
   };
-  return !fontLoaded ? <AppLoading /> : <Main />;
+  return !fontLoaded ? <AppLoading /> : Main();
 };
 
 export default createAppContainer(
