@@ -20,22 +20,13 @@ export default function FeedScreen() {
   const [userId, setUserId] = useState(null);
   const [token, setToken] = useState(null);
   const [artSocialStatus, setArtSocialStatus] = useState([]);
+  const [arts, setArts] = useState({});
+  const [artsIDs, setArtsIDs] = useState([]);
 
   let components = [];
 
   const screenHeight = Math.round(Dimensions.get('window').height);
   const screenWidth = Math.round(Dimensions.get('window').width);
-
-  _fetchDeviceStorage = async () => {
-    try {
-      const fetchedToken = await AsyncStorage.getItem('token');
-      setToken(fetchedToken);
-      const userId = await AsyncStorage.getItem('userId');
-      setUserId(userId);
-    } catch(err) {
-      console.error(err);
-    }
-  };
 
   const showInfographic = function(text) {
     Toast.show({
@@ -45,62 +36,56 @@ export default function FeedScreen() {
     })
   }
 
-  const setStateForSocial = function(arr1, arr2) {
-     let newArr = [];
-     arr2.forEach((el1) => {
-       newArr.push({
-        id: el1.id,
-        visited: false,
-        seelist: false,
-        liked: false,
-       })
-       arr1.forEach((el2) => {
-         if(el2.art_id === el1.id) {
-          newArr.pop()
-          newArr.push({
-            id: el1.id,
-            visited: el2.visited,
-            seelist: el2.seelist,
-            liked: el2.liked
-          })
-         }
-       })
-     })
-     
-  }
+  const changeTagStatus = function(item,type) {
+    let tempstate = arts[item]
+    tempstate[type] = !tempstate[type]
 
-  const changeTagStatus = function(item) {
-   console.log(item);
+    let fullState = arts;
+    fullState[item] = tempstate;
+
+    setArts({
+      ...fullState
+    })
    
   }
 
-  const getTags = async function(initArray) {
+  const getTags = async function() {
 
     const usID = await AsyncStorage.getItem('userId');
+   
 
-    let queryStr = '';
-
-    initArray.forEach((el) => {
-      queryStr += 'art_array[]=' + el.id + '&'
-    })
-
-    fetch('https://artsee-back-end.herokuapp.com/tags?user_id=' + usID + '&' + queryStr
+    fetch('https://artsee-back-end.herokuapp.com/api/userArts?user_id=' + usID
         ).then((response) => response.json()).then(res =>{
-          setStateForSocial(res, initArray);
-          console.log(res)
-          console.log(initArray)
-          components = initArray.map((comp)=>{
-          let artStatus = {};
-          res.forEach((el) => {
-            if(el.art_id === comp.id) {
-              artStatus = el;
-            } 
+          console.log('this is the result from db', res)
+          let tempState = {};
+          let tempIDState = [];
+          
+           res.forEach((comp)=>{
+            tempState[comp.id] = comp 
+            tempIDState.push(comp.id)
           })
-          return <Card style={{flex: 0}} key={comp.id}>
+
+          setArts(tempState);
+          setArtsIDs(tempIDState);
+
+
+        })
+  }
+
+  const deck = () => {
+    if (arts && artsIDs) {
+      console.log(arts);
+      return artsIDs.map(art => {
+
+        const comp = arts[art]
+        
+
+      return (
+        <Card style={{flex: 0}} key={comp.id}>
           <CardItem>
             <Left>
               <Body>
-                <Text>{comp.title} posted by USER</Text>
+                <Text>{comp.title} posted by USER: id:{comp.id}</Text>
               </Body>
             </Left>
           </CardItem>
@@ -121,42 +106,37 @@ export default function FeedScreen() {
                 showInfographic('Marked as visited!')
                 
               }}>
-                <Icon name={artStatus.seelist ? 'eye-check-outline' : 'eye-plus-outline' } artID={comp.id} userID={comp.user_id} ref={ (c) => { this._icon = c}} size={55} onPress={() => { 
-                  this._icon.props.name = 'eye-check-outline'
-                  changeTagStatus(this._icon)}}  />
+                <Icon name={comp.seelist ? 'eye-check-outline' : 'eye-plus-outline' } artID={comp.id} userID={comp.user_id} ref={ (c) => { this._icon = c}} size={55} onPress={() => { 
+                
+                  changeTagStatus(comp.id, 'seelist')}}  />
               </Button>
               <Button transparent textStyle={{color: '#87838B'}} onPress={() => {
                 showInfographic('Liked it!')
               }}>
-                <Icon name={artStatus.liked ? 'heart-circle' : 'heart-circle-outline'} size={55} />
+                <Icon name={comp.liked ? 'heart-circle' : 'heart-circle-outline'} size={55} artID={comp.id} userID={comp.user_id} ref={ (c) => { this._icon = c}} size={55} onPress={() => { 
+                
+                changeTagStatus(comp.id, 'liked')}}/>
               </Button>
               <Button transparent textStyle={{color: '#87838B'}} onPress={() => {
                 showInfographic('Marked as visited!')
                 
               }}>
-                <Icon name={artStatus.visited ? 'check-circle' : 'check-circle-outline'} size={55} />
+                <Icon name={comp.visited ? 'check-circle' : 'check-circle-outline'} size={55} artID={comp.id} userID={comp.user_id} ref={ (c) => { this._icon = c}} size={55} onPress={() => { 
+                
+                changeTagStatus(comp.id, 'visited')}}/>
               </Button>
             </Right>
           </CardItem>
-        </Card>}
-    )
-    setCards(components)
-
-        })
-  }
-
-    const getResults = function() {
-      fetch('https://artsee-back-end.herokuapp.com/arts'
-        ).then((response) => response.json()).then(res =>{
-          getTags(res);
-      } 
-      )
+        </Card>
+            )})
+      
+      
     }
-
-
+    return null
+  }
     useEffect(() => {
-      _fetchDeviceStorage();
-      getResults();
+      getTags();
+
     }, [])
 
   return (
@@ -164,8 +144,9 @@ export default function FeedScreen() {
     <Container>
     <Header />
     <Content>
-      {cards.length === 0 && <Spinner color='blue' size={75} style={{ marginTop: (screenHeight / 2) - 75}} />}
+      {artsIDs.length === 0 && <Spinner color='blue' size={75} style={{ marginTop: (screenHeight / 2) - 75}} />}
       {cards}
+      {deck()}
     </Content>
   </Container>
   </Root>
@@ -181,3 +162,48 @@ const styles = StyleSheet.create({
     marginRight: 15
   }
 });
+
+
+// return <Card style={{flex: 0}} key={comp.id}>
+//           <CardItem>
+//             <Left>
+//               <Body>
+//                 <Text>{comp.title} posted by USER</Text>
+//               </Body>
+//             </Left>
+//           </CardItem>
+//           <CardItem>
+//             <Body>
+//               <Image source={{uri: comp.img_url}} style={{height: screenWidth, width: screenWidth * 0.9, flex: 1}}/>
+//             </Body>
+//           </CardItem>
+//           <View style={{
+//             borderTopColor: 'grey',
+//             borderTopWidth: StyleSheet.hairlineWidth
+//           }}>
+
+//           </View>
+//           <CardItem>
+//             <Right style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-evenly' }}>
+//               <Button transparent textStyle={{color: '#87838B'}} onPress={() => {
+//                 showInfographic('Marked as visited!')
+                
+//               }}>
+//                 <Icon name={artTags[comp.id].seelist ? 'eye-check-outline' : 'eye-plus-outline' } artID={comp.id} userID={comp.user_id} ref={ (c) => { this._icon = c}} size={55} onPress={() => { 
+//                   this._icon.props.name = 'eye-check-outline'
+//                   changeTagStatus(this._icon)}}  />
+//               </Button>
+//               <Button transparent textStyle={{color: '#87838B'}} onPress={() => {
+//                 showInfographic('Liked it!')
+//               }}>
+//                 <Icon name={artTags[comp.id].liked ? 'heart-circle' : 'heart-circle-outline'} size={55} />
+//               </Button>
+//               <Button transparent textStyle={{color: '#87838B'}} onPress={() => {
+//                 showInfographic('Marked as visited!')
+                
+//               }}>
+//                 <Icon name={artTags[comp.id].visited ? 'check-circle' : 'check-circle-outline'} size={55} />
+//               </Button>
+//             </Right>
+//           </CardItem>
+//         </Card>
