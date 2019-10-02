@@ -9,4 +9,8 @@ npm-debug.*
 *.orig.*
 web-build/
 web-report/
+<<<<<<< HEAD
 .env
+=======
+.env
+>>>>>>> feature/feed

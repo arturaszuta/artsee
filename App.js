@@ -90,7 +90,10 @@ const AuthStack = createStackNavigator({
 });
 
 const App = () => {
+<<<<<<< HEAD
 
+=======
+>>>>>>> feature/feed
   const [fontLoaded, setLoaded] = useState(false);
 
   useEffect(() => {
@@ -104,7 +107,11 @@ const App = () => {
     });
     setLoaded(true);
   };
+<<<<<<< HEAD
   return !fontLoaded ? <AppLoading /> : Main();
+=======
+  return !fontLoaded ? <AppLoading /> : <Main />;
+>>>>>>> feature/feed
 };
 
 export default createAppContainer(

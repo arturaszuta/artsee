@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react"
 import { Container, Content, Text, Button, Header, Left, Right, Body, Spinner} from 'native-base';
 import { View, TouchableOpacity, Image, Platform, TouchableHighlight, Modal, Dimensions } from 'react-native';
 import * as Permissions from 'expo-permissions';
