@@ -19,7 +19,7 @@ export default function LoginScreen({navigation}) {
 
   _handleLogin = () => {
     console.log("========handle login =====> ", email, password);
-    fetch("http://a7c53c97.ngrok.io/auth/login", {
+    fetch("http://1cea8529.ngrok.io/auth/login", {
       method: "POST",
       headers: {
         Accept: "application/json",

@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { AsyncStorage, View, Text, ImageBackground, Image } from "react-native";
-import { Thumbnail, Content, Button, Tab, Tabs, TabHeading, Icon } from 'native-base';
-
-import LikeScreen from './LikeScreen';
-import BookmarkScreen from './BookmarkScreen';
-import SeenScreen from './SeenScreen';
+import { AsyncStorage, View, Text, ImageBackground, Dimensions, Image } from "react-native";
+import { Thumbnail, Content, Icon, Button } from 'native-base';
 
 const ProfileScreen = ({navigation}) => {
   let [token, setToken] = useState('');
   let [userId, setUserId] = useState('');
   let [userData, setUserData] = useState({}); 
   let [followingComp, setFollowingComp] = useState([]);
+  let [activeIndex, setActiveIndex] = useState(0);
+  let [likedArt, setLikedArt] = useState([]);
+  let [seenArt, setSeenArt] = useState([]);
+  let [bookmarkedArt, setBookmarkedArt] = useState([]);
+
+  let {width, height} = Dimensions.get("window");
 
   _handleLogout = async () => {
     try {
@@ -32,10 +34,99 @@ const ProfileScreen = ({navigation}) => {
     }
   };
 
+  _segmentClicked = (index) => {
+    setActiveIndex(index);
+  };
+
+  renderSection = () => {
+    if (activeIndex === 0) {
+      return (
+        <View style={{flexDirection:"row", flexWrap:"wrap"}}>
+          {renderLikedSection()}
+        </View>
+      );
+    } else if (activeIndex === 1) {
+      return (
+        <View style={{flexDirection:"row", flexWrap:"wrap"}}>
+          {renderSeenSection()}
+        </View>
+      )
+    } else {
+      return (
+        <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
+          {renderBookmarkedSection()}
+        </View>
+      );
+    }
+  };
+
+  renderLikedSection = () => {
+    return likedArt.map((art, idx) => {
+      return (
+        <View
+          key={idx}
+          style={[
+            {width: (width)/3}, {height: (width)/3}, 
+            {marginBottom: 2},
+            idx % 3 !== 0 ? {paddingLeft: 2} : {paddingLeft: 0}
+          ]}
+        >
+          <Image
+            style={{flex: 1, width:undefined, height:undefined}}
+            source={{ uri: art.img_url }}
+          />
+        </View>
+      );
+    })
+  }
+
+  renderSeenSection = () => {
+    return seenArt.map((art, idx) => {
+      return (
+        <View
+          key={idx}
+          style={[
+            { width: width / 3 },
+            { height: width / 3 },
+            { marginBottom: 2 },
+            idx % 3 !== 0 ? { paddingLeft: 2 } : { paddingLeft: 0 }
+          ]}
+        >
+        <Image
+          style={{ flex: 1, width: undefined, height: undefined }}
+          source={{ uri: art.img_url }}
+        />
+        </View>
+      );
+    });
+  };
+
+  renderBookmarkedSection = () => {
+    return bookmarkedArt.map((art, idx) => {
+      return (
+        <View
+          key={idx}
+          style={[
+            { width: width / 3 },
+            { height: width / 3 },
+            { marginBottom: 2 },
+            idx % 3 !== 0 ? { paddingLeft: 2 } : { paddingLeft: 0 }
+          ]}
+        >
+          <Image
+            style={{ flex: 1, width: undefined, height: undefined }}
+            source={{ uri: art.img_url }}
+          />
+        </View>
+      );
+    });
+  };
+
+  // get user profile information
   useEffect(() => {
       _fetchDeviceStorage();
       if (userId) {
-         fetch(`http://a7c53c97.ngrok.io/users/${userId}`, {
+         fetch(`http://c041e484.ngrok.io/users/${userId}`, {
            method: "GET",
            headers: {
              Accept: "application/json",
@@ -48,7 +139,8 @@ const ProfileScreen = ({navigation}) => {
              setUserData(data);
            })
            .then(
-             fetch(`http://a7c53c97.ngrok.io/users/${userId}/following`, {
+             // get users they're following
+             fetch(`http://c041e484.ngrok.io/users/${userId}/following`, {
                method: "GET",
                headers: {
                  Accept: "application/json",
@@ -75,11 +167,134 @@ const ProfileScreen = ({navigation}) => {
     }
   }, [userId, token]);
 
+  // get seen, liked, and bookmarked art
+  useEffect(() => {
+    // FIXME: change hardcoded user_id
+    fetch("https://artsee-back-end.herokuapp.com/tags?user_id=10", {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json"
+        // Authorization: token
+      }
+    })
+      .then(res => res.json())
+      .then(data => {
+        let artPromises = [];
+        for (let artIdx in data) {
+          if (data[artIdx].liked === true) {
+            artPromises.push(
+              fetch(
+                `https://artsee-back-end.herokuapp.com/arts/${data[artIdx].art_id}`,
+                {
+                  method: "GET",
+                  headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json"
+                    // Authorization: token
+                  }
+                }
+              )
+            );
+          }
+        }
+        Promise.all(artPromises)
+          .then(data => {
+            Promise.all(data.map(art => art.json()))
+            .then(arts => {
+              setLikedArt(arts);
+            });
+          })
+          .catch(err => console.error(err));
+      })
+      .catch(err => console.error(err));
+
+
+   // get seen art
+   // FIXME: change hardcoded user_id
+    fetch("https://artsee-back-end.herokuapp.com/tags?user_id=10", {
+      method: "GET",
+      headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json"
+      // Authorization: token
+      }
+    })
+    .then(res => res.json())
+    .then(data => {
+      let artPromises = [];
+        for (let artIdx in data) {
+          if (data[artIdx].visited === true) {
+            artPromises.push(
+              fetch(`https://artsee-back-end.herokuapp.com/arts/${data[artIdx].art_id}`, {
+                method: "GET",
+                headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json"
+                // Authorization: token
+                }
+              })
+            );
+          }
+        }
+      Promise
+        .all(artPromises)
+        .then(data => {
+          Promise
+            .all(data.map(arts => arts.json())).then(arts => {
+              setSeenArt(arts);
+            });
+        })
+        .catch(err => console.error(err));
+        })
+    .catch(err => console.error(err));
+
+  // get bookmarked art
+   // FIXME: change hardcoded user_id
+    fetch("https://artsee-back-end.herokuapp.com/tags?user_id=10", {
+      method: "GET",
+      headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json"
+      // Authorization: token
+      }
+    })
+    .then(res => res.json())
+    .then(data => {
+      let artPromises = [];
+        for (let artIdx in data) {
+          if (data[artIdx].seelist === true) {
+            artPromises.push(
+              fetch(`https://artsee-back-end.herokuapp.com/arts/${data[artIdx].art_id}`, {
+                method: "GET",
+                headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json"
+                // Authorization: token
+                }
+              })
+            );
+          }
+        }
+      Promise
+        .all(artPromises)
+        .then(data => {
+          Promise
+            .all(data.map(arts => arts.json())).then(arts => {
+              setBookmarkedArt(arts);
+            });
+        })
+        .catch(err => console.error(err));
+        })
+    .catch(err => console.error(err));
+  }, [])
+
+  console.log('============seen art===========', bookmarkedArt)
   return (
-    <View>
+    <View style={{ flex: 1 }}>
       <ImageBackground
         style={{
-          height: "65%",
+          height: "55%",
           width: "100%",
           justifyContent: "space-between"
         }}
@@ -102,50 +317,43 @@ const ProfileScreen = ({navigation}) => {
             {userData.name}
           </Text>
         </View>
-      </ImageBackground>
-      <Content>
         <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
           <Text>Following</Text>
           {followingComp}
         </View>
-        <Tabs style={{ marginTop: 15 }}>
-          <Tab
-            heading={
-              <TabHeading style={{ backgroundColor: "#17bebb" }}>
-                <Icon name="heart" style={{ color: "white" }} />
-              </TabHeading>
-            }
+      </ImageBackground>
+      <View>
+        <View style={{ flexDirection:'row', justifyContent: 'space-around', borderTopWidth: 1, borderTopColor:'#eae5e5' }}>
+          <Button 
+            transparent 
+            onPress={() => _segmentClicked(0)}
+            active={activeIndex === 0 }
           >
-            <LikeScreen />
-          </Tab>
-          <Tab
-            heading={
-              <TabHeading style={{ backgroundColor: "#17bebb" }}>
-                <Icon name="bookmark" style={{ color: "white" }} />
-              </TabHeading>
-            }
+            <Icon name='heart' 
+              style={activeIndex === 0 ? {} : {color: 'grey'}}
+            />
+          </Button>
+           <Button 
+            transparent 
+            onPress={() => _segmentClicked(1)}
+            active={activeIndex === 1 }
           >
-            <BookmarkScreen />
-          </Tab>
-          <Tab
-            heading={
-              <TabHeading style={{ backgroundColor: "#17bebb" }}>
-                <Icon name="eye" style={{ color: "white" }} />
-              </TabHeading>
-            }
+            <Icon name='eye' 
+              style={activeIndex === 1 ? {} : {color: 'grey'}}
+            />
+          </Button>
+           <Button 
+            transparent 
+            onPress={() => _segmentClicked(2)}
+            active={activeIndex === 2 }
           >
-            <SeenScreen />
-          </Tab>
-        </Tabs>
-        <Button
-          onPress={() => _handleLogout()}
-          style={{ bottom: 0 }}
-          block
-          light
-        >
-          <Text>Logout</Text>
-        </Button>
-      </Content>
+            <Icon name='bookmark' 
+              style={activeIndex === 2 ? {} : {color: 'grey'}}
+            />
+          </Button>
+        </View>
+        {renderSection()}
+      </View>
     </View>
   );
 };
