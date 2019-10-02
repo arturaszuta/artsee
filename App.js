@@ -21,13 +21,8 @@ const AppStack = createBottomTabNavigator(
   {
     Map: MapScreen,
     Feed: FeedScreen,
-<<<<<<< HEAD
-    Camera: MapScreen,
-    Profile: ProfileScreen,
-=======
     Camera: CameraScreen,
     Profile: ProfileScreen
->>>>>>> 0b6a6a831321c20c208ca200effbad3f67208b77
   },
   {
     defaultNavigationOptions: ({ navigation }) => ({
@@ -64,8 +59,7 @@ const AppStack = createBottomTabNavigator(
   }
 );
 
-<<<<<<< HEAD
-const Foot = createAppContainer(BottomNav);
+const Foot = createAppContainer(AppStack);
 
 const Main = () => {
   return (
@@ -80,10 +74,6 @@ const Main = () => {
   )
 }
 
-const App = () => {
-
-  const [fontLoaded, setLoaded] = useState(false);
-=======
 const AuthStack = createStackNavigator({
   Login: {
     screen: LoginScreen,
@@ -99,15 +89,14 @@ const AuthStack = createStackNavigator({
   }
 });
 
-// const App = () => {
-//   const [fontLoaded, setLoaded] = useState(false);
->>>>>>> 0b6a6a831321c20c208ca200effbad3f67208b77
+const App = () => {
 
-//   useEffect(() => {
-//     loadFonts();
-//   }, []);
+  const [fontLoaded, setLoaded] = useState(false);
 
-<<<<<<< HEAD
+  useEffect(() => {
+    loadFonts();
+  }, []);
+
   const loadFonts = async () => {
     await Font.loadAsync({
       Roboto: require("native-base/Fonts/Roboto.ttf"),
@@ -117,17 +106,6 @@ const AuthStack = createStackNavigator({
   };
   return !fontLoaded ? <AppLoading /> : Main();
 };
-=======
-//   const loadFonts = async () => {
-//     await Font.loadAsync({
-//       Roboto: require("native-base/Fonts/Roboto.ttf"),
-//       Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf")
-//     });
-//     setLoaded(true);
-//   };
-//   return !fontLoaded ? <AppLoading /> : <Main />;
-// };
->>>>>>> 0b6a6a831321c20c208ca200effbad3f67208b77
 
 export default createAppContainer(
   createSwitchNavigator(
