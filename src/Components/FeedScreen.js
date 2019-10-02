@@ -12,6 +12,7 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 
 
+
 import { Container, Header, Content, Card, CardItem, Text, Button, Left, Body, Right, Spinner, Toast, Root, Item } from "native-base";
 
 export default function FeedScreen() {
@@ -22,8 +23,6 @@ export default function FeedScreen() {
   const [artSocialStatus, setArtSocialStatus] = useState([]);
   const [arts, setArts] = useState({});
   const [artsIDs, setArtsIDs] = useState([]);
-
-  let components = [];
 
   const screenHeight = Math.round(Dimensions.get('window').height);
   const screenWidth = Math.round(Dimensions.get('window').width);
@@ -46,17 +45,28 @@ export default function FeedScreen() {
     setArts({
       ...fullState
     })
+
+    const queryString = 'https://artsee-back-end.herokuapp.com/tags' + '?user_id=' + userId + '&art_id=' + item + '&type=' + type + '&value=' + tempstate[type]
+
+    fetch(queryString, {
+      method: 'POST',
+
+    }).then((response) => response.json()).then(res => {console.log(res)})
+
+
    
   }
 
   const getTags = async function() {
 
     const usID = await AsyncStorage.getItem('userId');
+    setUserId(usID);
+    console.log(usID);
    
 
     fetch('https://artsee-back-end.herokuapp.com/api/userArts?user_id=' + usID
         ).then((response) => response.json()).then(res =>{
-          console.log('this is the result from db', res)
+          
           let tempState = {};
           let tempIDState = [];
           
@@ -74,7 +84,7 @@ export default function FeedScreen() {
 
   const deck = () => {
     if (arts && artsIDs) {
-      console.log(arts);
+    
       return artsIDs.map(art => {
 
         const comp = arts[art]
@@ -162,48 +172,3 @@ const styles = StyleSheet.create({
     marginRight: 15
   }
 });
-
-
-// return <Card style={{flex: 0}} key={comp.id}>
-//           <CardItem>
-//             <Left>
-//               <Body>
-//                 <Text>{comp.title} posted by USER</Text>
-//               </Body>
-//             </Left>
-//           </CardItem>
-//           <CardItem>
-//             <Body>
-//               <Image source={{uri: comp.img_url}} style={{height: screenWidth, width: screenWidth * 0.9, flex: 1}}/>
-//             </Body>
-//           </CardItem>
-//           <View style={{
-//             borderTopColor: 'grey',
-//             borderTopWidth: StyleSheet.hairlineWidth
-//           }}>
-
-//           </View>
-//           <CardItem>
-//             <Right style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-evenly' }}>
-//               <Button transparent textStyle={{color: '#87838B'}} onPress={() => {
-//                 showInfographic('Marked as visited!')
-                
-//               }}>
-//                 <Icon name={artTags[comp.id].seelist ? 'eye-check-outline' : 'eye-plus-outline' } artID={comp.id} userID={comp.user_id} ref={ (c) => { this._icon = c}} size={55} onPress={() => { 
-//                   this._icon.props.name = 'eye-check-outline'
-//                   changeTagStatus(this._icon)}}  />
-//               </Button>
-//               <Button transparent textStyle={{color: '#87838B'}} onPress={() => {
-//                 showInfographic('Liked it!')
-//               }}>
-//                 <Icon name={artTags[comp.id].liked ? 'heart-circle' : 'heart-circle-outline'} size={55} />
-//               </Button>
-//               <Button transparent textStyle={{color: '#87838B'}} onPress={() => {
-//                 showInfographic('Marked as visited!')
-                
-//               }}>
-//                 <Icon name={artTags[comp.id].visited ? 'check-circle' : 'check-circle-outline'} size={55} />
-//               </Button>
-//             </Right>
-//           </CardItem>
-//         </Card>
