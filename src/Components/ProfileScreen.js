@@ -185,7 +185,11 @@ const ProfileScreen = ({navigation}) => {
           source={{ uri: userData.background }}
         >
           <View
-            style={{ flexDirection: "row", justifyContent: "space-between", flex: 1 }}
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              flex: 1
+            }}
           >
             <Thumbnail
               style={{
@@ -203,10 +207,17 @@ const ProfileScreen = ({navigation}) => {
               {userData.name}
             </Text>
           </View>
-          <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
-            <Text>Following</Text>
-            {followingComp}
-          </View>
+          {followingComp.length > 0 ? (
+            <View style={{ flexDirection: "column", alignItems: "flex-end" }}>
+              <Text>Following</Text>
+              <View stype={{ flexDirection: "row" }}>{followingComp}</View>
+            </View>
+          ) : (
+            <View style={{ flexDirection: "column", alignItems: "flex-end" }}>
+              <Text>Following</Text>
+              <Text>No One</Text>
+            </View>
+          )}
         </ImageBackground>
         <View style={{ flex: 1 }}>
           <View
