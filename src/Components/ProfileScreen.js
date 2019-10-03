@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { AsyncStorage, View, Text, ImageBackground, Dimensions, Image } from "react-native";
-import { Thumbnail, Content, Icon, Button } from 'native-base';
+import { AsyncStorage, View, Text, ImageBackground, Dimensions, Image, FlatList, ScrollView } from "react-native";
+import { Thumbnail, Content, Icon, Button, ListItem  } from 'native-base';
 
 const ProfileScreen = ({navigation}) => {
   let [token, setToken] = useState('');
@@ -41,19 +41,19 @@ const ProfileScreen = ({navigation}) => {
   renderSection = () => {
     if (activeIndex === 0) {
       return (
-        <View style={{flexDirection:"row", flexWrap:"wrap"}}>
+        <View style={{ flexDirection: "row", flexWrap: "wrap", flex: 1 }}>
           {renderLikedSection()}
         </View>
       );
     } else if (activeIndex === 1) {
       return (
-        <View style={{flexDirection:"row", flexWrap:"wrap"}}>
+        <View style={{ flexDirection:"row", flexWrap:"wrap", flex: 1 }}>
           {renderSeenSection()}
         </View>
       )
     } else {
       return (
-        <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
+        <View style={{ flexDirection: "row", flexWrap: "wrap", flex: 1  }}>
           {renderBookmarkedSection()}
         </View>
       );
@@ -68,7 +68,7 @@ const ProfileScreen = ({navigation}) => {
           style={[
             {width: (width)/3}, {height: (width)/3}, 
             {marginBottom: 2},
-            idx % 3 !== 0 ? {paddingLeft: 2} : {paddingLeft: 0}
+            idx % 3 !== 0 ? {paddingLeft: 2} : {paddingLeft: 0},
           ]}
         >
           <Image
@@ -89,7 +89,7 @@ const ProfileScreen = ({navigation}) => {
             { width: width / 3 },
             { height: width / 3 },
             { marginBottom: 2 },
-            idx % 3 !== 0 ? { paddingLeft: 2 } : { paddingLeft: 0 }
+            idx % 3 !== 0 ? { paddingLeft: 2 } : { paddingLeft: 0 },
           ]}
         >
         <Image
@@ -110,7 +110,7 @@ const ProfileScreen = ({navigation}) => {
             { width: width / 3 },
             { height: width / 3 },
             { marginBottom: 2 },
-            idx % 3 !== 0 ? { paddingLeft: 2 } : { paddingLeft: 0 }
+            idx % 3 !== 0 ? { paddingLeft: 2 } : { paddingLeft: 0 },
           ]}
         >
           <Image
@@ -146,7 +146,6 @@ const ProfileScreen = ({navigation}) => {
   // get seen, liked, and bookmarked art
   useEffect(() => {
     if (userId) {
-      console.log('===============userId===============', userId);
        fetch(
          `https://artsee-back-end.herokuapp.com/api/userArts?user_id=${userId}`,
          {
@@ -164,9 +163,6 @@ const ProfileScreen = ({navigation}) => {
            const bookmarked = data.filter(art => art.seelist);
            const seen = data.filter(art => art.visited);
 
-           console.log('============liked============', liked);
-           console.log("============bookmarked============", bookmarked);
-           console.log("============seen============", seen);
            setLikedArt(liked);
            setBookmarkedArt(bookmarked);
            setSeenArt(seen);
@@ -177,80 +173,85 @@ const ProfileScreen = ({navigation}) => {
   
 
   return (
-    <View style={{ flex: 1 }}>
-      <ImageBackground
-        style={{
-          height: "55%",
-          width: "100%",
-          justifyContent: "space-between"
-        }}
-        source={{ uri: userData.background }}
-      >
-        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-          <Thumbnail
-            style={{
-              height: 150,
-              width: 150,
-              borderRadius: 75,
-              marginTop: 60,
-              marginLeft: 5
-            }}
-            source={{ uri: userData.avatar }}
-          />
-          <Text
-            style={{ fontSize: 30, alignSelf: "flex-end", marginRight: 20 }}
-          >
-            {userData.name}
-          </Text>
-        </View>
-        <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
-          <Text>Following</Text>
-          {followingComp}
-        </View>
-      </ImageBackground>
-      <View>
-        <View
+    <ScrollView>
+      <View style={{ flex: 1 }}>
+        <ImageBackground
           style={{
-            flexDirection: "row",
-            justifyContent: "space-around",
-            borderTopWidth: 1,
-            borderTopColor: "#eae5e5"
+            height: "55%",
+            width: "100%",
+            justifyContent: "space-between",
+            flex: 1
           }}
+          source={{ uri: userData.background }}
         >
-          <Button
-            transparent
-            onPress={() => _segmentClicked(0)}
-            active={activeIndex === 0}
+          <View
+            style={{ flexDirection: "row", justifyContent: "space-between", flex: 1 }}
           >
-            <Icon
-              name="heart"
-              style={activeIndex === 0 ? {} : { color: "grey" }}
+            <Thumbnail
+              style={{
+                height: 150,
+                width: 150,
+                borderRadius: 75,
+                marginTop: 60,
+                marginLeft: 5
+              }}
+              source={{ uri: userData.avatar }}
             />
-          </Button>
-          <Button
-            transparent
-            onPress={() => _segmentClicked(1)}
-            active={activeIndex === 1}
+            <Text
+              style={{ fontSize: 30, alignSelf: "flex-end", marginRight: 20 }}
+            >
+              {userData.name}
+            </Text>
+          </View>
+          <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
+            <Text>Following</Text>
+            {followingComp}
+          </View>
+        </ImageBackground>
+        <View style={{ flex: 1 }}>
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-around",
+              borderTopWidth: 1,
+              borderTopColor: "#eae5e5"
+            }}
           >
-            <Icon
-              name="eye"
-              style={activeIndex === 1 ? {} : { color: "grey" }}
-            />
-          </Button>
-          <Button
-            transparent
-            onPress={() => _segmentClicked(2)}
-            active={activeIndex === 2}
-          >
-            <Icon
-              name="bookmark"
-              style={activeIndex === 2 ? {} : { color: "grey" }}
-            />
-          </Button>
+            <Button
+              transparent
+              onPress={() => _segmentClicked(0)}
+              active={activeIndex === 0}
+            >
+              <Icon
+                name="heart"
+                style={activeIndex === 0 ? {} : { color: "grey" }}
+              />
+            </Button>
+            <Button
+              transparent
+              onPress={() => _segmentClicked(1)}
+              active={activeIndex === 1}
+            >
+              <Icon
+                name="eye"
+                style={activeIndex === 1 ? {} : { color: "grey" }}
+              />
+            </Button>
+            <Button
+              transparent
+              onPress={() => _segmentClicked(2)}
+              active={activeIndex === 2}
+            >
+              <Icon
+                name="bookmark"
+                style={activeIndex === 2 ? {} : { color: "grey" }}
+              />
+            </Button>
+          </View>
+          {renderSection()}
         </View>
-        {renderSection()}
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
