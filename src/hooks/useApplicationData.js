@@ -16,6 +16,7 @@ const SET_RESOLVED = "SET_RESOLVED";
 const reducer = (state, action) => {
   switch(action.type) {
     case SET_USER_ID: {
+      console.log("==> from inside SET_USER_ID. action.value:",action.value)
       return {...state, userId: action.value}
     }
     case SET_ARTS_DATA: {
@@ -40,7 +41,6 @@ const reducer = (state, action) => {
   }
 };
 
-
 export default useApplicationData = () => {
   const [state, dispatch] = useReducer(reducer, {
     userId: null,
@@ -53,31 +53,38 @@ export default useApplicationData = () => {
   });
 
   useEffect(() => {
-    getUser()
-    getUserLocation()
-    getArts(state.userId)
+    const getAll = async () => {
+      await getUser()
+      await getUserLocation()
+      await getArts()
+    }
+    getAll()
   }, []);
 
-  getUser = async () => {
-    const usID = await AsyncStorage.getItem('userId');
-    dispatch({ type: SET_USER_ID, value: usID })
+  getUser = () => {
+    return AsyncStorage.getItem('userId')
+      .then(res => {
+        dispatch({ type: SET_USER_ID, value: res })
+      })
   }
 
-  getArts = async (userId) => {
-    const response = await axios.get('https://artsee-back-end.herokuapp.com/api/userArts', {
+  getArts = () => {
+    return axios.get('https://artsee-back-end.herokuapp.com/api/userArts', {
       params: {
-        user_id: userId
+        user_id: state.userId
       }
     })
+      .then(response => {
+        let arts = {};
+        response.data.forEach(art => {
+          arts[art.id] = art
+          art.latitude = Number(art.latitude);
+          art.longitude = Number(art.longitude);
+        })
+    
+        dispatch({ type: SET_ARTS_DATA, value: arts})
+      })
 
-    let arts = {};
-    response.data.forEach(art => {
-      arts[art.id] = art
-      art.latitude = Number(art.latitude);
-      art.longitude = Number(art.longitude);
-    })
-
-    dispatch({ type: SET_ARTS_DATA, value: arts})
   }
 
   getUserLocation = async () => {
@@ -100,7 +107,6 @@ export default useApplicationData = () => {
   getNearestArt = async () => {
     getUserLocation();
     getNearestArts();
-    console.log("==|> inside getNearestArt")
 
     let nearest = await getFromCurrentLocation('https://artsee-back-end.herokuapp.com/api/nearest');
     
@@ -120,7 +126,7 @@ export default useApplicationData = () => {
     })
   };
 
-  setTag = async (art_id, type) => {
+  setTag = (art_id, type) => {
     let arts = {...state.arts};
 
     let art = {...arts[art_id]}
@@ -128,9 +134,19 @@ export default useApplicationData = () => {
 
     arts[art_id] = art
 
-    console.log("===|===> art is:", art)
+    const q = 'https://artsee-back-end.herokuapp.com/tags' 
+      + '?user_id=' + state.userId 
+      + '&art_id=' + art_id 
+      + '&type=' + type 
+      + '&value=' + art[type];
 
-    dispatch({ type: SET_ARTS_DATA, value: arts })
+    return fetch(q, {
+      method: 'POST'
+    })
+      .then(res => {
+        dispatch({ type: SET_ARTS_DATA, value: arts })
+      })
+
   }
 
   return {

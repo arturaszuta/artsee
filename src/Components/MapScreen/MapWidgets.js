@@ -23,8 +23,6 @@ export const Popup = ({artPopup, setArtPopup, setTag}) => {
   
   if (artPopup.component) {
 
-    console.log("==>==> artPopup:",artPopup)
-
     return (
       <FadeInView>
         <ImageBackground style={mapStyles.imgBack} onPress={e => setArtPopup({ component: false })} source={{ uri: artPopup.componentUrl }} imageStyle={mapStyles.imgStyle}>
@@ -76,7 +74,6 @@ export const marker = (mapMarkers, setArtPopup) => {
 
 export const userLocation = (userLocation) => {
   if (userLocation && userLocation.latitude) {
-    console.log("==>>==>> userLocation:",userLocation)
 
     return (
       <Marker
