@@ -3,7 +3,7 @@ import { createAppContainer, createSwitchNavigator } from "react-navigation";
 import { createStackNavigator } from 'react-navigation-stack';
 import { createBottomTabNavigator } from "react-navigation-tabs";
 import { View, Header } from "react-native";
-import { AppLoading } from "expo";
+import { AppLoading, SplashScreen } from "expo";
 
 import Icon from "react-native-vector-icons/FontAwesome5";
 import * as Font from "expo-font";
@@ -16,6 +16,8 @@ import CameraScreen from "./src/Components/CameraScreen";
 import LoginScreen from "./src/Components/LoginScreen";
 import SignUpScreen from "./src/Components/SignUpScreen";
 import AuthLoadingScreen from "./src/Components/AuthLoadingScreen";
+import SplashLoadingScreen from "./src/Components/SplashLoadingScreen";
+import SecondSignUpScreen from "./src/Components/SecondSignUpScreen";
 
 const AppStack = createBottomTabNavigator(
   {
@@ -91,19 +93,33 @@ const AuthStack = createStackNavigator({
 
 const App = () => {
   const [fontLoaded, setLoaded] = useState(false);
+  
 
   useEffect(() => {
     loadFonts();
   }, []);
 
   const loadFonts = async () => {
+
     await Font.loadAsync({
       Roboto: require("native-base/Fonts/Roboto.ttf"),
       Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf")
     });
-    setLoaded(true);
+    setTimeout(() => {
+      setLoaded(true);
+
+    },2000)
   };
-  return !fontLoaded ? <AppLoading /> : Main();
+
+  
+  
+  return !fontLoaded ? <AppLoading>
+    <View>
+      <Text>
+        Hello?
+      </Text>
+    </View>
+  </AppLoading> : Main();
 };
 
 export default createAppContainer(
@@ -111,7 +127,9 @@ export default createAppContainer(
     {
       AuthLoading: AuthLoadingScreen,
       App: AppStack,
-      Auth: AuthStack
+      Auth: AuthStack,
+      Splash: SplashLoadingScreen,
+      SecondSignup: SecondSignUpScreen
     },
     {
       initialRouteName: "AuthLoading"

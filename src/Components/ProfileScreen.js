@@ -15,8 +15,9 @@ const ProfileScreen = ({navigation}) => {
   let {width, height} = Dimensions.get("window");
 
   _handleLogout = async () => {
+    console.log('logging out?')
     try {
-      AsyncStorage.clear();
+      await AsyncStorage.clear();
       navigation.navigate('Auth');
     } catch (err) {
       console.error(err);
