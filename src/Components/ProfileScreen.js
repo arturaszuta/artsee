@@ -138,163 +138,43 @@ const ProfileScreen = ({navigation}) => {
            .then(data => {
              setUserData(data);
            })
-           .then(
-             // get users they're following
-             fetch(`https://artsee-back-end.herokuapp.com//users/${userId}/following`, {
-               method: "GET",
-               headers: {
-                 Accept: "application/json",
-                 "Content-Type": "application/json",
-                 Authorization: token
-               }
-             })
-               .then(res => res.json())
-               .then(data => {
-                 const comp = data.map((obj, idx) => {
-                   return (
-                     <Thumbnail
-                       key={data[idx].id}
-                       id={data[idx].id}
-                       style={{ height: 50, width: 50, marginRight: 5 }}
-                       source={{ uri: data[idx].avatar }}
-                     />
-                   );
-                 });
-                 setFollowingComp(comp);
-               })
-               .catch(err => console.error(err))
-           );
+           .catch(err => console.error(err));
+         
     }
   }, [userId, token]);
 
   // get seen, liked, and bookmarked art
   useEffect(() => {
-    // FIXME: change hardcoded user_id
-    fetch(`https://artsee-back-end.herokuapp.com/api/userArts?user_id=${userId}`, {
-      method: "GET",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json"
-        // Authorization: token
-      }
-    })
-      .then(res => res.json())
-      .then(data => {
-        let artPromises = [];
-        for (let artIdx in data) {
-          if (data[artIdx].liked === true) {
-            artPromises.push(
-              fetch(
-                `https://artsee-back-end.herokuapp.com/arts/${data[artIdx].art_id}`,
-                {
-                  method: "GET",
-                  headers: {
-                    Accept: "application/json",
-                    "Content-Type": "application/json"
-                    // Authorization: token
-                  }
-                }
-              )
-            );
-          }
-        }
-        Promise.all(artPromises)
-          .then(data => {
-            Promise.all(data.map(art => art.json())).then(arts => {
-              setLikedArt(arts);
-            });
-          })
-          .catch(err => console.error(err));
-      })
-      .catch(err => console.error(err));
+    if (userId) {
+      console.log('===============userId===============', userId);
+       fetch(
+         `https://artsee-back-end.herokuapp.com/api/userArts?user_id=${userId}`,
+         {
+           method: "GET",
+           headers: {
+             Accept: "application/json",
+             "Content-Type": "application/json",
+             Authorization: token
+           }
+         }
+       )
+         .then(res => res.json())
+         .then(data => {
+           const liked = data.filter(art => art.liked);
+           const bookmarked = data.filter(art => art.seelist);
+           const seen = data.filter(art => art.visited);
 
-
-   // get seen art
-   // FIXME: change hardcoded user_id
-    fetch(
-      `https://artsee-back-end.herokuapp.com/api/userArts?user_id=${userId}`,
-      {
-        method: "GET",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json"
-          // Authorization: token
-        }
-      }
-    )
-      .then(res => res.json())
-      .then(data => {
-        let artPromises = [];
-        for (let artIdx in data) {
-          if (data[artIdx].visited === true) {
-            artPromises.push(
-              fetch(
-                `https://artsee-back-end.herokuapp.com/arts/${data[artIdx].art_id}`,
-                {
-                  method: "GET",
-                  headers: {
-                    Accept: "application/json",
-                    "Content-Type": "application/json"
-                    // Authorization: token
-                  }
-                }
-              )
-            );
-          }
-        }
-        Promise.all(artPromises)
-          .then(data => {
-            Promise.all(data.map(arts => arts.json())).then(arts => {
-              setSeenArt(arts);
-            });
-          })
-          .catch(err => console.error(err));
-      })
-      .catch(err => console.error(err));
-
-  // get bookmarked art
-   // FIXME: change hardcoded user_id
-    fetch(
-      `https://artsee-back-end.herokuapp.com/api/userArts?user_id=${userId}`,
-      {
-        method: "GET",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json"
-          // Authorization: token
-        }
-      }
-    )
-      .then(res => res.json())
-      .then(data => {
-        let artPromises = [];
-        for (let artIdx in data) {
-          if (data[artIdx].seelist === true) {
-            artPromises.push(
-              fetch(
-                `https://artsee-back-end.herokuapp.com/arts/${data[artIdx].art_id}`,
-                {
-                  method: "GET",
-                  headers: {
-                    Accept: "application/json",
-                    "Content-Type": "application/json"
-                    // Authorization: token
-                  }
-                }
-              )
-            );
-          }
-        }
-        Promise.all(artPromises)
-          .then(data => {
-            Promise.all(data.map(arts => arts.json())).then(arts => {
-              setBookmarkedArt(arts);
-            });
-          })
-          .catch(err => console.error(err));
-      })
-      .catch(err => console.error(err));
-  }, [])
+           console.log('============liked============', liked);
+           console.log("============bookmarked============", bookmarked);
+           console.log("============seen============", seen);
+           setLikedArt(liked);
+           setBookmarkedArt(bookmarked);
+           setSeenArt(seen);
+         })
+         .catch(err => console.error(err));
+    }
+  }, [userId, likedArt, bookmarkedArt, seenArt])
+  
 
   return (
     <View style={{ flex: 1 }}>
@@ -368,7 +248,7 @@ const ProfileScreen = ({navigation}) => {
             />
           </Button>
         </View>
-        <Content>{renderSection()}</Content>
+        {renderSection()}
       </View>
     </View>
   );
