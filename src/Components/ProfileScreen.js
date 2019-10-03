@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { AsyncStorage, View, Text, ImageBackground, Dimensions, Image } from "react-native";
-import { Thumbnail, Content, Icon, Button } from 'native-base';
+import { AsyncStorage, View, Text, ImageBackground, Dimensions, Image, FlatList, ScrollView } from "react-native";
+import { Thumbnail, Content, Icon, Button, ListItem  } from 'native-base';
 
 const ProfileScreen = ({navigation}) => {
   let [token, setToken] = useState('');
@@ -42,19 +42,19 @@ const ProfileScreen = ({navigation}) => {
   renderSection = () => {
     if (activeIndex === 0) {
       return (
-        <View style={{flexDirection:"row", flexWrap:"wrap"}}>
+        <View style={{ flexDirection: "row", flexWrap: "wrap", flex: 1 }}>
           {renderLikedSection()}
         </View>
       );
     } else if (activeIndex === 1) {
       return (
-        <View style={{flexDirection:"row", flexWrap:"wrap"}}>
+        <View style={{ flexDirection:"row", flexWrap:"wrap", flex: 1 }}>
           {renderSeenSection()}
         </View>
       )
     } else {
       return (
-        <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
+        <View style={{ flexDirection: "row", flexWrap: "wrap", flex: 1  }}>
           {renderBookmarkedSection()}
         </View>
       );
@@ -69,7 +69,7 @@ const ProfileScreen = ({navigation}) => {
           style={[
             {width: (width)/3}, {height: (width)/3}, 
             {marginBottom: 2},
-            idx % 3 !== 0 ? {paddingLeft: 2} : {paddingLeft: 0}
+            idx % 3 !== 0 ? {paddingLeft: 2} : {paddingLeft: 0},
           ]}
         >
           <Image
@@ -90,7 +90,7 @@ const ProfileScreen = ({navigation}) => {
             { width: width / 3 },
             { height: width / 3 },
             { marginBottom: 2 },
-            idx % 3 !== 0 ? { paddingLeft: 2 } : { paddingLeft: 0 }
+            idx % 3 !== 0 ? { paddingLeft: 2 } : { paddingLeft: 0 },
           ]}
         >
         <Image
@@ -111,7 +111,7 @@ const ProfileScreen = ({navigation}) => {
             { width: width / 3 },
             { height: width / 3 },
             { marginBottom: 2 },
-            idx % 3 !== 0 ? { paddingLeft: 2 } : { paddingLeft: 0 }
+            idx % 3 !== 0 ? { paddingLeft: 2 } : { paddingLeft: 0 },
           ]}
         >
           <Image
@@ -139,242 +139,131 @@ const ProfileScreen = ({navigation}) => {
            .then(data => {
              setUserData(data);
            })
-           .then(
-             // get users they're following
-             fetch(`https://artsee-back-end.herokuapp.com//users/${userId}/following`, {
-               method: "GET",
-               headers: {
-                 Accept: "application/json",
-                 "Content-Type": "application/json",
-                 Authorization: token
-               }
-             })
-               .then(res => res.json())
-               .then(data => {
-                 const comp = data.map((obj, idx) => {
-                   return (
-                     <Thumbnail
-                       key={data[idx].id}
-                       id={data[idx].id}
-                       style={{ height: 50, width: 50, marginRight: 5 }}
-                       source={{ uri: data[idx].avatar }}
-                     />
-                   );
-                 });
-                 setFollowingComp(comp);
-               })
-               .catch(err => console.error(err))
-           );
+           .catch(err => console.error(err));
+         
     }
   }, [userId, token]);
 
   // get seen, liked, and bookmarked art
   useEffect(() => {
-    // FIXME: change hardcoded user_id
-    fetch(`https://artsee-back-end.herokuapp.com/api/userArts?user_id=${userId}`, {
-      method: "GET",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json"
-        // Authorization: token
-      }
-    })
-      .then(res => res.json())
-      .then(data => {
-        let artPromises = [];
-        for (let artIdx in data) {
-          if (data[artIdx].liked === true) {
-            artPromises.push(
-              fetch(
-                `https://artsee-back-end.herokuapp.com/arts/${data[artIdx].art_id}`,
-                {
-                  method: "GET",
-                  headers: {
-                    Accept: "application/json",
-                    "Content-Type": "application/json"
-                    // Authorization: token
-                  }
-                }
-              )
-            );
-          }
-        }
-        Promise.all(artPromises)
-          .then(data => {
-            Promise.all(data.map(art => art.json())).then(arts => {
-              setLikedArt(arts);
-            });
-          })
-          .catch(err => console.error(err));
-      })
-      .catch(err => console.error(err));
+    if (userId) {
+       fetch(
+         `https://artsee-back-end.herokuapp.com/api/userArts?user_id=${userId}`,
+         {
+           method: "GET",
+           headers: {
+             Accept: "application/json",
+             "Content-Type": "application/json",
+             Authorization: token
+           }
+         }
+       )
+         .then(res => res.json())
+         .then(data => {
+           const liked = data.filter(art => art.liked);
+           const bookmarked = data.filter(art => art.seelist);
+           const seen = data.filter(art => art.visited);
 
-
-   // get seen art
-   // FIXME: change hardcoded user_id
-    fetch(
-      `https://artsee-back-end.herokuapp.com/api/userArts?user_id=${userId}`,
-      {
-        method: "GET",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json"
-          // Authorization: token
-        }
-      }
-    )
-      .then(res => res.json())
-      .then(data => {
-        let artPromises = [];
-        for (let artIdx in data) {
-          if (data[artIdx].visited === true) {
-            artPromises.push(
-              fetch(
-                `https://artsee-back-end.herokuapp.com/arts/${data[artIdx].art_id}`,
-                {
-                  method: "GET",
-                  headers: {
-                    Accept: "application/json",
-                    "Content-Type": "application/json"
-                    // Authorization: token
-                  }
-                }
-              )
-            );
-          }
-        }
-        Promise.all(artPromises)
-          .then(data => {
-            Promise.all(data.map(arts => arts.json())).then(arts => {
-              setSeenArt(arts);
-            });
-          })
-          .catch(err => console.error(err));
-      })
-      .catch(err => console.error(err));
-
-  // get bookmarked art
-   // FIXME: change hardcoded user_id
-    fetch(
-      `https://artsee-back-end.herokuapp.com/api/userArts?user_id=${userId}`,
-      {
-        method: "GET",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json"
-          // Authorization: token
-        }
-      }
-    )
-      .then(res => res.json())
-      .then(data => {
-        let artPromises = [];
-        for (let artIdx in data) {
-          if (data[artIdx].seelist === true) {
-            artPromises.push(
-              fetch(
-                `https://artsee-back-end.herokuapp.com/arts/${data[artIdx].art_id}`,
-                {
-                  method: "GET",
-                  headers: {
-                    Accept: "application/json",
-                    "Content-Type": "application/json"
-                    // Authorization: token
-                  }
-                }
-              )
-            );
-          }
-        }
-        Promise.all(artPromises)
-          .then(data => {
-            Promise.all(data.map(arts => arts.json())).then(arts => {
-              setBookmarkedArt(arts);
-            });
-          })
-          .catch(err => console.error(err));
-      })
-      .catch(err => console.error(err));
-  }, [])
+           setLikedArt(liked);
+           setBookmarkedArt(bookmarked);
+           setSeenArt(seen);
+         })
+         .catch(err => console.error(err));
+    }
+  }, [userId, likedArt, bookmarkedArt, seenArt])
+  
 
   return (
-    <View style={{ flex: 1 }}>
-      <ImageBackground
-        style={{
-          height: "55%",
-          width: "100%",
-          justifyContent: "space-between"
-        }}
-        source={{ uri: userData.background }}
-      >
-        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-          <Thumbnail
-            style={{
-              height: 150,
-              width: 150,
-              borderRadius: 75,
-              marginTop: 60,
-              marginLeft: 5
-            }}
-            source={{ uri: userData.avatar }}
-          />
-          <Text
-            style={{ fontSize: 30, alignSelf: "flex-end", marginRight: 20 }}
-          >
-            {userData.name}
-          </Text>
-        </View>
-        <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
-          <Text>Following</Text>
-          <Button onPress={() => { _handleLogout()}} style={{ width: 250 }}>
-            <Text>LOGOUT</Text>
-          </Button>
-          {followingComp}
-        </View>
-      </ImageBackground>
-      <View>
-        <View
+    <ScrollView>
+      <View style={{ flex: 1 }}>
+        <ImageBackground
           style={{
-            flexDirection: "row",
-            justifyContent: "space-around",
-            borderTopWidth: 1,
-            borderTopColor: "#eae5e5"
+            height: "55%",
+            width: "100%",
+            justifyContent: "space-between",
+            flex: 1
           }}
+          source={{ uri: userData.background }}
         >
-          <Button
-            transparent
-            onPress={() => _segmentClicked(0)}
-            active={activeIndex === 0}
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              flex: 1
+            }}
           >
-            <Icon
-              name="heart"
-              style={activeIndex === 0 ? {} : { color: "grey" }}
+            <Thumbnail
+              style={{
+                height: 150,
+                width: 150,
+                borderRadius: 75,
+                marginTop: 60,
+                marginLeft: 5
+              }}
+              source={{ uri: userData.avatar }}
             />
-          </Button>
-          <Button
-            transparent
-            onPress={() => _segmentClicked(1)}
-            active={activeIndex === 1}
+            <Text
+              style={{ fontSize: 30, alignSelf: "flex-end", marginRight: 20 }}
+            >
+              {userData.name}
+            </Text>
+          </View>
+          {followingComp.length > 0 ? (
+            <View style={{ flexDirection: "column", alignItems: "flex-end" }}>
+              <Text>Following</Text>
+              <View stype={{ flexDirection: "row" }}>{followingComp}</View>
+            </View>
+          ) : (
+            <View style={{ flexDirection: "column", alignItems: "flex-end" }}>
+              <Text>Following</Text>
+              <Text>No One</Text>
+            </View>
+          )}
+        </ImageBackground>
+        <View style={{ flex: 1 }}>
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-around",
+              borderTopWidth: 1,
+              borderTopColor: "#eae5e5"
+            }}
           >
-            <Icon
-              name="eye"
-              style={activeIndex === 1 ? {} : { color: "grey" }}
-            />
-          </Button>
-          <Button
-            transparent
-            onPress={() => _segmentClicked(2)}
-            active={activeIndex === 2}
-          >
-            <Icon
-              name="bookmark"
-              style={activeIndex === 2 ? {} : { color: "grey" }}
-            />
-          </Button>
+            <Button
+              transparent
+              onPress={() => _segmentClicked(0)}
+              active={activeIndex === 0}
+            >
+              <Icon
+                name="heart"
+                style={activeIndex === 0 ? {} : { color: "grey" }}
+              />
+            </Button>
+            <Button
+              transparent
+              onPress={() => _segmentClicked(1)}
+              active={activeIndex === 1}
+            >
+              <Icon
+                name="eye"
+                style={activeIndex === 1 ? {} : { color: "grey" }}
+              />
+            </Button>
+            <Button
+              transparent
+              onPress={() => _segmentClicked(2)}
+              active={activeIndex === 2}
+            >
+              <Icon
+                name="bookmark"
+                style={activeIndex === 2 ? {} : { color: "grey" }}
+              />
+            </Button>
+          </View>
+          {renderSection()}
         </View>
-        <Content>{renderSection()}</Content>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
