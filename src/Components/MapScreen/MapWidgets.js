@@ -7,16 +7,21 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 import mapStyles from '../../../styles/map';
 import { colors } from '../../../styles/variables';
 
-const flag = <Icon name="flag" size={23} color="#fff" />;
-const heart = <Icon name="heart" size={23} color="#fff" />;
-const eye = <Icon name="eye" size={23} color="#fff" />;
 const spraycan = <Icon name="spray-can" size={23} color={colors.color1} />;
 const child = <Icon name="child" size={28} color={colors.color4} />;
 
-export const Popup = ({artPopup, setArtPopup}) => {
+export const Popup = ({artPopup, setArtPopup, setTag}) => {
+  const flag = <Icon name="flag" size={23} color="#fff" onPress={e => {
+    setTag(artPopup.artId, 'visited')
+  }} />;
+  const heart = <Icon name="heart" size={23} color="#fff" onPress={e => {
+    setTag(artPopup.artId, 'liked')
+  }} />;
+  const eye = <Icon name="eye" size={23} color="#fff" onPress={e => {
+    setTag(artPopup.artId, 'seelist')
+  }} />;
+  
   if (artPopup.component) {
-
-    console.log("==>==> artPopup:",artPopup)
 
     return (
       <FadeInView>
@@ -43,20 +48,20 @@ export const Popup = ({artPopup, setArtPopup}) => {
   }
 }
 
-
 export const marker = (mapMarkers, setArtPopup) => {
   if (mapMarkers) {           
     // console.log("==|==> from inside Map, marker(), mapMarkers: ", state.mapMarkers)
-    return mapMarkers.map(marker => {
+    return Object.keys(mapMarkers).map(marker => {
       return (
         <Marker draggable
-          key = {marker.id}
-          coordinate={marker}
+          key = {marker}
+          coordinate={mapMarkers[marker]}
           onPress={e => {
             setArtPopup({
               component: true,
-              componentUrl: marker.img_url,
-              componentTitle: marker.title || "This piece has no title"
+              componentUrl: mapMarkers[marker].img_url,
+              componentTitle: mapMarkers[marker].title || "This piece has no title",
+              artId: marker
             })
           }}
         >
@@ -69,7 +74,6 @@ export const marker = (mapMarkers, setArtPopup) => {
 
 export const userLocation = (userLocation) => {
   if (userLocation && userLocation.latitude) {
-    console.log("==>>==>> userLocation:",userLocation)
 
     return (
       <Marker

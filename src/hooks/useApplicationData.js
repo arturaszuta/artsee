@@ -3,7 +3,10 @@ import axios from 'axios';
 import Constants from 'expo-constants';
 import * as Location from 'expo-location';
 import * as Permissions from 'expo-permissions';
+import { AsyncStorage } from 'react-native';
 
+const SET_USER_ID = "SET_USER_ID";
+const SET_ARTS_DATA = "SET_ARTS_DATA";
 const SET_USER_LOCATION = "SET_USER_LOCATION";
 const SET_MAP_MARKERS = "SET_MAP_MARKERS";
 const SET_DESTINATION = "SET_DESTINATION";
@@ -12,11 +15,15 @@ const SET_RESOLVED = "SET_RESOLVED";
 
 const reducer = (state, action) => {
   switch(action.type) {
+    case SET_USER_ID: {
+      console.log("==> from inside SET_USER_ID. action.value:",action.value)
+      return {...state, userId: action.value}
+    }
+    case SET_ARTS_DATA: {
+      return {...state, arts: action.value}
+    }
     case SET_USER_LOCATION: {
       return {...state, userLocation: action.value}
-    }
-    case SET_MAP_MARKERS: {
-      return {...state, mapMarkers: action.value}
     }
     case SET_DESTINATION: {
       return {...state, destination: action.value}
@@ -34,9 +41,10 @@ const reducer = (state, action) => {
   }
 };
 
-
 export default useApplicationData = () => {
   const [state, dispatch] = useReducer(reducer, {
+    userId: null,
+    arts: {},
     userLocation: {},
     mapMarkers: [],
     destination: {},
@@ -45,31 +53,41 @@ export default useApplicationData = () => {
   });
 
   useEffect(() => {
-    getUserLocation()
+    const getAll = async () => {
+      await getUser()
+      await getUserLocation()
+      await getArts()
+    }
+    getAll()
   }, []);
 
-  useEffect(() => {
-    axios.get('https://artsee-back-end.herokuapp.com/arts')
-    .then(values => {
-      markerList = [...state.mapMarkers, ...markerListGenerator(values.data)]
+  getUser = () => {
+    return AsyncStorage.getItem('userId')
+      .then(res => {
+        dispatch({ type: SET_USER_ID, value: res })
+      })
+  }
 
-      dispatch({ type: SET_MAP_MARKERS, value: markerList })
+  getArts = () => {
+    return axios.get('https://artsee-back-end.herokuapp.com/api/userArts', {
+      params: {
+        user_id: state.userId
+      }
     })
-    .catch(err => console.log("==|==>> error from axios:", err));
-  }, []);
+      .then(response => {
+        let arts = {};
+        response.data.forEach(art => {
+          arts[art.id] = art
+          art.latitude = Number(art.latitude);
+          art.longitude = Number(art.longitude);
+        })
+    
+        dispatch({ type: SET_ARTS_DATA, value: arts})
+      })
 
-  markerListGenerator = (list) => {
-    return list.map(item => {
-      let obj = item;
-      obj.latitude = Number(obj.latitude);
-      obj.longitude = Number(obj.longitude);
-      
-      return obj;
-    })
   }
 
   getUserLocation = async () => {
-    console.log("=|=+> inside getUserLocation")
     let { status } = await Permissions.askAsync(Permissions.LOCATION);
     if (status !== 'granted') {
       console.log('Permission to access location was denied')
@@ -89,7 +107,6 @@ export default useApplicationData = () => {
   getNearestArt = async () => {
     getUserLocation();
     getNearestArts();
-    console.log("==|> inside getNearestArt")
 
     let nearest = await getFromCurrentLocation('https://artsee-back-end.herokuapp.com/api/nearest');
     
@@ -109,10 +126,34 @@ export default useApplicationData = () => {
     })
   };
 
+  setTag = (art_id, type) => {
+    let arts = {...state.arts};
+
+    let art = {...arts[art_id]}
+    art[type] = !art[type]
+
+    arts[art_id] = art
+
+    const q = 'https://artsee-back-end.herokuapp.com/tags' 
+      + '?user_id=' + state.userId 
+      + '&art_id=' + art_id 
+      + '&type=' + type 
+      + '&value=' + art[type];
+
+    return fetch(q, {
+      method: 'POST'
+    })
+      .then(res => {
+        dispatch({ type: SET_ARTS_DATA, value: arts })
+      })
+
+  }
+
   return {
     state, 
     getUserLocation,
     getNearestArts,
-    getNearestArt
+    getNearestArt,
+    setTag
   };
 };
