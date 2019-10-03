@@ -5,7 +5,8 @@ import * as Location from 'expo-location';
 import * as Permissions from 'expo-permissions';
 import { AsyncStorage } from 'react-native';
 
-const SET_USER_ID = "SET_USER_ID";
+const SET_USER = "SET_USER";
+const SET_TOKEN = "SET_TOKEN";
 const SET_ARTS_DATA = "SET_ARTS_DATA";
 const SET_USER_LOCATION = "SET_USER_LOCATION";
 const SET_MAP_MARKERS = "SET_MAP_MARKERS";
@@ -15,9 +16,11 @@ const SET_RESOLVED = "SET_RESOLVED";
 
 const reducer = (state, action) => {
   switch(action.type) {
-    case SET_USER_ID: {
-      console.log("==> from inside SET_USER_ID. action.value:",action.value)
-      return {...state, userId: action.value}
+    case SET_USER: {
+      return {...state, user: action.value}
+    }
+    case SET_TOKEN: {
+      return {...state, token: action.value}
     }
     case SET_ARTS_DATA: {
       return {...state, arts: action.value}
@@ -43,7 +46,8 @@ const reducer = (state, action) => {
 
 export default useApplicationData = () => {
   const [state, dispatch] = useReducer(reducer, {
-    userId: null,
+    user: null,
+    token: null,
     arts: {},
     userLocation: {},
     mapMarkers: [],
@@ -54,6 +58,8 @@ export default useApplicationData = () => {
 
   useEffect(() => {
     const getAll = async () => {
+      // await userLogout()
+      await getToken()
       await getUser()
       await getUserLocation()
       await getArts()
@@ -61,17 +67,50 @@ export default useApplicationData = () => {
     getAll()
   }, []);
 
-  getUser = () => {
-    return AsyncStorage.getItem('userId')
+  getUser = async () => {
+    const userId = await AsyncStorage.getItem('userId');
+
+    return fetch(`https://artsee-back-end.herokuapp.com/users/${userId}`, {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        Authorization: state.token
+      }
+    })
+    .then(res => {
+      return res.json()
+        .then(res => {
+          console.log("==|==> res from getUser:",res)
+          dispatch({ type: SET_USER, value: res })
+    
+          })
+    })
+  }
+
+  getToken = () => {
+    return AsyncStorage.getItem('token')
       .then(res => {
-        dispatch({ type: SET_USER_ID, value: res })
+        dispatch({ type: SET_TOKEN, value: res })
+      })
+  }
+
+  userLogout = () => {
+    _handleLogout = () => {
+        AsyncStorage.clear();
+        navigation.navigate('Auth');
+    };
+
+    return _handleLogout()
+      .then(res => {
+        dispatch({ type: SET_USER_ID, value: null })
       })
   }
 
   getArts = () => {
     return axios.get('https://artsee-back-end.herokuapp.com/api/userArts', {
       params: {
-        user_id: state.userId
+        user_id: state.user.id
       }
     })
       .then(response => {
@@ -135,7 +174,7 @@ export default useApplicationData = () => {
     arts[art_id] = art
 
     const q = 'https://artsee-back-end.herokuapp.com/tags' 
-      + '?user_id=' + state.userId 
+      + '?user_id=' + state.user.id 
       + '&art_id=' + art_id 
       + '&type=' + type 
       + '&value=' + art[type];

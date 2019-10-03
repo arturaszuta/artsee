@@ -10,7 +10,7 @@ import * as Font from "expo-font";
 import mainStyle from "./styles/main";
 
 import MapScreen from "./src/Components/MapScreen/MapScreen";
-import ProfileScreen from "./src/Components/ProfileScreen";
+import ProfileScreen from "./src/Components/ProfileScreen/ProfileScreen";
 import FeedScreen from "./src/Components/FeedScreen/FeedScreen";
 import CameraScreen from "./src/Components/CameraScreen";
 import LoginScreen from "./src/Components/LoginScreen";
