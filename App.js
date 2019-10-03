@@ -11,7 +11,7 @@ import mainStyle from "./styles/main";
 
 import MapScreen from "./src/Components/MapScreen/MapScreen";
 import ProfileScreen from "./src/Components/ProfileScreen";
-import FeedScreen from "./src/Components/FeedScreen";
+import FeedScreen from "./src/Components/FeedScreen/FeedScreen";
 import CameraScreen from "./src/Components/CameraScreen";
 import LoginScreen from "./src/Components/LoginScreen";
 import SignUpScreen from "./src/Components/SignUpScreen";
