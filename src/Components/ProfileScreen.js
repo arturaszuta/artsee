@@ -15,8 +15,9 @@ const ProfileScreen = ({navigation}) => {
   let {width, height} = Dimensions.get("window");
 
   _handleLogout = async () => {
+    console.log('logging out?')
     try {
-      AsyncStorage.clear();
+      await AsyncStorage.clear();
       navigation.navigate('Auth');
     } catch (err) {
       console.error(err);
@@ -325,6 +326,9 @@ const ProfileScreen = ({navigation}) => {
         </View>
         <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
           <Text>Following</Text>
+          <Button onPress={() => { _handleLogout()}} style={{ width: 250 }}>
+            <Text>LOGOUT</Text>
+          </Button>
           {followingComp}
         </View>
       </ImageBackground>

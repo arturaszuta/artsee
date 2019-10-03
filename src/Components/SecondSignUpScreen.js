@@ -7,62 +7,62 @@ import {
 } from "react-native";
 import { Content, Item, Input, Button } from "native-base";
 
-export default function SignupScreen({navigation}) {
+export default function SecondSignUpScreen({navigation}, ) {
   let [errorMessage, setErrorMessage] = useState("");
-  let email, password, password_confirmation, name = '';
+  let city, tagline, avatar, background,email = '';
 
-  _handleSignup = () => {
-    console.log("=======handle signup", name, email, password, password_confirmation);
-    if (password === password_confirmation) {
-      fetch("https://artsee-back-end.herokuapp.com/users", {
-        method: "POST",
+  
+  
+
+  _updateProfile = () => {
+    email = navigation.state.params.email;
+    
+      fetch("https://artsee-back-end.herokuapp.com/usersupdate", {
+        method: "PUT",
         headers: {
           "Accept": "application/json",
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
           user: {
-            name,
-            email,
-            password,
-            password_confirmation
+            city,
+            tagline,
+            avatar,
+            background,
+            email
           }
         })
       })
-        .then(navigation.navigate('SecondSignup', { email }))
+        .then(navigation.navigate('Login'))
         .catch(err => console.error(err));
-    } else {
-      setErrorMessage('Passwords do not match');
-    }
+    } 
     
-  };
+  
 
   return (
     <View style={styles.container}>
       <Content style={{ marginTop: 100, width: '100%' }}>
         <Item rounded>
-          <Input placeholder='name' onChangeText={text => name = text} />
+          <Input placeholder='city you live in' onChangeText={text => city = text} />
         </Item>
         <Item rounded>
-          <Input placeholder='Email' onChangeText={text => email = text } />
+          <Input placeholder='tagline...something quirky!' onChangeText={text => tagline = text } />
         </Item>
         <Item rounded>
           <Input
-            placeholder='Password'
-            onChangeText={text => password = text}
-            secureTextEntry={true}
+            placeholder='avatar url'
+            onChangeText={text => avatarUrl = text}
           />
         </Item>
         <Item rounded>
           <Input
-            placeholder='Password Confirmation'
-            onChangeText={text => password_confirmation = text}
-            secureTextEntry={true}
+            placeholder='background url'
+            onChangeText={text => backgroundUrl = text}
           />
         </Item>
         {errorMessage ? <Text>{errorMessage}</Text> : <Text />}
-        <Button onPress={() => _handleSignup()} block light>
-          <Text>Create An Account</Text>
+        <Button onPress={() => _updateProfile()} block light>
+          <Text>Update Profile</Text>
         </Button>
         <Button onPress={() => navigation.navigate('Login')} block light>
           <Text>Login</Text>
@@ -70,7 +70,8 @@ export default function SignupScreen({navigation}) {
       </Content>
     </View>
   );
-}
+  }
+
 
 const styles = StyleSheet.create({
   container: {
