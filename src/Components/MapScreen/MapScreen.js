@@ -19,7 +19,8 @@ const MapScreen = ({navigation}) => {
     state,
     getUserLocation,
     getNearestArts,
-    getNearestArt
+    getNearestArt,
+    setTag
   } = useApplicationData();
 
   const [duration, setDuration] = useState(null);
@@ -28,7 +29,8 @@ const MapScreen = ({navigation}) => {
   const [artPopup, setArtPopup] = useState({
     component: null,
     componentTitle: null,
-    componentUrl: null
+    componentUrl: null,
+    artId: null
   });
   const [region, setRegion] = useState({
     latitude: 43.644913,
@@ -61,7 +63,7 @@ const MapScreen = ({navigation}) => {
           region={region}
           ref={c => setMapview(c)}
         >
-          {marker(state.mapMarkers, setArtPopup)}
+          {marker(state.arts, setArtPopup)}
           {userLocation(state.userLocation)}
           <NearestArtDirections userLocation={state.userLocation} destination={state.destination} setDuration={setDuration} setRegion={setRegion} directionOn={directionOn} />
         </MapView>
@@ -72,7 +74,7 @@ const MapScreen = ({navigation}) => {
           latitude: state.userLocation.latitude,
           longitude: state.userLocation.longitude
         }} />
-        <Popup artPopup={artPopup} setArtPopup={setArtPopup} />
+        <Popup artPopup={artPopup} setArtPopup={setArtPopup} setTag={setTag} />
       </View>
     </Container>
   );

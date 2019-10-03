@@ -8,6 +8,8 @@ import {
   View,
   AsyncStorage
 } from 'react-native';
+import useApplicationData from '../hooks/useApplicationData';
+
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 
@@ -16,6 +18,9 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { Container, Header, Content, Card, CardItem, Text, Button, Left, Body, Right, Spinner, Toast, Root, Item } from "native-base";
 
 export default function FeedScreen() {
+  const {
+    state
+  } = useApplicationData();
 
   const [cards, setCards] = useState([]);
   const [userId, setUserId] = useState(null);
@@ -57,37 +62,12 @@ export default function FeedScreen() {
    
   }
 
-  const getTags = async function() {
-
-    const usID = await AsyncStorage.getItem('userId');
-    setUserId(usID);
-    console.log(usID);
-   
-
-    fetch('https://artsee-back-end.herokuapp.com/api/userArts?user_id=' + usID
-        ).then((response) => response.json()).then(res =>{
-          
-          let tempState = {};
-          let tempIDState = [];
-          
-           res.forEach((comp)=>{
-            tempState[comp.id] = comp 
-            tempIDState.push(comp.id)
-          })
-
-          setArts(tempState);
-          setArtsIDs(tempIDState);
-
-
-        })
-  }
-
   const deck = () => {
-    if (arts && artsIDs) {
+    if (state.arts) {
     
-      return artsIDs.map(art => {
+      return Object.keys(state.arts).map(artId => {
 
-        const comp = arts[art]
+        const comp = state.arts[artId]
         
 
       return (
@@ -144,17 +124,13 @@ export default function FeedScreen() {
     }
     return null
   }
-    useEffect(() => {
-      getTags();
-
-    }, [])
 
   return (
     <Root>
     <Container>
     <Header />
     <Content>
-      {artsIDs.length === 0 && <Spinner color='blue' size={75} style={{ marginTop: (screenHeight / 2) - 75}} />}
+      {!state.arts && <Spinner color='blue' size={75} style={{ marginTop: (screenHeight / 2) - 75}} />}
       {cards}
       {deck()}
     </Content>
