@@ -2,6 +2,8 @@ import React from 'react';
 import { Card, CardItem, Text, Button, Left, Body, Right, Toast } from "native-base";
 import { View, Dimensions, Image } from 'react-native';
 
+
+
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 const screenHeight = Math.round(Dimensions.get('window').height);
@@ -29,7 +31,7 @@ export default ArtCard = ({comp, setTag}) => {
       </CardItem>
       <CardItem>
         <Body>
-          <Image source={{uri: comp.img_url}} style={{height: screenWidth, width: screenWidth * 0.9, flex: 1}}/>
+          <Image source={{uri: comp.img_url}}  style={{height: screenWidth, width: screenWidth * 0.9, flex: 1}}/>
         </Body>
       </CardItem>
       <View style={{
