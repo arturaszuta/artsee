@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { View, ScrollView } from "react-native";
+import { View, ScrollView, Button } from "react-native";
 
-import useApplicationData from '../../hooks/useApplicationData';
+import { useApplicationData } from '../../hooks/useApplicationData';
 import Section from './Section';
 import SectionButton from './SectionButton';
 import ProfileSection from './ProfileSection';
@@ -57,7 +57,7 @@ const ProfileScreen = ({navigation}) => {
               <SectionButton setActiveIndex={setActiveIndex} activeIndex={activeIndex} sectionNum={2} icon={'bookmark'} />
               
             </View>
-            <Section section={screens[activeIndex]} />
+            <Section section={screens[activeIndex]} navigation={navigation} />
           </View>
         </View>
       </ScrollView>

@@ -19,7 +19,7 @@ const showInfographic = function(text) {
 export default ArtCard = ({comp, setTag}) => {
   
   return (
-    <Card style={{flex: 0}} key={comp.id}>
+    <Card style={{flex: 0}}>
       <CardItem>
         <Left>
           <Body>

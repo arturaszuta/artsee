@@ -1,18 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Text, View, Dimensions } from 'react-native';
-import { Container, Header, Left, Body, Right, Content } from 'native-base';
-import MapView, { Marker } from 'react-native-maps';
+import { Container, Header, Left, Body, Right } from 'native-base';
+import MapView from 'react-native-maps';
 
-import useApplicationData from '../../hooks/useApplicationData';
+import { useApplicationData } from '../../hooks/useApplicationData';
 
-import mapStyles from '../../../styles/map';
 import { colors } from '../../../styles/variables';
 
 import CenterOnMe from './CenterOnMe';
 import { NearestArtButton, NearestArtsButton, NearestArtDirections, Duration } from './Nearest';
 import { marker, Popup, userLocation } from './MapWidgets';
-
-const { width, height } = Dimensions.get('window');
 
 const MapScreen = ({navigation}) => {
   const {
@@ -22,6 +19,8 @@ const MapScreen = ({navigation}) => {
     getNearestArt,
     setTag
   } = useApplicationData();
+
+  console.log("=|===|> inside MapScreen. state:",state)
 
   const [duration, setDuration] = useState(null);
   const [mapview, setMapview] = useState(null);

@@ -44,7 +44,9 @@ const reducer = (state, action) => {
   }
 };
 
-export default useApplicationData = () => {
+export let fullState = {}
+
+export const useApplicationData = () => {
   const [state, dispatch] = useReducer(reducer, {
     user: null,
     token: null,
@@ -56,6 +58,10 @@ export default useApplicationData = () => {
     resolved: false
   });
 
+  const setFullState = () => {
+    fullState = state
+  }
+
   useEffect(() => {
     const getAll = async () => {
       // await userLogout()
@@ -63,9 +69,12 @@ export default useApplicationData = () => {
       await getUser()
       await getUserLocation()
       await getArts()
+  
+      return state.user
     }
     getAll()
-  }, []);
+  }, [])
+ 
 
   getUser = async () => {
     const userId = await AsyncStorage.getItem('userId');
@@ -82,6 +91,7 @@ export default useApplicationData = () => {
       return res.json()
         .then(res => {
           console.log("==|==> res from getUser:",res)
+          fullState["user"] = res
           dispatch({ type: SET_USER, value: res })
     
           })
@@ -103,7 +113,7 @@ export default useApplicationData = () => {
 
     return _handleLogout()
       .then(res => {
-        dispatch({ type: SET_USER_ID, value: null })
+        dispatch({ type: SET_USER, value: null })
       })
   }
 
@@ -120,10 +130,9 @@ export default useApplicationData = () => {
           art.latitude = Number(art.latitude);
           art.longitude = Number(art.longitude);
         })
-    
+        fullState["arts"] = arts
         dispatch({ type: SET_ARTS_DATA, value: arts})
       })
-
   }
 
   getUserLocation = async () => {

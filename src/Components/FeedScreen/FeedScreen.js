@@ -1,6 +1,6 @@
 import * as WebBrowser from 'expo-web-browser';
 import React from 'react';
-import useApplicationData from '../../hooks/useApplicationData';
+import { useApplicationData, fullState } from '../../hooks/useApplicationData';
 
 import { Container, Header, Content, Root } from "native-base";
 
@@ -9,16 +9,17 @@ import Deck from './Deck';
 
 export default function FeedScreen() {
   const {
-    state,
     setTag
   } = useApplicationData();
+
+  const arts = fullState.arts
 
   return (
     <Root>
         <Container>
           <Header />
           <Content>
-            <Deck arts={state.arts} setTag={setTag} />
+            <Deck arts={arts} setTag={setTag} />
           </Content>
       </Container>
     </Root>
