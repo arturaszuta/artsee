@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, ScrollView } from "react-native";
+import { View, ScrollView, Button, Text, AsyncStorage } from "react-native";
 
 import useApplicationData from '../../hooks/useApplicationData';
 import Section from './Section';
@@ -42,6 +42,12 @@ const ProfileScreen = ({navigation}) => {
       <ScrollView>
         <View style={{ flex: 1 }}>
           <ProfileSection user={state.user} followingComp={followingComp} />
+          <Button title='logout' onPress={() => {AsyncStorage.clear();
+        navigation.navigate('Auth') }}>
+            <Text>
+              Logout
+            </Text>
+          </Button>
           <View style={{ flex: 1 }}>
             <View
               style={{
