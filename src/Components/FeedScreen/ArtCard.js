@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardItem, Text, Button, Left, Body, Right, Toast } from "native-base";
 import { View, Dimensions, Image } from 'react-native';
 
 
 
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import Axios from 'axios';
 
 const screenHeight = Math.round(Dimensions.get('window').height);
 const screenWidth = Math.round(Dimensions.get('window').width);
@@ -17,11 +18,22 @@ const showInfographic = function(text) {
   })
 }
 
-
 export default ArtCard = ({comp, setTag}) => {
   
   return (
-    <Card style={{flex: 0}} key={comp.id}>
+    <View>
+      <Text style={modalStyle.txt}>Art peace!</Text>
+      <Image source={{ uri: comp.img_url }} style={modalStyle.image} />
+      <View style={modalStyle.icons}>
+          <Icon name={comp.seelist ? 'eye-check-outline' : 'eye-plus-outline' } artID={comp.id} userID={comp.user_id} size={55} onPress={() => setTag(comp.id, 'seelist')}  />
+          <Icon name={comp.liked ? 'heart-circle' : 'heart-circle-outline'} size={55} artID={comp.id} userID={comp.user_id} size={55} onPress={() => setTag(comp.id, 'liked')}/>
+          <Icon name={comp.visited ? 'check-circle' : 'check-circle-outline'} size={55} artID={comp.id} userID={comp.user_id} size={55} onPress={() => setTag(comp.id, 'visited')}/>
+      </View>
+    </View>
+  )
+}
+
+{/* <Card style={{flex: 0}}>
       <CardItem>
         <Left>
           <Body>
@@ -53,6 +65,4 @@ export default ArtCard = ({comp, setTag}) => {
           </Button>
         </Right>
       </CardItem>
-    </Card>
-  )
-}
+    </Card> */}

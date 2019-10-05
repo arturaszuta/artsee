@@ -1,18 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { Text, View, Dimensions } from 'react-native';
-import { Container, Header, Left, Body, Right, Content } from 'native-base';
-import MapView, { Marker } from 'react-native-maps';
+import { Text, View, Dimensions, AsyncStorage } from 'react-native';
+import { Container, Header, Left, Body, Right } from 'native-base';
+import MapView from 'react-native-maps';
 
-import useApplicationData from '../../hooks/useApplicationData';
+import { useApplicationData, fullState } from '../../hooks/useApplicationData';
 
-import mapStyles from '../../../styles/map';
 import { colors } from '../../../styles/variables';
 
 import CenterOnMe from './CenterOnMe';
 import { NearestArtButton, NearestArtsButton, NearestArtDirections, Duration } from './Nearest';
-import { marker, Popup, userLocation } from './MapWidgets';
-
-const { width, height } = Dimensions.get('window');
+import { marker, userLocation } from './MapWidgets';
 
 const MapScreen = ({navigation}) => {
   const {
@@ -23,15 +20,10 @@ const MapScreen = ({navigation}) => {
     setTag
   } = useApplicationData();
 
+
   const [duration, setDuration] = useState(null);
   const [mapview, setMapview] = useState(null);
   const [directionOn, setDirectionState] = useState(false)
-  const [artPopup, setArtPopup] = useState({
-    component: null,
-    componentTitle: null,
-    componentUrl: null,
-    artId: null
-  });
   const [region, setRegion] = useState({
     latitude: 43.644913,
     longitude: -79.402520,
@@ -61,9 +53,10 @@ const MapScreen = ({navigation}) => {
         <MapView
           style={{ flex: 1 }}
           region={region}
+          onUserLocationChange={event => getUserLocation()}
           ref={c => setMapview(c)}
         >
-          {marker(state.arts, setArtPopup)}
+          {marker(state.arts, setRegion, region, navigation)}
           {userLocation(state.userLocation)}
           <NearestArtDirections userLocation={state.userLocation} destination={state.destination} setDuration={setDuration} setRegion={setRegion} directionOn={directionOn} />
         </MapView>
@@ -74,7 +67,6 @@ const MapScreen = ({navigation}) => {
           latitude: state.userLocation.latitude,
           longitude: state.userLocation.longitude
         }} />
-        <Popup artPopup={artPopup} setArtPopup={setArtPopup} setTag={setTag} />
       </View>
     </Container>
   );
