@@ -176,6 +176,7 @@ export const useApplicationData = () => {
   };
 
   setTag = (art_id, type) => {
+    console.log("==|==|> setTag called:", type)
     let arts = {...state.arts};
 
     let art = {...arts[art_id]}

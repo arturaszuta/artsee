@@ -9,7 +9,7 @@ export default Deck = ({arts, setTag}) => {
       const comp = arts[artId];
 
       return (
-        <ArtCard comp={comp} setTag={setTag} key={comp.id} />
+        <ArtCard comp={comp} onPress={(type) => setTag(comp.id, type)} key={comp.id} />
       ) 
     })
   }

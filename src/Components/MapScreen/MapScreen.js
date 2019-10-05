@@ -11,14 +11,14 @@ import CenterOnMe from './CenterOnMe';
 import { NearestArtButton, NearestArtsButton, NearestArtDirections, Duration } from './Nearest';
 import { marker, userLocation } from './MapWidgets';
 
-const MapScreen = ({navigation}) => {
-  const {
-    state,
-    getUserLocation,
-    getNearestArts,
-    getNearestArt,
-    setTag
-  } = useApplicationData();
+const MapScreen = ({navigation,state,getUserLocation,getNearestArts,getNearestArt,setTag}) => {
+  // const {
+  //   state,
+  //   getUserLocation,
+  //   getNearestArts,
+  //   getNearestArt,
+  //   setTag
+  // } = useApplicationData();
 
 
   const [duration, setDuration] = useState(null);

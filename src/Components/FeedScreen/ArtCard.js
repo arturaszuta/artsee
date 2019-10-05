@@ -18,16 +18,16 @@ const showInfographic = function(text) {
   })
 }
 
-export default ArtCard = ({comp, setTag}) => {
+export default ArtCard = ({comp, onPress}) => {
   
   return (
     <View>
       <Text style={modalStyle.txt}>Art peace!</Text>
       <Image source={{ uri: comp.img_url }} style={modalStyle.image} />
       <View style={modalStyle.icons}>
-          <Icon name={comp.seelist ? 'eye-check-outline' : 'eye-plus-outline' } artID={comp.id} userID={comp.user_id} size={55} onPress={() => setTag(comp.id, 'seelist')}  />
-          <Icon name={comp.liked ? 'heart-circle' : 'heart-circle-outline'} size={55} artID={comp.id} userID={comp.user_id} size={55} onPress={() => setTag(comp.id, 'liked')}/>
-          <Icon name={comp.visited ? 'check-circle' : 'check-circle-outline'} size={55} artID={comp.id} userID={comp.user_id} size={55} onPress={() => setTag(comp.id, 'visited')}/>
+          <Icon name={comp.seelist ? 'eye-check-outline' : 'eye-plus-outline' } artID={comp.id} userID={comp.user_id} size={55} onPress={e => onPress('seelist')}  />
+          <Icon name={comp.liked ? 'heart-circle' : 'heart-circle-outline'} size={55} artID={comp.id} userID={comp.user_id} size={55} onPress={e => onPress('liked')}/>
+          <Icon name={comp.visited ? 'check-circle' : 'check-circle-outline'} size={55} artID={comp.id} userID={comp.user_id} size={55} onPress={e => onPress('visited')}/>
       </View>
     </View>
   )

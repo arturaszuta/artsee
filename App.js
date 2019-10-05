@@ -20,92 +20,94 @@ import SplashLoadingScreen from "./src/Components/SplashLoadingScreen";
 import SecondSignUpScreen from "./src/Components/SecondSignUpScreen";
 import ModalArt from './src/Components/ModalArt/ModalArt';
 
-import useApplicationData from './src/hooks/useApplicationData';
+import Main from './src/Components/Main'
+
+import { useApplicationData } from './src/hooks/useApplicationData';
 
 
-const AppStack = createBottomTabNavigator(
-  {
-    Map: MapScreen,
-    Feed: FeedScreen,
-    Camera: CameraScreen,
-    Profile: ProfileScreen
-  },
-  {
-    defaultNavigationOptions: ({ navigation }) => ({
-      tabBarIcon: ({ focused, horizontal, tintColor }) => {
-        const { routeName } = navigation.state;
-        let IconComponent = Icon;
-        let iconName;
+// const AppStack = createBottomTabNavigator(
+//   {
+//     Map: MapScreen,
+//     Feed: FeedScreen,
+//     Camera: CameraScreen,
+//     Profile: ProfileScreen
+//   },
+//   {
+//     defaultNavigationOptions: ({ navigation }) => ({
+//       tabBarIcon: ({ focused, horizontal, tintColor }) => {
+//         const { routeName } = navigation.state;
+//         let IconComponent = Icon;
+//         let iconName;
 
-        switch (routeName) {
-          case "Map":
-            iconName = "map";
-            break;
-          case "Profile":
-            iconName = "ghost";
-            break;
-          case "Camera":
-            iconName = "camera-retro";
-            break;
-          case "Feed":
-            iconName = "broadcast-tower";
-            break;
-          default:
-            return;
-        }
+//         switch (routeName) {
+//           case "Map":
+//             iconName = "map";
+//             break;
+//           case "Profile":
+//             iconName = "ghost";
+//             break;
+//           case "Camera":
+//             iconName = "camera-retro";
+//             break;
+//           case "Feed":
+//             iconName = "broadcast-tower";
+//             break;
+//           default:
+//             return;
+//         }
 
-        return <IconComponent name={iconName} navigation={navigation} size={25} color={tintColor} />;
-      },
-      headerStyle: {
-        backgroundColor: '#f4511e',
-      },
-      headerTintColor: '#fff',
-      headerTitleStyle: {
-        fontWeight: 'bold',
-      },
-    }),
-    tabBarOptions: {
-      activeTintColor: "#39c2c9",
-      inactiveTintColor: "#363a43",
-      style: mainStyle.tabBar
-    }
-  }
-);
+//         return <IconComponent name={iconName} navigation={navigation} size={25} color={tintColor} />;
+//       },
+//       headerStyle: {
+//         backgroundColor: '#f4511e',
+//       },
+//       headerTintColor: '#fff',
+//       headerTitleStyle: {
+//         fontWeight: 'bold',
+//       },
+//     }),
+//     tabBarOptions: {
+//       activeTintColor: "#39c2c9",
+//       inactiveTintColor: "#363a43",
+//       style: mainStyle.tabBar
+//     }
+//   }
+// );
 
-const RootStack = createStackNavigator(
-  {
-    Main: {
-      screen: AppStack,
-    },
-    ArtModal: {
-      screen: ModalArt,
-    },
-  },
-  {
-    mode: 'modal',
-    headerMode: 'none',
-  }
-);
+// const RootStack = createStackNavigator(
+//   {
+//     Main: {
+//       screen: AppStack,
+//     },
+//     ArtModal: {
+//       screen: ModalArt,
+//     },
+//   },
+//   {
+//     mode: 'modal',
+//     headerMode: 'none',
+//   }
+// );
 
-const Foot = createAppContainer(RootStack);
+// const Foot = createAppContainer(RootStack);
 
-const Main = () => {
-  const {
-    state
-  } = useApplicationData();
+// const Main = () => {
+//   const {
+//     state
+//   } = useApplicationData();
 
-  return (
-    <View style={mainStyle.container}>
-      {/* <Header 
-        leftComponent={{
-            text: "artsee"
-        }}
-      /> */}
-      <MapButton state={state} navigation={navigation} />
-      <Foot />
-    </View>
-  )
-}
+//   return (
+//     <View style={mainStyle.container}>
+//       {/* <Header 
+//         leftComponent={{
+//             text: "artsee"
+//         }}
+//       /> */}
+//       <MapButton state={state} navigation={navigation} />
+//       <Foot />
+//     </View>
+//   )
+// }
 
 const AuthStack = createStackNavigator({
   Login: {
@@ -122,42 +124,135 @@ const AuthStack = createStackNavigator({
   }
 });
 
-const App = ({navigation}) => {
-  const [fontLoaded, setLoaded] = useState(false);
+// const App = ({navigation}) => {
+//   const [fontLoaded, setLoaded] = useState(false);
   
 
-  useEffect(() => {
-    loadFonts();
-  }, []);
+//   useEffect(() => {
+//     loadFonts();
+//   }, []);
 
-  const loadFonts = async () => {
+//   const loadFonts = async () => {
 
-    await Font.loadAsync({
-      Roboto: require("native-base/Fonts/Roboto.ttf"),
-      Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf")
-    });
-    setTimeout(() => {
-      setLoaded(true);
+//     await Font.loadAsync({
+//       Roboto: require("native-base/Fonts/Roboto.ttf"),
+//       Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf")
+//     });
+//     setTimeout(() => {
+//       setLoaded(true);
 
-    },2000)
-  };
+//     },2000)
+//   };
   
-  return !fontLoaded 
-    ? <AppLoading>
-        <View>
-          <Text>
-            Hello?
-          </Text>
-        </View>
-      </AppLoading> 
-    : Main();
-};
+//   return !fontLoaded 
+//     ? <AppLoading>
+//         <View>
+//           <Text>
+//             Hello?
+//           </Text>
+//         </View>
+//       </AppLoading> 
+//     : Main();
+// };
+
+
+// const createComponent = (instance, props) =>
+//   navProps => React.createElement(instance, Object.assign({}, props, navProps));
+
+
+// const Main = () => {
+//   const {
+//     state,
+//     getUserLocation,
+//     getNearestArts,
+//     getNearestArt,
+//     setTag,
+//     userLogout,
+//     updateArts
+//   } = useApplicationData();
+
+//   const AppStack = createBottomTabNavigator(
+//     {
+//       Map: {
+//         screen: createComponent(MapScreen, {...state, getUserLocation, getNearestArt, getNearestArts, setTag})
+//       },
+//       Feed: {
+//         screen: createComponent(FeedScreen, {...state, setTag})
+//       },
+//       Camera: {
+//         screen: createComponent(CameraScreen, {...state, updateArts})
+//       },
+//       Profile: {
+//         screen: createComponent(ProfileScreen, {...state, setTag, userLogout})
+//       }
+//     },
+//     {
+//       defaultNavigationOptions: ({ navigation }) => ({
+//         tabBarIcon: ({ focused, horizontal, tintColor }) => {
+//           const { routeName } = navigation.state;
+//           let IconComponent = Icon;
+//           let iconName;
+  
+//           switch (routeName) {
+//             case "Map":
+//               iconName = "map";
+//               break;
+//             case "Profile":
+//               iconName = "ghost";
+//               break;
+//             case "Camera":
+//               iconName = "camera-retro";
+//               break;
+//             case "Feed":
+//               iconName = "broadcast-tower";
+//               break;
+//             default:
+//               return;
+//           }
+  
+//           return <IconComponent name={iconName} navigation={navigation} size={25} color={tintColor} />;
+//         },
+//         headerStyle: {
+//           backgroundColor: '#f4511e',
+//         },
+//         headerTintColor: '#fff',
+//         headerTitleStyle: {
+//           fontWeight: 'bold',
+//         },
+//       }),
+//       tabBarOptions: {
+//         activeTintColor: "#39c2c9",
+//         inactiveTintColor: "#363a43",
+//         style: mainStyle.tabBar
+//       }
+//     }
+//   );
+  
+//   const RootStack = createStackNavigator(
+//     {
+//       Main: {
+//         screen: AppStack,
+//       },
+//       ArtModal: {
+//         screen: createComponent(ModalArt, {setTag})
+//       },
+//     },
+//     {
+//       mode: 'modal',
+//       headerMode: 'none',
+//     }
+//   );
+
+//   return RootStack
+// }
+
+// const MainStack = <Main />
 
 export default createAppContainer(
   createSwitchNavigator(
     {
       AuthLoading: AuthLoadingScreen,
-      App: RootStack,
+      App: Main,
       Auth: AuthStack,
       Splash: SplashLoadingScreen,
       SecondSignup: SecondSignUpScreen
