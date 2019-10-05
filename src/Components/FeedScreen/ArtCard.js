@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardItem, Text, Button, Left, Body, Right, Toast } from "native-base";
 import { View, Dimensions, Image } from 'react-native';
 import { CLOUDIMG_TOKEN } from 'react-native-dotenv'
@@ -7,6 +7,7 @@ import Img from 'react-cloudimage-responsive';
 
 
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import Axios from 'axios';
 
 const screenHeight = Math.round(Dimensions.get('window').height);
 const screenWidth = Math.round(Dimensions.get('window').width);

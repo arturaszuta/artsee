@@ -8,8 +8,10 @@ import {
   Image
 } from 'react-native';
 
-export default function SplashLoadingScreen({navigation}) {
 
+import { useApplicationData } from '../hooks/useApplicationData';
+
+export default function SplashLoadingScreen({navigation}) {
 
   _getState = async () => {
     
@@ -23,13 +25,13 @@ export default function SplashLoadingScreen({navigation}) {
    
     result();
     // navigation.navigate(state.length === 0 ? 'Splash' : 'App');
-
     
     // switches to App or Auth screen
     
   };
 
   useEffect(() => {
+    
     _getState();
   }, [])
 

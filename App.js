@@ -18,6 +18,10 @@ import SignUpScreen from "./src/Components/SignUpScreen";
 import AuthLoadingScreen from "./src/Components/AuthLoadingScreen";
 import SplashLoadingScreen from "./src/Components/SplashLoadingScreen";
 import SecondSignUpScreen from "./src/Components/SecondSignUpScreen";
+import ModalArt from './src/Components/ModalArt/ModalArt';
+
+import useApplicationData from './src/hooks/useApplicationData';
+
 
 const AppStack = createBottomTabNavigator(
   {
@@ -50,8 +54,15 @@ const AppStack = createBottomTabNavigator(
             return;
         }
 
-        return <IconComponent name={iconName} size={25} color={tintColor} />;
-      }
+        return <IconComponent name={iconName} navigation={navigation} size={25} color={tintColor} />;
+      },
+      headerStyle: {
+        backgroundColor: '#f4511e',
+      },
+      headerTintColor: '#fff',
+      headerTitleStyle: {
+        fontWeight: 'bold',
+      },
     }),
     tabBarOptions: {
       activeTintColor: "#39c2c9",
@@ -61,9 +72,28 @@ const AppStack = createBottomTabNavigator(
   }
 );
 
-const Foot = createAppContainer(AppStack);
+const RootStack = createStackNavigator(
+  {
+    Main: {
+      screen: AppStack,
+    },
+    ArtModal: {
+      screen: ModalArt,
+    },
+  },
+  {
+    mode: 'modal',
+    headerMode: 'none',
+  }
+);
+
+const Foot = createAppContainer(RootStack);
 
 const Main = () => {
+  const {
+    state
+  } = useApplicationData();
+
   return (
     <View style={mainStyle.container}>
       {/* <Header 
@@ -71,6 +101,7 @@ const Main = () => {
             text: "artsee"
         }}
       /> */}
+      <MapButton state={state} navigation={navigation} />
       <Foot />
     </View>
   )
@@ -91,7 +122,7 @@ const AuthStack = createStackNavigator({
   }
 });
 
-const App = () => {
+const App = ({navigation}) => {
   const [fontLoaded, setLoaded] = useState(false);
   
 
@@ -110,23 +141,23 @@ const App = () => {
 
     },2000)
   };
-
   
-  
-  return !fontLoaded ? <AppLoading>
-    <View>
-      <Text>
-        Hello?
-      </Text>
-    </View>
-  </AppLoading> : Main();
+  return !fontLoaded 
+    ? <AppLoading>
+        <View>
+          <Text>
+            Hello?
+          </Text>
+        </View>
+      </AppLoading> 
+    : Main();
 };
 
 export default createAppContainer(
   createSwitchNavigator(
     {
       AuthLoading: AuthLoadingScreen,
-      App: AppStack,
+      App: RootStack,
       Auth: AuthStack,
       Splash: SplashLoadingScreen,
       SecondSignup: SecondSignUpScreen

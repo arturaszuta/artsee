@@ -44,7 +44,7 @@ const reducer = (state, action) => {
   }
 };
 
-export default useApplicationData = () => {
+export const useApplicationData = () => {
   const [state, dispatch] = useReducer(reducer, {
     user: null,
     token: null,
@@ -56,16 +56,24 @@ export default useApplicationData = () => {
     resolved: false
   });
 
+  updateArts = async () => {
+    await getArts()
+
+    return true
+  }
   useEffect(() => {
-    const getAll = async () => {
+    getAll = async () => {
       // await userLogout()
       await getToken()
       await getUser()
       await getUserLocation()
       await getArts()
+  
+      return state.user
     }
     getAll()
-  }, []);
+  }, [])
+ 
 
   getUser = async () => {
     const userId = await AsyncStorage.getItem('userId');
@@ -81,10 +89,13 @@ export default useApplicationData = () => {
     .then(res => {
       return res.json()
         .then(res => {
-          console.log("==|==> res from getUser:",res)
+          console.log("==|==|> getUser called:", res)
           dispatch({ type: SET_USER, value: res })
-    
-          })
+        })
+    })
+    .catch(err => {
+      userLogout()
+      console.log("==||==> error from getUser:",err)
     })
   }
 
@@ -103,14 +114,15 @@ export default useApplicationData = () => {
 
     return _handleLogout()
       .then(res => {
-        dispatch({ type: SET_USER_ID, value: null })
+        dispatch({ type: SET_USER, value: null })
       })
   }
 
   getArts = () => {
     return axios.get('https://artsee-back-end.herokuapp.com/api/userArts', {
       params: {
-        user_id: state.user.id
+        user_id: state.user.id,
+        limit: 20
       }
     })
       .then(response => {
@@ -120,10 +132,8 @@ export default useApplicationData = () => {
           art.latitude = Number(art.latitude);
           art.longitude = Number(art.longitude);
         })
-    
         dispatch({ type: SET_ARTS_DATA, value: arts})
       })
-
   }
 
   getUserLocation = async () => {
@@ -193,6 +203,7 @@ export default useApplicationData = () => {
     getUserLocation,
     getNearestArts,
     getNearestArt,
-    setTag
+    setTag,
+    updateArts
   };
 };
