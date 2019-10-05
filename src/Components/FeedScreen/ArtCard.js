@@ -2,6 +2,7 @@ import React from 'react';
 import { Card, CardItem, Text, Button, Left, Body, Right, Toast } from "native-base";
 import { View, Dimensions, Image } from 'react-native';
 
+import Img from 'react-cloudimage-responsive';
 
 
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
@@ -21,7 +22,7 @@ const showInfographic = function(text) {
 export default ArtCard = ({comp, setTag}) => {
   
   return (
-    <Card style={{flex: 0}} key={comp.id}>
+    <Card style={{flex: 0}}>
       <CardItem>
         <Left>
           <Body>
