@@ -121,8 +121,7 @@ export const useApplicationData = () => {
   getArts = () => {
     return axios.get('https://artsee-back-end.herokuapp.com/api/userArts', {
       params: {
-        user_id: state.user.id,
-        limit: 20
+        user_id: state.user.id
       }
     })
       .then(response => {
