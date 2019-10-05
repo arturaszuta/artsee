@@ -44,8 +44,6 @@ const reducer = (state, action) => {
   }
 };
 
-export let fullState = {}
-
 export const useApplicationData = () => {
   const [state, dispatch] = useReducer(reducer, {
     user: null,
@@ -58,12 +56,13 @@ export const useApplicationData = () => {
     resolved: false
   });
 
-  const setFullState = () => {
-    fullState = state
-  }
+  updateArts = async () => {
+    await getArts()
 
+    return true
+  }
   useEffect(() => {
-    const getAll = async () => {
+    getAll = async () => {
       // await userLogout()
       await getToken()
       await getUser()
@@ -90,11 +89,13 @@ export const useApplicationData = () => {
     .then(res => {
       return res.json()
         .then(res => {
-          console.log("==|==> res from getUser:",res)
-          fullState["user"] = res
+          console.log("==|==|> getUser called:", res)
           dispatch({ type: SET_USER, value: res })
-    
-          })
+        })
+    })
+    .catch(err => {
+      userLogout()
+      console.log("==||==> error from getUser:",err)
     })
   }
 
@@ -120,7 +121,8 @@ export const useApplicationData = () => {
   getArts = () => {
     return axios.get('https://artsee-back-end.herokuapp.com/api/userArts', {
       params: {
-        user_id: state.user.id
+        user_id: state.user.id,
+        limit: 20
       }
     })
       .then(response => {
@@ -130,7 +132,6 @@ export const useApplicationData = () => {
           art.latitude = Number(art.latitude);
           art.longitude = Number(art.longitude);
         })
-        fullState["arts"] = arts
         dispatch({ type: SET_ARTS_DATA, value: arts})
       })
   }
@@ -202,6 +203,7 @@ export const useApplicationData = () => {
     getUserLocation,
     getNearestArts,
     getNearestArt,
-    setTag
+    setTag,
+    updateArts
   };
 };

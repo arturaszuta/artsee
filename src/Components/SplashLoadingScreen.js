@@ -9,10 +9,9 @@ import {
 } from 'react-native';
 
 
-import useApplicationData from '../hooks/useApplicationData';
+import { useApplicationData } from '../hooks/useApplicationData';
 
 export default function SplashLoadingScreen({navigation}) {
-
 
   _getState = async () => {
     

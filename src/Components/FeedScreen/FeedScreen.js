@@ -9,10 +9,14 @@ import Deck from './Deck';
 
 export default function FeedScreen() {
   const {
+    state,
     setTag
   } = useApplicationData();
 
-  const arts = fullState.arts
+  console.log("==|||==> FeedScreen")
+
+  // let arts = fullState.arts
+  const arts = state.arts
 
   return (
     <Root>
