@@ -1,6 +1,9 @@
 import React from 'react';
 import { Text,Toast } from "native-base";
-import { View, Dimensions, Image } from 'react-native';
+import { View, Dimensions } from 'react-native';
+import { Image } from "react-native-expo-image-cache";
+
+import CachedImage from '../../helpers/CachedImage';
 
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
@@ -16,12 +19,19 @@ const showInfographic = function(text) {
 }
 
 export default ArtCard = ({comp, setTag}) => {
+  const preview = '';
   const imgUrl = 'https://arzmkdmkzm.cloudimg.io/width/' + screenWidth + '/x/' + comp.img_url;
 
   return (
     <View>
       <Text style={modalStyle.txt}>Art peace!</Text>
-      <Image source={{ uri: imgUrl }} style={{ width: screenWidth, height: screenWidth }} />
+      {/* <Image source={{ uri: imgUrl }} style={{ width: screenWidth, height: screenWidth }} /> */}
+      <CachedImage
+        source={imgUrl}
+        title={comp.id}
+        style={{ width: screenWidth, height: screenWidth }}
+      />
+      {/* <Image style={{ width: screenWidth, height: screenWidth }} {...{preview, imgUrl}} /> */}
       <View style={modalStyle.icons}>
           <Icon name={comp.seelist ? 'eye-check-outline' : 'eye-plus-outline' } artID={comp.id} userID={comp.user_id} size={55} onPress={() => setTag(comp.id, 'seelist')}  />
           <Icon name={comp.liked ? 'heart-circle' : 'heart-circle-outline'} size={55} artID={comp.id} userID={comp.user_id} size={55} onPress={() => setTag(comp.id, 'liked')}/>

@@ -2,16 +2,19 @@ import React from 'react';
 import { Image, View, Dimensions } from 'react-native';
 import { TouchableHighlight } from 'react-native';
 
+import CachedImage from '../../helpers/CachedImage';
 
 let {width, height} = Dimensions.get("window");
+
 
 export default Section = ({navigation, section}) => {
   return (
     <View style={{ flexDirection: "row", flexWrap: "wrap", flex: 1 }}>
       {section.map((art, idx) => {
+        const imgUrl = 'https://arzmkdmkzm.cloudimg.io/width/' + 200 + '/x/' + art.img_url;
         return (
           <View
-            key={idx}
+            key={art.id}
             style={[
               { width: width / 3 },
               { height: width / 3 },
@@ -24,9 +27,9 @@ export default Section = ({navigation, section}) => {
                 navigation.navigate('ArtModal', {art: art})}
               } 
             >
-              <Image
-                style={{ flex: 1, resizeMode: 'cover' }}
-                source={{ uri: art.img_url }}
+              <CachedImage
+                style={{ flex: 1, resizeMode: 'cover', width: "100%" }}
+                source={imgUrl}
               />
             </TouchableHighlight>
           </View>
