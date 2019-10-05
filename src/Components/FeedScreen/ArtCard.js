@@ -1,6 +1,7 @@
 import React from 'react';
 import { Card, CardItem, Text, Button, Left, Body, Right, Toast } from "native-base";
 import { View, Dimensions, Image } from 'react-native';
+import { CLOUDIMG_TOKEN } from 'react-native-dotenv'
 
 import Img from 'react-cloudimage-responsive';
 
@@ -18,42 +19,17 @@ const showInfographic = function(text) {
   })
 }
 
-
 export default ArtCard = ({comp, setTag}) => {
-  
+  const imgUrl = 'https://' + CLOUDIMG_TOKEN + '.cloudimg.io/width/' + screenWidth + '/x/' + comp.img_url;
   return (
-    <Card style={{flex: 0}}>
-      <CardItem>
-        <Left>
-          <Body>
-            <Text>{comp.title} posted by USER: id:{comp.id}</Text>
-          </Body>
-        </Left>
-      </CardItem>
-      <CardItem>
-        <Body>
-          <Image source={{uri: comp.img_url}}  style={{height: screenWidth, width: screenWidth * 0.9, flex: 1}}/>
-        </Body>
-      </CardItem>
-      <View style={{
-        borderTopColor: 'grey',
-        // borderTopWidth: StyleSheet.hairlineWidth
-      }}>
-
+    <View>
+      <Text style={modalStyle.txt}>Art peace!</Text>
+      <Image source={{ uri: imgUrl }} style={modalStyle.image} />
+      <View style={modalStyle.icons}>
+          <Icon name={comp.seelist ? 'eye-check-outline' : 'eye-plus-outline' } artID={comp.id} userID={comp.user_id} size={55} onPress={() => setTag(comp.id, 'seelist')}  />
+          <Icon name={comp.liked ? 'heart-circle' : 'heart-circle-outline'} size={55} artID={comp.id} userID={comp.user_id} size={55} onPress={() => setTag(comp.id, 'liked')}/>
+          <Icon name={comp.visited ? 'check-circle' : 'check-circle-outline'} size={55} artID={comp.id} userID={comp.user_id} size={55} onPress={() => setTag(comp.id, 'visited')}/>
       </View>
-      <CardItem>
-        <Right style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-evenly' }}>
-          <Button transparent textStyle={{color: '#87838B'}} onPress={() => showInfographic('Marked as visited!')}>
-            <Icon name={comp.seelist ? 'eye-check-outline' : 'eye-plus-outline' } artID={comp.id} userID={comp.user_id} ref={ (c) => { this._icon = c}} size={55} onPress={() => setTag(comp.id, 'seelist')}  />
-          </Button>
-          <Button transparent textStyle={{color: '#87838B'}} onPress={() => showInfographic('Liked it!')}>
-            <Icon name={comp.liked ? 'heart-circle' : 'heart-circle-outline'} size={55} artID={comp.id} userID={comp.user_id} ref={ (c) => { this._icon = c}} size={55} onPress={() => setTag(comp.id, 'liked')}/>
-          </Button>
-          <Button transparent textStyle={{color: '#87838B'}} onPress={() => showInfographic('Marked as visited!')}>
-            <Icon name={comp.visited ? 'check-circle' : 'check-circle-outline'} size={55} artID={comp.id} userID={comp.user_id} ref={ (c) => { this._icon = c}} size={55} onPress={() => setTag(comp.id, 'visited')}/>
-          </Button>
-        </Right>
-      </CardItem>
-    </Card>
+    </View>
   )
 }

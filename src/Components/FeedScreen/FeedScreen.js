@@ -1,11 +1,8 @@
 import * as WebBrowser from 'expo-web-browser';
 import React from 'react';
 import useApplicationData from '../../hooks/useApplicationData';
-import { CloudimageProvider } from 'react-cloudimage-responsive';
-import { CLOUDIMG_TOKEN } from 'react-native-dotenv'
 
 import { Container, Header, Content, Root } from "native-base";
-import ArtCard from "./ArtCard";
 
 import Deck from './Deck';
 
@@ -16,18 +13,18 @@ export default function FeedScreen() {
     setTag
   } = useApplicationData();
 
-  const cloudimageConfig = {
-    token: CLOUDIMG_TOKEN,
-    baseUrl: ''
-  };
+  console.log("==|||==> FeedScreen")
+
+  // let arts = fullState.arts
+  const arts = state.arts
 
   return (
     <Root>
         <Container>
           <Header />
-          <CloudimageProvider>
-            <Deck arts={state.arts} setTag={setTag} />
-          </CloudimageProvider>
+          <Content>
+            <Deck arts={arts} setTag={setTag} />
+          </Content>
       </Container>
     </Root>
   );
