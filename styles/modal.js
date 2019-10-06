@@ -36,13 +36,17 @@ export default modalStyle = StyleSheet.create({
   icons: {
     alignItems: 'center', 
     alignContent: 'center',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
+    padding: 20,
     textAlign: 'center',
     flex: 1,
     flexDirection: 'row'
   },
   dismiss: {
-    backgroundColor: colors.text,
-    color: colors.color1
+    color: colors.color3,
+    alignContent: 'flex-end',
+    justifyContent: 'flex-end',
+    padding: 10,
+    fontSize: 30
   }
 });

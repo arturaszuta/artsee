@@ -46,7 +46,7 @@ async componentDidMount() {
       if (this.state.loading) {
         // while the image is being checked and downloading
         return(
-          <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+          <View style={{ alignItems: 'center', justifyContent: 'center', height: this.state.height }}>
             <ActivityIndicator
               color='#42C2F3'
               size='large'

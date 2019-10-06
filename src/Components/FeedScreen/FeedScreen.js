@@ -1,6 +1,7 @@
 import * as WebBrowser from 'expo-web-browser';
 import React from 'react';
 import { useApplicationData, fullState } from '../../hooks/useApplicationData';
+import Constants from 'expo-constants';
 
 import { Container, Header, Content, Root } from "native-base";
 
@@ -20,11 +21,10 @@ export default function FeedScreen() {
 
   return (
     <Root>
-        <Container>
-          <Header />
-          <Content>
-            <Deck arts={arts} setTag={setTag} />
-          </Content>
+      <Container style={{ marginTop: Constants.statusBarHeight }}>
+        <Content>
+          <Deck arts={arts} setTag={setTag} />
+        </Content>
       </Container>
     </Root>
   );

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Text, View, Dimensions, AsyncStorage } from 'react-native';
 import { Container, Header, Left, Body, Right } from 'native-base';
 import MapView from 'react-native-maps';
+import Constants from 'expo-constants';
 
 import { useApplicationData, fullState } from '../../hooks/useApplicationData';
 
@@ -17,9 +18,8 @@ const MapScreen = ({navigation}) => {
     getUserLocation,
     getNearestArts,
     getNearestArt,
-    setTag
+    setTag,
   } = useApplicationData();
-
 
   const [duration, setDuration] = useState(null);
   const [mapview, setMapview] = useState(null);
@@ -27,8 +27,8 @@ const MapScreen = ({navigation}) => {
   const [region, setRegion] = useState({
     latitude: 43.644913,
     longitude: -79.402520,
-    latitudeDelta: 0.0922,
-    longitudeDelta: 0.0421,
+    latitudeDelta: 0.0522,
+    longitudeDelta: 0.0121,
   })
 
   navigationOptions = {
@@ -42,7 +42,7 @@ const MapScreen = ({navigation}) => {
   }, [region])
 
   return (
-    <Container style={{ flex: 1 }}>
+    <Container style={{ flex: 1, marginTop: Constants.statusBarHeight }}>
        <Header style={{backgroundColor:colors.color2}}>
         <Left style={{flex:1}}><Text style={{color:colors.text, fontWeight:'bold', fontSize:18}}>artsee</Text></Left>
         <Body style={{flex:1, alignItems:'center', justifyContent: "center"}}>

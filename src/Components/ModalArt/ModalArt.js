@@ -2,10 +2,16 @@ import React from 'react';
 import { View, Button, Text, Image, Dimensions } from 'react-native';
 import { withNavigation } from 'react-navigation';
 
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import IconMat from "react-native-vector-icons/MaterialIcons";
+import Icon from "react-native-vector-icons/Ionicons";
+import { colors } from '../../../styles/variables';
 
 import modalStyle from '../../../styles/modal' 
 import CachedImage from '../../helpers/CachedImage';
+
+const bookmark = (comp, setTag) => <IconMat name={comp.seelist ? 'bookmark' : 'bookmark-border'} color={comp.seelist ? colors.seen : colors.color1} size={50} artID={comp.id} userID={comp.user_id} onPress={() => setTag(comp.id, 'visited')} style={modalStyle.icons} />;
+const heart = (comp, setTag) => <Icon name={comp.liked ? 'ios-heart' : 'ios-heart-empty'} color={comp.liked ? colors.like : colors.color1} size={50} artID={comp.id} userID={comp.user_id} onPress={() => setTag(comp.id, 'liked')} style={{...modalStyle.icons}} />;
+const map = (comp, setTag) => <Icon name={comp.visited ? 'ios-map' : 'ios-pin'} color={comp.visited ? colors.bookmark : colors.color1} size={50} artID={comp.id} userID={comp.user_id} onPress={() => setTag(comp.id, 'seelist')} style={modalStyle.icons} />;
  
 const ModalArt = ({navigation}) => {
   const art = navigation.getParam("art")
@@ -22,15 +28,16 @@ const ModalArt = ({navigation}) => {
         style={modalStyle.image}
       />
       <View style={modalStyle.icons}>
-          <Icon name={art.seelist ? 'eye-check-outline' : 'eye-plus-outline' } artID={art.id} userID={art.user_id} size={55} onPress={() => setTag(art.id, 'seelist')}  />
-          <Icon name={art.liked ? 'heart-circle' : 'heart-circle-outline'} size={55} artID={art.id} userID={art.user_id} size={55} onPress={() => setTag(art.id, 'liked')}/>
-          <Icon name={art.visited ? 'check-circle' : 'check-circle-outline'} size={55} artID={art.id} userID={art.user_id} size={55} onPress={() => setTag(art.id, 'visited')}/>
+        {heart(art, setTag)}
+        {map(art, setTag)}
+        {bookmark(art, setTag)}
       </View>
-      <Button
-        onPress={() => navigation.goBack()}
-        style={modalStyle.dismiss}
-        title="Dismiss"
-      />
+      <Text style={{ color: colors.color2, fontSize: 24, textAlign: 'center', flex: 1, justifyContent: 'center' }}>comments...</Text>
+      <View onPress={() => navigation.goBack()} >
+        <Text style={modalStyle.dismiss}>
+          X
+        </Text>
+      </View>
     </View>
   )
 }

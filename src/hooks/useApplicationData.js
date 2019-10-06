@@ -13,6 +13,7 @@ const SET_MAP_MARKERS = "SET_MAP_MARKERS";
 const SET_DESTINATION = "SET_DESTINATION";
 const SET_LOADING = "SET_LOADING";
 const SET_RESOLVED = "SET_RESOLVED";
+const SET_USERS = "SET_USERS";
 
 const reducer = (state, action) => {
   switch(action.type) {
@@ -37,6 +38,9 @@ const reducer = (state, action) => {
     case SET_RESOLVED: {
       return {...state, loading: action.loading, resolved: action.resolved}
     }
+    case SET_USERS: {
+      return {...state, users: action.value}
+    }
     default:
       throw new Error(
         `Tried to reduce with unsupported action type: ${action.type}`
@@ -47,6 +51,7 @@ const reducer = (state, action) => {
 export const useApplicationData = () => {
   const [state, dispatch] = useReducer(reducer, {
     user: null,
+    users: {},
     token: null,
     arts: {},
     userLocation: {},
@@ -68,8 +73,6 @@ export const useApplicationData = () => {
       await getUser()
       await getUserLocation()
       await getArts()
-  
-      return state.user
     }
     getAll()
   }, [])
@@ -144,6 +147,18 @@ export const useApplicationData = () => {
     let location = await Location.getCurrentPositionAsync({});
     dispatch({ type: SET_USER_LOCATION, value: location.coords });
   };
+
+  getUsers = () => {
+    return axios.get('https://artsee-back-end.herokuapp.com/users')
+      .then(res => {
+        let users = {}; 
+        res.data.forEach(user => {
+          users[user.id] = user
+        })
+
+        dispatch({ type: SET_USERS, value: users})
+      })
+  }
 
   getNearestArts = async () => {
     await getUserLocation();
