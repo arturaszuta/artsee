@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
-import { Card, CardItem, Text, Button, Left, Body, Right, Toast } from "native-base";
-import { View, Dimensions, Image } from 'react-native';
+import React from 'react';
+import { Text,Toast } from "native-base";
+import { View, Dimensions } from 'react-native';
+import artCardStyle from '../../../styles/artCard'
+import { colors } from '../../../styles/variables';
 
+import CachedImage from '../../helpers/CachedImage';
 
-
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import Axios from 'axios';
+import Icon from "react-native-vector-icons/Ionicons";
+import IconMat from 'react-native-vector-icons/MaterialIcons'
 
 const screenHeight = Math.round(Dimensions.get('window').height);
 const screenWidth = Math.round(Dimensions.get('window').width);
@@ -18,51 +20,33 @@ const showInfographic = function(text) {
   })
 }
 
-export default ArtCard = ({comp, onPress}) => {
-  
+const bookmark = (comp, setTag) => <IconMat name={comp.seelist ? 'bookmark' : 'bookmark-border'} color={comp.seelist ? colors.seen : colors.color1} size={26} artID={comp.id} userID={comp.user_id} onPress={() => setTag(comp.id, 'visited')} style={artCardStyle.icons} />;
+const heart = (comp, setTag) => <Icon name={comp.liked ? 'ios-heart' : 'ios-heart-empty'} color={comp.liked ? colors.like : colors.color1} size={26} artID={comp.id} userID={comp.user_id} onPress={() => setTag(comp.id, 'liked')} style={artCardStyle.icons} />;
+const map = (comp, setTag) => <Icon name={comp.visited ? 'ios-map' : 'ios-pin'} color={comp.visited ? colors.bookmark : colors.color1} size={26} artID={comp.id} userID={comp.user_id} onPress={() => setTag(comp.id, 'seelist')} style={artCardStyle.icons} />;
+
+export default ArtCard = ({comp, setTag}) => {
+  const imgUrl = 'https://arzmkdmkzm.cloudimg.io/width/' + screenWidth + '/x/' + comp.img_url;
+
   return (
-    <View>
-      <Text style={modalStyle.txt}>Art peace!</Text>
-      <Image source={{ uri: comp.img_url }} style={modalStyle.image} />
-      <View style={modalStyle.icons}>
-          <Icon name={comp.seelist ? 'eye-check-outline' : 'eye-plus-outline' } artID={comp.id} userID={comp.user_id} size={55} onPress={e => onPress('seelist')}  />
-          <Icon name={comp.liked ? 'heart-circle' : 'heart-circle-outline'} size={55} artID={comp.id} userID={comp.user_id} size={55} onPress={e => onPress('liked')}/>
-          <Icon name={comp.visited ? 'check-circle' : 'check-circle-outline'} size={55} artID={comp.id} userID={comp.user_id} size={55} onPress={e => onPress('visited')}/>
+    <View style={artCardStyle.container}>
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+        <Text style={artCardStyle.head}>{comp.title || 'Art peace!'}</Text>
+        <Text style={{...artCardStyle.head, fontSize: 22}}>{comp.user_id}</Text>
       </View>
+      {/* <Image source={{ uri: imgUrl }} style={{ width: screenWidth, height: screenWidth }} /> */}
+      <CachedImage
+        source={imgUrl}
+        title={comp.id}
+        style={{ width: screenWidth, height: screenWidth }}
+        height={screenWidth}
+      />
+      {/* <Image style={{ width: screenWidth, height: screenWidth }} {...{preview, imgUrl}} /> */}
+      <View style={artCardStyle.iconContainer}>
+          {heart(comp, setTag)}
+          {map(comp, setTag)}
+          {bookmark(comp, setTag)}
+      </View>
+      <Text style={artCardStyle.comment}>comments...</Text>
     </View>
   )
 }
-
-{/* <Card style={{flex: 0}}>
-      <CardItem>
-        <Left>
-          <Body>
-            <Text>{comp.title} posted by USER: id:{comp.id}</Text>
-          </Body>
-        </Left>
-      </CardItem>
-      <CardItem>
-        <Body>
-          <Image source={{uri: comp.img_url}}  style={{height: screenWidth, width: screenWidth * 0.9, flex: 1}}/>
-        </Body>
-      </CardItem>
-      <View style={{
-        borderTopColor: 'grey',
-        // borderTopWidth: StyleSheet.hairlineWidth
-      }}>
-
-      </View>
-      <CardItem>
-        <Right style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-evenly' }}>
-          <Button transparent textStyle={{color: '#87838B'}} onPress={() => showInfographic('Marked as visited!')}>
-            <Icon name={comp.seelist ? 'eye-check-outline' : 'eye-plus-outline' } artID={comp.id} userID={comp.user_id} ref={ (c) => { this._icon = c}} size={55} onPress={() => setTag(comp.id, 'seelist')}  />
-          </Button>
-          <Button transparent textStyle={{color: '#87838B'}} onPress={() => showInfographic('Liked it!')}>
-            <Icon name={comp.liked ? 'heart-circle' : 'heart-circle-outline'} size={55} artID={comp.id} userID={comp.user_id} ref={ (c) => { this._icon = c}} size={55} onPress={() => setTag(comp.id, 'liked')}/>
-          </Button>
-          <Button transparent textStyle={{color: '#87838B'}} onPress={() => showInfographic('Marked as visited!')}>
-            <Icon name={comp.visited ? 'check-circle' : 'check-circle-outline'} size={55} artID={comp.id} userID={comp.user_id} ref={ (c) => { this._icon = c}} size={55} onPress={() => setTag(comp.id, 'visited')}/>
-          </Button>
-        </Right>
-      </CardItem>
-    </Card> */}

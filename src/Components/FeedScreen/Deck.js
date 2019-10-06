@@ -1,17 +1,31 @@
 import React from 'react';
 
 import ArtCard from './ArtCard';
+import { FlatList } from 'react-native-gesture-handler';
 
 export default Deck = ({arts, setTag}) => {
-  if (arts) {
-    return Object.keys(arts).map(artId => {
+  const data = Object.keys(arts).map(artId => {
 
-      const comp = arts[artId];
+    return {
+      id: artId,
+      comp: arts[artId]
+    }
 
-      return (
-        <ArtCard comp={comp} onPress={(type) => setTag(comp.id, type)} key={comp.id} />
-      ) 
-    })
+  })
+
+  const Item = ({comp}) => {
+    return (
+      <ArtCard comp={comp} setTag={setTag} />
+    ) 
+  }
+
+  if (data) {
+    return (
+      <FlatList
+        data={data}
+        renderItem={({item}) => <Item comp={item.comp} />}
+      />
+    )
   }
   return null
 };

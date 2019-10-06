@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, ScrollView, Button, AsyncStorage } from "react-native";
+import Constants from 'expo-constants';
 
 import { useApplicationData } from '../../hooks/useApplicationData';
 import Section from './Section';
@@ -41,7 +42,7 @@ const ProfileScreen = ({navigation}) => {
   
   if (state.user) {
     return (
-      <ScrollView>
+      <ScrollView style={{ marginTop: Constants.statusBarHeight }}>
         <View style={{ flex: 1 }}>
           <ProfileSection user={state.user} followingComp={followingComp} />
           <Button onPress={e => {
