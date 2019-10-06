@@ -1,5 +1,7 @@
 import axios from 'axios';
 import { AsyncStorage } from 'react-native';
+import * as Location from 'expo-location';
+import * as Permissions from 'expo-permissions';
 
 const SET_USER = "SET_USER";
 const SET_TOKEN = "SET_TOKEN";
@@ -45,6 +47,38 @@ const setArts = (arts) => {
   }
 }
 
+const setUserLocation = (userLocation) => {
+  return {
+    type: SET_USER_LOCATION,
+    userLocation
+  }
+}
+
+const setDestination = (destination) => {
+  return {
+    type: SET_DESTINATION,
+    destination
+  }
+}
+
+export const setNearestArts = arts => {
+  return {
+    type: SET_ARTS_DATA,
+    arts
+  }
+}
+
+export const setTag = (id, opt, value) => {
+  console.log("==|==> setTag, I've been called")
+  
+  return {
+    type: SET_TAG,
+    id,
+    opt,
+    value
+  }
+}
+
 export const fetchToken = () => dispatch => {
   dispatch(fetching())
   return AsyncStorage.getItem('token')
@@ -71,7 +105,6 @@ export const fetchUser = () => dispatch => {
             .then(res => {
               return res.json()
                 .then(res => {
-                  console.log("==|=> fetchUser:",res)
                   dispatch(setUser(res))
                   dispatch(fetchArts(res.id))
                   dispatch(resolveFetch())
@@ -86,7 +119,6 @@ export const fetchUser = () => dispatch => {
 }
 
 export const fetchArts = (userId) => dispatch => {
-  dispatch(fetching())
 
   return axios.get('https://artsee-back-end.herokuapp.com/api/userArts', {
       params: {
@@ -102,4 +134,16 @@ export const fetchArts = (userId) => dispatch => {
         })
         dispatch(setArts(arts))
       })
+}
+
+export const findUserLocation = () => async dispatch => {
+  let { status } = await Permissions.askAsync(Permissions.LOCATION);
+  if (status !== 'granted') {
+    console.log('Permission to access location was denied')
+  };
+
+  return Location.getCurrentPositionAsync({})
+    .then(location => {
+      dispatch(setUserLocation(location.coords));
+    })
 }

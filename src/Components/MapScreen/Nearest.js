@@ -1,28 +1,47 @@
 import React from 'react';
 import { Text, View, Dimensions } from 'react-native';
-import MapView, { Marker } from 'react-native-maps';
+import { Marker } from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
 import { GOOGLE_API_KEY } from 'react-native-dotenv';
+
+import distance from '../../helpers/distanceBetweenCoords';
 
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import mapStyles from '../../../styles/map';
 import { colors } from '../../../styles/variables';
 
-
 const { width, height } = Dimensions.get('window');
 
+const nearbyArts = (arts, userLocation) => {
+  let artsOut = {}
+  Object.keys(arts).forEach(a => {
+    let art = arts[a]
+    const userCoords = {latitude: userLocation.latitude, longitude: userLocation.longitude}
+    const artCoords = {latitude: art.latitude, longitude: art.longitude}
+    const d = distance(userCoords, artCoords)
+    if (d < 1) {
+      artsOut[a] = art
+    }
+  })
+
+  return artsOut
+}
+
 // GET a collection of the nearest art/graffiti in a 3 km radius
-export const NearestArtsButton = ({getNearestArts}) => {
+export const NearestArtsButton = ({setNearestArts, arts, userLocation}) => {
   return (
-    <Icon name="map-marked" size={30} color={colors.color3} onPress={e => getNearestArts()} style={mapStyles.nearButton} title="nearby" >
+    <Icon name="map-marked" size={30} color={colors.color3} onPress={e => {
+      const nearArts = nearbyArts(arts, userLocation)
+      setNearestArts(nearArts)
+    }} style={mapStyles.nearButton} title="nearby" >
     </Icon>
   )
 }
 
-export const NearestArtButton = ({getNearestArt, setDirectionState}) => {
+export const NearestArtButton = ({getNearestArt, setDirectionState, userLocation}) => {
   return (
     <Icon name="crow" size={30} color={colors.color3} onPress={e => {
-      getNearestArt()
+      getNearestArt(userLocation)
       setDirectionState(true)
     }} style={{...mapStyles.nearButton, bottom: 80}} title="nearest" >
     </Icon>
@@ -82,7 +101,7 @@ export const NearestArtDirections = ({userLocation, destination, setDuration, se
   return null
 }
 
-export const Duration = ({duration, setDuration, setDirectionState, setRegion}) => {
+export const Duration = ({duration, setDuration, setDirectionState, setRegion, userLocation}) => {
   if (duration) {
     return (
       <View style={mapStyles.duration}>
@@ -96,10 +115,9 @@ export const Duration = ({duration, setDuration, setDirectionState, setRegion}) 
           setDirectionState(false);
           setDuration(null);
           setRegion({
-            latitude: 43.644913,
-            longitude: -79.402520,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421,
+            ...userLocation,
+            latitudeDelta: 0.0482,
+            longitudeDelta: 0.0181,
           });
         }} size={30} color="red" title="endDirections" />
       </View>

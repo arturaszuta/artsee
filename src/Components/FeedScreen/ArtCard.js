@@ -1,13 +1,12 @@
 import React from 'react';
 import { Text,Toast } from "native-base";
 import { View, Dimensions } from 'react-native';
-import artCardStyle from '../../../styles/artCard'
-import { colors } from '../../../styles/variables';
 
 import CachedImage from '../../helpers/CachedImage';
-
+import artCardStyle from '../../../styles/artCard'
+import { colors } from '../../../styles/variables';
 import Icon from "react-native-vector-icons/Ionicons";
-import IconMat from 'react-native-vector-icons/MaterialIcons'
+import IconMat from 'react-native-vector-icons/MaterialIcons';
 
 const screenHeight = Math.round(Dimensions.get('window').height);
 const screenWidth = Math.round(Dimensions.get('window').width);
@@ -20,12 +19,12 @@ const showInfographic = function(text) {
   })
 }
 
-const bookmark = (comp, setTag) => <IconMat name={comp.seelist ? 'bookmark' : 'bookmark-border'} color={comp.seelist ? colors.seen : colors.color1} size={26} artID={comp.id} userID={comp.user_id} onPress={() => setTag(comp.id, 'visited')} style={artCardStyle.icons} />;
-const heart = (comp, setTag) => <Icon name={comp.liked ? 'ios-heart' : 'ios-heart-empty'} color={comp.liked ? colors.like : colors.color1} size={26} artID={comp.id} userID={comp.user_id} onPress={() => setTag(comp.id, 'liked')} style={artCardStyle.icons} />;
-const map = (comp, setTag) => <Icon name={comp.visited ? 'ios-map' : 'ios-pin'} color={comp.visited ? colors.bookmark : colors.color1} size={26} artID={comp.id} userID={comp.user_id} onPress={() => setTag(comp.id, 'seelist')} style={artCardStyle.icons} />;
-
 export default ArtCard = ({comp, setTag}) => {
   const imgUrl = 'https://arzmkdmkzm.cloudimg.io/width/' + screenWidth + '/x/' + comp.img_url;
+
+  const bookmark = (comp, setTag) => <IconMat name={comp.seelist ? 'bookmark' : 'bookmark-border'} color={comp.seelist ? colors.seen : colors.color1} size={26} artID={comp.id} userID={comp.user_id} onPress={() => setTag(comp.id, 'seelist', !comp.seelist)} style={artCardStyle.icons} />;
+  const heart = (comp, setTag) => <Icon name={comp.liked ? 'ios-heart' : 'ios-heart-empty'} color={comp.liked ? colors.like : colors.color1} size={26} artID={comp.id} userID={comp.user_id} onPress={() => setTag(comp.id, 'liked', !comp.liked)} style={artCardStyle.icons} />;
+  const map = (comp, setTag) => <Icon name={comp.visited ? 'ios-map' : 'ios-pin'} color={comp.visited ? colors.bookmark : colors.color1} size={26} artID={comp.id} userID={comp.user_id} onPress={() => setTag(comp.id, 'visited', !comp.visited)} style={artCardStyle.icons} />;
 
   return (
     <View style={artCardStyle.container}>

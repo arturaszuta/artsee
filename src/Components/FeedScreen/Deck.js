@@ -13,17 +13,12 @@ export default Deck = ({arts, setTag}) => {
 
   })
 
-  const Item = ({comp}) => {
-    return (
-      <ArtCard comp={comp} setTag={setTag} />
-    ) 
-  }
-
   if (data) {
     return (
       <FlatList
         data={data}
-        renderItem={({item}) => <Item comp={item.comp} />}
+        renderItem={({item}) => <ArtCard comp={item.comp} setTag={setTag} />}
+        keyExtractor={item => item.id}
       />
     )
   }

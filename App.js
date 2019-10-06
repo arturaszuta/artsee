@@ -15,9 +15,6 @@ import Icon from "react-native-vector-icons/FontAwesome5";
 import * as Font from "expo-font";
 import mainStyle from "./styles/main";
 
-import MapScreen from "./src/Components/MapScreen/MapScreen";
-import ProfileScreen from "./src/Components/ProfileScreen/ProfileScreen";
-import FeedScreen from "./src/Components/FeedScreen/FeedScreen";
 import CameraScreen from "./src/Components/CameraScreen";
 import LoginScreen from "./src/Components/LoginScreen";
 import SignUpScreen from "./src/Components/SignUpScreen";
@@ -26,16 +23,19 @@ import SplashLoadingScreen from "./src/Components/SplashLoadingScreen";
 import SecondSignUpScreen from "./src/Components/SecondSignUpScreen";
 import ModalArt from './src/Components/ModalArt/ModalArt';
 
-import useApplicationData from './src/hooks/useApplicationData';
+import mapScreen from "./src/containers/mapScreen";
+import profileScreen from "./src/containers/profileScreen";
+import feedScreen from "./src/containers/feedScreen";
+
 
 const store = createStore(rootReducer, applyMiddleware(thunkMiddleware));
 
 const AppStack = createBottomTabNavigator(
   {
-    Map: MapScreen,
-    Feed: FeedScreen,
+    Map: mapScreen,
+    Feed: feedScreen,
     Camera: CameraScreen,
-    Profile: ProfileScreen
+    Profile: profileScreen
   },
   {
     defaultNavigationOptions: ({ navigation }) => ({

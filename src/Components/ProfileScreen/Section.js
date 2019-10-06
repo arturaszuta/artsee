@@ -7,7 +7,7 @@ import CachedImage from '../../helpers/CachedImage';
 let {width, height} = Dimensions.get("window");
 
 
-export default Section = ({navigation, section}) => {
+export default Section = ({navigation, section, setTag}) => {
   const data = section.map((art, idx) => {
     const imgUrl = 'https://arzmkdmkzm.cloudimg.io/width/' + 200 + '/x/' + art.img_url;
     return {
@@ -18,7 +18,7 @@ export default Section = ({navigation, section}) => {
     };
   })
 
-  const Item = ({art, imgUrl, idx}) => {
+  const Item = ({art, imgUrl, idx, setTag}) => {
     return (
       <View
         key={art.imgUrl}
@@ -30,7 +30,7 @@ export default Section = ({navigation, section}) => {
         ]}
       >
         <TouchableHighlight style={{ flex: 1 }} activeOpacity={0} onPress={() => {
-            navigation.navigate('ArtModal', {art: art})}
+            navigation.navigate('ArtModal', {artId: art.id})}
           } 
         >
           <CachedImage
@@ -47,7 +47,7 @@ export default Section = ({navigation, section}) => {
       style={{margin:2}}
       numColumns={3}                   
       data={data}
-      renderItem={({item}) => <Item imgUrl={item.imgUrl} art={item.art} idx={item.idx} />}
+      renderItem={({item}) => <Item imgUrl={item.imgUrl} art={item.art} idx={item.idx} setTag={setTag} />}
       keyExtractor={(item) => item.id}
     />
   )

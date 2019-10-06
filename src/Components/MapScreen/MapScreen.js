@@ -1,16 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Text, View, Dimensions, AsyncStorage } from 'react-native';
+import { Text, View } from 'react-native';
 import { Container, Header, Left, Body, Right } from 'native-base';
-import { connect } from 'react-redux';
 import MapView from 'react-native-maps';
 import Constants from 'expo-constants';
 
-// import { useApplicationData } from '../../hooks/useApplicationData';
-
-import {
-  fetchUser,
-  fetchToken
-} from '../../actions'
+import useApplicationData from '../../hooks/useApplicationData';
 
 import { colors } from '../../../styles/variables';
 
@@ -18,16 +12,11 @@ import CenterOnMe from './CenterOnMe';
 import { NearestArtButton, NearestArtsButton, NearestArtDirections, Duration } from './Nearest';
 import { marker, userLocation } from './MapWidgets';
 
-const MapScreen = ({navigation, reduxState}) => {
-  // const {
-  //   state,
-  //   getUserLocation,
-  //   getNearestArts,
-  //   getNearestArt,
-  //   setTag,
-  // } = useApplicationData();
-
-  console.log("==|==> from mapscreen. reduxState:",reduxState)
+export default MapScreen = ({navigation, arts, currUserLocation, updateUserLocation, setNearestArts}) => {
+  const {
+    state,
+    getNearestArt
+  } = useApplicationData();
 
   const [duration, setDuration] = useState(null);
   const [mapview, setMapview] = useState(null);
@@ -61,31 +50,21 @@ const MapScreen = ({navigation, reduxState}) => {
         <MapView
           style={{ flex: 1 }}
           region={region}
-          // onUserLocationChange={event => getUserLocation()}
-          // ref={c => setMapview(c)}
+          onUserLocationChange={event => updateUserLocation()}
+          ref={c => setMapview(c)}
         >
-          {marker(reduxState.arts, setRegion, region, navigation)}
-          {/* {userLocation(state.userLocation)} */}
-          {/* <NearestArtDirections userLocation={state.userLocation} destination={state.destination} setDuration={setDuration} setRegion={setRegion} directionOn={directionOn} /> */}
+          {marker(arts, setRegion, region, navigation)}
+          {userLocation(currUserLocation)}
+          <NearestArtDirections userLocation={currUserLocation} destination={state.destination} setDuration={setDuration} setRegion={setRegion} directionOn={directionOn} setDirectionState={setDirectionState} />
         </MapView>
-        {/* <NearestArtButton getNearestArt={getNearestArt} setDirectionState={setDirectionState} />
-        <NearestArtsButton getNearestArts={getNearestArts} />
-        <Duration duration={duration} setDuration={setDuration} setDirectionState={setDirectionState} setRegion={setRegion} />
+        <NearestArtButton getNearestArt={getNearestArt} setDirectionState={setDirectionState} userLocation={currUserLocation} />
+        <NearestArtsButton setNearestArts={setNearestArts} userLocation={currUserLocation} arts={arts} />
+        <Duration duration={duration} setDuration={setDuration} setDirectionState={setDirectionState} setRegion={setRegion} userLocation={currUserLocation} />
         <CenterOnMe setRegion={setRegion} coordinates={{
-          latitude: state.userLocation.latitude,
-          longitude: state.userLocation.longitude
-        }} /> */}
+          latitude: currUserLocation.latitude,
+          longitude: currUserLocation.longitude
+        }} />
       </View>
     </Container>
   );
 };
-
-function mapStateToProps(state) {
-  const reduxState = state
-
-  return {
-    reduxState
-  }
-}
-
-export default connect(mapStateToProps)(MapScreen);

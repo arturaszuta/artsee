@@ -8,7 +8,6 @@ import { Camera } from 'expo-camera';
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { NavigationEvents } from 'react-navigation';
 
-import useApplicationData from '../hooks/useApplicationData';
 import { setConfigurationAsync } from "expo/build/AR";
 
 export default class CameraScreen extends React.Component {
@@ -67,9 +66,6 @@ export default class CameraScreen extends React.Component {
 
 
   async snapPhoto() {
-    const {
-      updateArts
-    } = useApplicationData();
 
     this.setState({ view: 'takingPhoto' });
 

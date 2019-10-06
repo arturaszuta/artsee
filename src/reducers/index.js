@@ -9,7 +9,7 @@ const SET_DESTINATION = "SET_DESTINATION";
 const SET_LOADING = "SET_LOADING";
 const SET_RESOLVED = "SET_RESOLVED";
 const SET_USERS = "SET_USERS";
-const SET_TAG = "SET_TAG"
+const SET_TAG = "SET_TAG";
 
 const initialState = {
   user: null,
@@ -41,11 +41,11 @@ const users = (state = {}, action) => {
 
 const arts = (state = {}, action) => {
   switch(action.type) {
-    case SET_ARTS_DATA: {
-      return Object.assign({}, state, action.arts)
-    }
     case SET_TAG: {
-      return Object.assign({}, state, {[action.id]: action.value})
+      return Object.assign({}, state, {[action.id]: {...state[action.id],[action.opt]: action.value }})
+    }
+    case SET_ARTS_DATA: {
+      return Object.assign({}, action.arts)
     }
     default:
       return state
@@ -55,10 +55,10 @@ const arts = (state = {}, action) => {
 const maps = (state = {}, action) => {
   switch(action.type) {
     case SET_USER_LOCATION: {
-      return action.value
+      return Object.assign({}, state, {userLocation: action.userLocation})
     }
     case SET_DESTINATION: {
-      return action.value
+      return Object.assign({}, state, {destination: action.destination})
     }
     default:
       return state

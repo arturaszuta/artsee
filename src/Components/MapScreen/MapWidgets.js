@@ -1,7 +1,5 @@
-import React, { useState } from 'react';
-import { Text, View, ImageBackground, Button, Dimensions } from 'react-native';
-import MapView, { Marker } from 'react-native-maps';
-import FadeInView from '../../Animations/FadeInView';
+import React from 'react';
+import { Marker } from 'react-native-maps';
 
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import mapStyles from '../../../styles/map';
@@ -19,7 +17,7 @@ export const marker = (mapMarkers, setRegion, region, navigation) => {
           coordinate={mapMarkers[marker]}
           onPress={e => {
             setRegion({...region, ...mapMarkers[marker]})
-            navigation.navigate('ArtModal', {art: mapMarkers[marker]})
+            navigation.navigate('ArtModal', {artId: mapMarkers[marker].id})
           }}
         >
           {spraycan}

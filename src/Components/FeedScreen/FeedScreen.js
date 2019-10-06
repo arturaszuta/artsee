@@ -1,28 +1,18 @@
 import * as WebBrowser from 'expo-web-browser';
 import React from 'react';
-import { useApplicationData } from '../../hooks/useApplicationData';
 import Constants from 'expo-constants';
 
-import { Container, Content, Root } from "native-base";
+import { Container, Content } from "native-base";
 
 import Deck from './Deck';
 
-
-export default function FeedScreen() {
-  const {
-    state,
-    setTag
-  } = useApplicationData();
-
-  const arts = state.arts
+export default FeedScreen = ({navigation, arts, setTag}) => {
 
   return (
-    <Root>
       <Container style={{ marginTop: Constants.statusBarHeight }}>
         <Content>
           <Deck arts={arts} setTag={setTag} />
         </Content>
       </Container>
-    </Root>
   );
 }
