@@ -1,6 +1,6 @@
 import * as WebBrowser from 'expo-web-browser';
 import React from 'react';
-import useApplicationData from '../../hooks/useApplicationData';
+import { useApplicationData } from '../../hooks/useApplicationData';
 import Constants from 'expo-constants';
 
 import { Container, Content, Root } from "native-base";

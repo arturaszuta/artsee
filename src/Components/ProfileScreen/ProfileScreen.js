@@ -12,8 +12,6 @@ const ProfileScreen = ({navigation}) => {
     state,
     userLogout
   } = useApplicationData();
-
-  console.log("==|==> ProfileScreen")
   
   let [followingComp, setFollowingComp] = useState([]);
   let [activeIndex, setActiveIndex] = useState(0);

@@ -92,7 +92,6 @@ export const useApplicationData = () => {
     .then(res => {
       return res.json()
         .then(res => {
-          console.log("==|==|> getUser called:", res)
           dispatch({ type: SET_USER, value: res })
         })
     })
@@ -190,7 +189,6 @@ export const useApplicationData = () => {
   };
 
   setTag = (art_id, type) => {
-    console.log("==|==|> setTag called:", type)
     let arts = {...state.arts};
 
     let art = {...arts[art_id]}
