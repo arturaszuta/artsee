@@ -5,6 +5,12 @@ import { createBottomTabNavigator } from "react-navigation-tabs";
 import { View, Header } from "react-native";
 import { AppLoading, SplashScreen } from "expo";
 
+import { Provider } from 'react-redux'
+import { createStore, applyMiddleware } from 'redux'
+import thunkMiddleware from 'redux-thunk'
+
+import rootReducer from './src/reducers'
+
 import Icon from "react-native-vector-icons/FontAwesome5";
 import * as Font from "expo-font";
 import mainStyle from "./styles/main";
@@ -21,6 +27,8 @@ import SecondSignUpScreen from "./src/Components/SecondSignUpScreen";
 import ModalArt from './src/Components/ModalArt/ModalArt';
 
 import useApplicationData from './src/hooks/useApplicationData';
+
+const store = createStore(rootReducer, applyMiddleware(thunkMiddleware));
 
 const AppStack = createBottomTabNavigator(
   {
@@ -86,26 +94,6 @@ const RootStack = createStackNavigator(
   }
 );
 
-const Foot = createAppContainer(RootStack);
-
-const Main = () => {
-  const {
-    state
-  } = useApplicationData();
-
-  return (
-    <View style={mainStyle.container}>
-      {/* <Header 
-        leftComponent={{
-            text: "artsee"
-        }}
-      /> */}
-      <MapButton state={state} navigation={navigation} />
-      <Foot />
-    </View>
-  )
-}
-
 const AuthStack = createStackNavigator({
   Login: {
     screen: LoginScreen,
@@ -121,38 +109,7 @@ const AuthStack = createStackNavigator({
   }
 });
 
-const App = ({navigation}) => {
-  const [fontLoaded, setLoaded] = useState(false);
-  
-
-  useEffect(() => {
-    loadFonts();
-  }, []);
-
-  const loadFonts = async () => {
-
-    await Font.loadAsync({
-      Roboto: require("native-base/Fonts/Roboto.ttf"),
-      Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf")
-    });
-    setTimeout(() => {
-      setLoaded(true);
-
-    },2000)
-  };
-  
-  return !fontLoaded 
-    ? <AppLoading>
-        <View>
-          <Text>
-            Hello?
-          </Text>
-        </View>
-      </AppLoading> 
-    : Main();
-};
-
-export default createAppContainer(
+let Navigation = createAppContainer(
   createSwitchNavigator(
     {
       AuthLoading: AuthLoadingScreen,
@@ -164,5 +121,12 @@ export default createAppContainer(
     {
       initialRouteName: "AuthLoading"
     }
+  ));
+
+export default App = ({navigation}) => {
+  return (
+    <Provider store={store}>
+      <Navigation />
+    </Provider>
   )
-);
+}

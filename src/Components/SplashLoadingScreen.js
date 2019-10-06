@@ -7,11 +7,16 @@ import {
   Text,
   Image
 } from 'react-native';
+import { connect } from 'react-redux';
+import {
+  fetchUser,
+  fetchToken
+} from '../actions'
 
 
 import { useApplicationData } from '../hooks/useApplicationData';
 
-export default function SplashLoadingScreen({navigation}) {
+function SplashLoadingScreen({navigation, user, isFetching, isResolved, dispatch, reduxState}) {
 
   _getState = async () => {
     
@@ -31,6 +36,8 @@ export default function SplashLoadingScreen({navigation}) {
   };
 
   useEffect(() => {
+    // dispatch(fetchToken())
+    dispatch(fetchUser())
     
     _getState();
   }, [])
@@ -41,3 +48,19 @@ export default function SplashLoadingScreen({navigation}) {
     </View>
   )
 }
+
+function mapStateToProps(state) {
+  const { user } = state
+  const reduxState = state
+  const { isFetching, isResolved } = user ? { isFetching: false, isResolved: true } :{ isFetching: true, isResolved: false };
+
+  return {
+    state,
+    reduxState,
+    user,
+    isFetching,
+    isResolved
+  }
+}
+
+export default connect(mapStateToProps)(SplashLoadingScreen);
