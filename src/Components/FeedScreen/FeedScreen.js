@@ -1,41 +1,31 @@
 import * as WebBrowser from 'expo-web-browser';
-import React, { useState } from 'react';
-import useApplicationData from '../../hooks/useApplicationData';
+import React, { useState, useEffect } from 'react';
+import Constants from 'expo-constants';
+import filterArts from "../../helpers/filterArts"
 
-
-import { Container, Header, Content, Root, Left, Body, Button, Icon, Segment, Text } from "native-base";
+import { Container, Content, Segment, Button, Text, Header, Body } from "native-base";
 
 import Deck from './Deck';
+import { setAutoFocusEnabled } from 'expo/build/AR';
 
-
-
-export default function FeedScreen() {
-  const {
-    state,
-    setTag
-  } = useApplicationData();
+export default FeedScreen = ({navigation, arts, setTag, applyFilter, setFilterArray, filterArray }) => {
 
   const [activeFilter, setActiveFilter] = useState('default');
 
-  const initialState = state.arts;
+  useEffect(() => {
+  }
+  ,[arts])
 
   const changeFeed = async function(param) {
-    setActiveFilter(param)
-    if (param === 'default') {
-      state.arts = initialState;
-    } else {
-      
-      fetch('https://artsee-back-end.herokuapp.com/api/mostlikedart?method=' + param + '&user_id=' + state.user.id).then(result => result.json()).then(res => {state.arts = res});
-    }
-  
+    setActiveFilter(param);
+    const resolvedArray = filterArts(arts, param);
+    setFilterArray(resolvedArray);
   }
 
 
 
-
-
   return (
-    <Root>
+  
         <Container>
           <Header style={{ marginTop: 20 }}>
           <Container>
@@ -52,9 +42,9 @@ export default function FeedScreen() {
       </Container>
           </Header>
           <Content>
-            <Deck arts={state.arts} setTag={setTag} />
+            <Deck arts={arts} setTag={setTag} filter={filterArray} />
           </Content>
       </Container>
-    </Root>
+  
   );
 }

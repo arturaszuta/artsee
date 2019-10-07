@@ -8,6 +8,8 @@ import { Camera } from 'expo-camera';
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { NavigationEvents } from 'react-navigation';
 
+import { setConfigurationAsync } from "expo/build/AR";
+
 export default class CameraScreen extends React.Component {
 
   state = {
@@ -21,8 +23,6 @@ export default class CameraScreen extends React.Component {
     modalVisible: false,
     data: {}
   };
-
-  
 
   componentWillMount() {
     if (Platform.OS === 'android' && !Constants.isDevice) {
@@ -66,6 +66,7 @@ export default class CameraScreen extends React.Component {
 
 
   async snapPhoto() {
+
     this.setState({ view: 'takingPhoto' });
 
     let data = {
@@ -83,7 +84,7 @@ export default class CameraScreen extends React.Component {
          exif: true, 
          autoFocus: false,
       };
-       await this.camera.takePictureAsync(options).then(photo => {
+      await this.camera.takePictureAsync(options).then(photo => {
           this.setState({ view: 'success' }) ;
           photo.exif.Orientation = 1;
           console.log(photo);
@@ -91,9 +92,10 @@ export default class CameraScreen extends React.Component {
           this.setState({ data: data })
           this.setState({ photo: 'data:image/jpg;base64,' + photo.base64 })
           this.setState({ modalVisible: true }) ;
-           });     
-     }
+          updateArts()
+      });     
     }
+  }
 
 
   render() {
