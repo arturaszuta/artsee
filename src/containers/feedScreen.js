@@ -4,7 +4,8 @@ import FeedScreen from '../Components/FeedScreen/FeedScreen'
 
 
 const mapStateToProps = (state) => ({
-  arts:  state.arts
+  arts:  state.arts,
+  users: state.users
 })
 
 const mapDispatchToProps = dispatch => ({

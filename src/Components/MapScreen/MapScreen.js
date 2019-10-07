@@ -54,15 +54,15 @@ export default MapScreen = ({navigation, arts, currUserLocation, updateUserLocat
           ref={c => setMapview(c)}
         >
           {marker(arts, setRegion, region, navigation)}
-          {userLocation(currUserLocation)}
+          {currUserLocation && userLocation(currUserLocation)}
           <NearestArtDirections userLocation={currUserLocation} destination={state.destination} setDuration={setDuration} setRegion={setRegion} directionOn={directionOn} setDirectionState={setDirectionState} />
         </MapView>
         <NearestArtButton getNearestArt={getNearestArt} setDirectionState={setDirectionState} userLocation={currUserLocation} />
         <NearestArtsButton setNearestArts={setNearestArts} userLocation={currUserLocation} arts={arts} />
         <Duration duration={duration} setDuration={setDuration} setDirectionState={setDirectionState} setRegion={setRegion} userLocation={currUserLocation} />
         <CenterOnMe setRegion={setRegion} coordinates={{
-          latitude: currUserLocation.latitude,
-          longitude: currUserLocation.longitude
+          latitude: currUserLocation && currUserLocation.latitude || 43.644913,
+          longitude: currUserLocation && currUserLocation.longitude || -79.402520
         }} />
       </View>
     </Container>

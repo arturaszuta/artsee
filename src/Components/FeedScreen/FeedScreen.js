@@ -6,8 +6,9 @@ import { Container, Content } from "native-base";
 
 import Deck from './Deck';
 
-export default FeedScreen = ({navigation, arts, setTag}) => {
+export default FeedScreen = ({navigation, arts, setTag, users}) => {
 
+  console.log("==|==|> FeedScreen. users:",users)
   return (
       <Container style={{ marginTop: Constants.statusBarHeight }}>
         <Content>

@@ -43,7 +43,7 @@ export default function LoginScreen({navigation}) {
         // }
         _storeToken(data);
       })
-      .then(navigation.navigate("App"))
+      .then(navigation.navigate("Splash"))
       .catch(err => console.error(err));
   };
 
