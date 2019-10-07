@@ -77,8 +77,6 @@ export const setNearestArts = arts => {
 }
 
 export const setTag = (id, opt, value) => {
-  console.log("==|==> setTag, I've been called")
-  
   return {
     type: SET_TAG,
     id,
@@ -165,4 +163,13 @@ export const findUserLocation = () => async dispatch => {
     .then(location => {
       dispatch(setUserLocation(location.coords));
     })
+}
+
+export const postTag = (id, opt, value, userID) => async dispatch => {
+  fetch(`https://artsee-back-end.herokuapp.com/tags/?user_id=${userID.id}&art_id=${id}&type=${opt}&value=${value}`, {
+            method: "POST"
+}).then(result => result.json()).then(res => res)
+  dispatch(setTag(id,
+    opt,
+    value))
 }

@@ -8,7 +8,7 @@ import { Container, Content, Segment, Button, Text, Header, Body } from "native-
 import Deck from './Deck';
 import { setAutoFocusEnabled } from 'expo/build/AR';
 
-export default FeedScreen = ({navigation, arts, setTag, applyFilter, setFilterArray, filterArray }) => {
+export default FeedScreen = ({navigation, arts, postTag, applyFilter, setFilterArray, filterArray, user }) => {
 
   const [activeFilter, setActiveFilter] = useState('default');
 
@@ -42,7 +42,7 @@ export default FeedScreen = ({navigation, arts, setTag, applyFilter, setFilterAr
       </Container>
           </Header>
           <Content>
-            <Deck arts={arts} setTag={setTag} filter={filterArray} />
+            <Deck arts={arts} postTag={postTag} filter={filterArray} user={user}/>
           </Content>
       </Container>
   

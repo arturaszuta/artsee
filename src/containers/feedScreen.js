@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import { setTag, applyFilter, setFilterArray } from '../actions'
+import { setTag, applyFilter, setFilterArray, postTag } from '../actions'
 import FeedScreen from '../Components/FeedScreen/FeedScreen'
 
 
@@ -10,7 +10,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  setTag: (id, type, value) => dispatch(setTag(id, type, value)),
+  postTag: (id, type, value, user) => dispatch(postTag(id, type, value, user)),
   applyFilter: (param) => dispatch(applyFilter(param)),
   setFilterArray: (array) => dispatch(setFilterArray(array))
 })

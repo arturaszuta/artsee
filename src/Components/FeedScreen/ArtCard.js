@@ -19,12 +19,12 @@ const showInfographic = function(text) {
   })
 }
 
-export default ArtCard = ({comp, setTag}) => {
+export default ArtCard = ({comp, postTag, user}) => {
   const imgUrl = 'https://arzmkdmkzm.cloudimg.io/width/' + screenWidth + '/x/' + comp.img_url;
 
-  const bookmark = (comp, setTag) => <IconMat name={comp.seelist ? 'bookmark' : 'bookmark-border'} color={comp.seelist ? colors.seen : colors.color1} size={26} artID={comp.id} userID={comp.user_id} onPress={() => setTag(comp.id, 'seelist', !comp.seelist)} style={artCardStyle.icons} />;
-  const heart = (comp, setTag) => <Icon name={comp.liked ? 'ios-heart' : 'ios-heart-empty'} color={comp.liked ? colors.like : colors.color1} size={26} artID={comp.id} userID={comp.user_id} onPress={() => setTag(comp.id, 'liked', !comp.liked)} style={artCardStyle.icons} />;
-  const map = (comp, setTag) => <Icon name={comp.visited ? 'ios-map' : 'ios-pin'} color={comp.visited ? colors.bookmark : colors.color1} size={26} artID={comp.id} userID={comp.user_id} onPress={() => setTag(comp.id, 'visited', !comp.visited)} style={artCardStyle.icons} />;
+  const bookmark = (comp, postTag) => <IconMat name={comp.seelist ? 'bookmark' : 'bookmark-border'} color={comp.seelist ? colors.seen : colors.color1} size={26} artID={comp.id} userID={comp.user_id} onPress={() => postTag(comp.id, 'seelist', !comp.seelist, user)} style={artCardStyle.icons} />;
+  const heart = (comp, postTag) => <Icon name={comp.liked ? 'ios-heart' : 'ios-heart-empty'} color={comp.liked ? colors.like : colors.color1} size={26} artID={comp.id} userID={comp.user_id} onPress={() => postTag(comp.id, 'liked', !comp.liked, user)} style={artCardStyle.icons} />;
+  const map = (comp, postTag) => <Icon name={comp.visited ? 'ios-map' : 'ios-pin'} color={comp.visited ? colors.bookmark : colors.color1} size={26} artID={comp.id} userID={comp.user_id} onPress={() => postTag(comp.id, 'visited', !comp.visited, user)} style={artCardStyle.icons} />;
 
   return (
     <View style={artCardStyle.container}>
@@ -41,9 +41,9 @@ export default ArtCard = ({comp, setTag}) => {
       />
       {/* <Image style={{ width: screenWidth, height: screenWidth }} {...{preview, imgUrl}} /> */}
       <View style={artCardStyle.iconContainer}>
-          {heart(comp, setTag)}
-          {map(comp, setTag)}
-          {bookmark(comp, setTag)}
+          {heart(comp, postTag)}
+          {map(comp, postTag)}
+          {bookmark(comp, postTag)}
       </View>
       <Text style={artCardStyle.comment}>comments...</Text>
     </View>

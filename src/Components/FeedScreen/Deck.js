@@ -3,7 +3,7 @@ import React from 'react';
 import ArtCard from './ArtCard';
 import { FlatList } from 'react-native-gesture-handler';
 
-export default Deck = ({arts, setTag, filter }) => {
+export default Deck = ({arts, postTag, filter, user }) => {
   const data = Object.keys(arts).map(artId => {
 
     return {
@@ -17,7 +17,7 @@ export default Deck = ({arts, setTag, filter }) => {
     return (
       <FlatList
         data={filter}
-        renderItem={({item}) => <ArtCard comp={arts[item]} setTag={setTag} />}
+        renderItem={({item}) => <ArtCard comp={arts[item]} postTag={postTag} user={user} />}
         keyExtractor={item => item}
       />
     )
