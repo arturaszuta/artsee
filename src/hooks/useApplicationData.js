@@ -44,6 +44,8 @@ const reducer = (state, action) => {
   }
 };
 
+
+
 export default useApplicationData = () => {
   const [state, dispatch] = useReducer(reducer, {
     user: null,
@@ -56,6 +58,8 @@ export default useApplicationData = () => {
     resolved: false
   });
 
+  
+  
   useEffect(() => {
     const getAll = async () => {
       // await userLogout()
@@ -63,10 +67,12 @@ export default useApplicationData = () => {
       await getUser()
       await getUserLocation()
       await getArts()
+      
     }
     getAll()
   }, []);
-
+  
+  
   getUser = async () => {
     const userId = await AsyncStorage.getItem('userId');
 
