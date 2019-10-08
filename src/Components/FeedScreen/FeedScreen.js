@@ -1,12 +1,13 @@
 import * as WebBrowser from 'expo-web-browser';
 import React, { useState, useEffect } from 'react';
 import filterArts from "../../helpers/filterArts"
+import Constants from 'expo-constants';
 
 import { Container, Content, Segment, Button, Text, Header, Body } from "native-base";
 
 import Deck from './Deck';
 
-export default FeedScreen = ({navigation, arts, postTag, setFilterArray, filterArray, user, comments, postNewComment }) => {
+export default FeedScreen = ({ navigation, arts, postTag, setFilterArray, filterArray, user, comments, postNewComment, users }) => {
 
   const [activeFilter, setActiveFilter] = useState('default');
 
@@ -22,10 +23,9 @@ export default FeedScreen = ({navigation, arts, postTag, setFilterArray, filterA
 
 
   return (
-  
-        <Container>
-          <Header style={{ marginTop: 20 }}>
-          <Container>
+    <Container>
+      <Header style={{ marginTop: Constants.statusBarHeight }}>
+      <Container>
         <Header hasSegment>
           <Body>
             <Segment>
@@ -37,11 +37,10 @@ export default FeedScreen = ({navigation, arts, postTag, setFilterArray, filterA
           </Body>
         </Header>
       </Container>
-          </Header>
-          <Content>
-            <Deck arts={arts} postTag={postTag} filter={filterArray} postNewComment={postNewComment} user={user} comments={comments}/>
-          </Content>
-      </Container>
-  
-  );
+      </Header>
+      <Content>
+        <Deck arts={arts} postTag={postTag} filter={filterArray} user={user} postNewComment={postNewComment} comments={comments} users={users} />
+      </Content>
+    </Container>
+  )
 }

@@ -27,14 +27,13 @@ const showInfographic = function(text) {
   })
 }
 
-export default ArtCard = ({comp, postTag, postNewComment, user}) => {
+export default ArtCard = ({comp, postTag, user, postNewComment, ogUser, comments, users}) => {
   let [showComments, setShowComments] = useState(false);
   let [newComment, setNewComment] = useState('');
 
   const toggleComments = () => {
     setShowComments(!showComments);
   };
-
   const imgUrl = 'https://arzmkdmkzm.cloudimg.io/width/' + screenWidth + '/x/' + comp.img_url;
 
   const bookmark = (comp, postTag) => {
@@ -45,7 +44,7 @@ export default ArtCard = ({comp, postTag, postNewComment, user}) => {
         size={26}
         artID={comp.id}
         userID={comp.user_id}
-        onPress={() => postTag(comp.id, "seelist", !comp.seelist)}
+        onPress={() => postTag(comp.id, "seelist", !comp.seelist, user)}
         style={artCardStyle.icons}
       />
     )
@@ -59,7 +58,7 @@ export default ArtCard = ({comp, postTag, postNewComment, user}) => {
       size={26}
       artID={comp.id}
       userID={comp.user_id}
-      onPress={() => postTag(comp.id, "liked", !comp.liked)}
+      onPress={() => postTag(comp.id, "liked", !comp.liked, user)}
       style={artCardStyle.icons}
     />
     )
@@ -73,7 +72,7 @@ export default ArtCard = ({comp, postTag, postNewComment, user}) => {
         size={26}
         artID={comp.id}
         userID={comp.user_id}
-        onPress={() => postTag(comp.id, "visited", !comp.visited)}
+        onPress={() => postTag(comp.id, "visited", !comp.visited, user)}
         style={artCardStyle.icons}
       />
     )
@@ -94,11 +93,15 @@ export default ArtCard = ({comp, postTag, postNewComment, user}) => {
   }
 
   const renderComments = () => {
-    return comp.comments.map((comment, idx) => {
-      return (
-        <Comment key={idx} comment={comment} />
-      )
-    })
+    if (comments) {
+      return comments.map((comment, idx) => {
+        return (
+          <Comment key={idx} comment={comment} username={users[comment.user_id].name} />
+        )
+      })
+    } else {
+      return null
+    }
   }
 
   return (
@@ -165,6 +168,9 @@ export default ArtCard = ({comp, postTag, postNewComment, user}) => {
           </View>
         )}
       </View>
+        {/* <View style={{ flex: 1, width: screenWidth, justifyContent: 'center', alignItems: 'center' }}>
+          <Text style={artCardStyle.line}>____________________________________</Text>
+        </View> */}
     </KeyboardAvoidingView>
   );
 }

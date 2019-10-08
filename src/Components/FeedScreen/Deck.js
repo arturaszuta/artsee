@@ -3,29 +3,26 @@ import React from 'react';
 import ArtCard from './ArtCard';
 import { FlatList } from 'react-native-gesture-handler';
 
-export default Deck = ({arts, user, postTag, filter, postNewComment, comments}) => {
-  const data = Object.keys(arts).map(artId => {
+export default Deck = ({arts, user, postNewComment, comments, postTag, filter, users}) => {
 
+  console.log("==|==|> comments:",comments)
+  const data = filter.map(artId => {
+    const artComments = comments.filter(comment => comment.art_id === arts[artId].id );
     return {
       id: artId,
       comp: arts[artId],
-      ogUser: users[arts[artId].user_id]
+      ogUser: users[arts[artId].user_id],
+      comments: artComments
     }
 
   })
 
-  // append comments to arts
-  if (comments && data) {
-    data.forEach((item, idx) => {
-     item.comp.comments = comments.filter(comment => comment.art_id === item.comp.id );
-    });
-  }
-  if (comments && data) {
+  if (data) {
     return (
       <FlatList
-        data={filter}
-        renderItem={({item}) => <ArtCard comp={arts[item]} postTag={setTag} postNewComment={postNewComment} user={user}/>}
-        keyExtractor={item => item}
+        data={data}
+        renderItem={({item}) => <ArtCard comp={item.comp} postTag={postTag} postNewComment={postNewComment} user={user} ogUser={item.ogUser} comments={item.comments} users={users} />}
+        keyExtractor={item => item.id}
       />
     )
   }

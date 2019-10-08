@@ -87,10 +87,10 @@ const maps = (state = {}, action) => {
 const comments = (state = [], action) => {
   switch(action.type) {
     case SET_COMMENTS: {
-      return Object.assign([], state, action.comments)
+      return action.comments
     }
     case SET_NEW_COMMENT: {
-      return Object.assign([], state, [...state, action.newComment])
+      return [...state, action.newComment]
     }
     default:
       return state
