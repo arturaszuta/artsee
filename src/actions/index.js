@@ -170,7 +170,7 @@ export const findUserLocation = () => async dispatch => {
 }
 
 export const fetchAllComments = () => dispatch => {
-  fetch(`https://7256d0e9.ngrok.io/api/allComments`, {
+  fetch(`https://artsee-back-end.herokuapp.com/api/allComments`, {
     method: "GET",
     headers: {
       Accept: "application/json",
@@ -186,7 +186,7 @@ export const fetchAllComments = () => dispatch => {
 }
 
 export const postNewComment = (art_id, user_id, newComment) => dispatch => {
-  fetch(`https://7256d0e9.ngrok.io/arts/${art_id}/comments`, {
+  fetch(`https://artsee-back-end.herokuapp.com/arts/${art_id}/comments`, {
     method: "POST",
     headers: {
       Accept: "application/json",
