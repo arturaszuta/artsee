@@ -6,18 +6,13 @@ import {
   View,
   Image,
   Dimensions,
-  ImageBackground
+  ImageBackground,
+  TextInput
 } from 'react-native';
-import {
-  Content,
-  Item,
-  Input,
-  Button
-  
-} from 'native-base';
 import Constants from 'expo-constants';
 
 import { colors } from '../../styles/variables';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 export default function LoginScreen({navigation}) {
   let [email, setEmail] = useState("Email");
@@ -69,25 +64,30 @@ export default function LoginScreen({navigation}) {
   return (
     <View style={styles.container}>
       <ImageBackground source={require('../../assets/auth_2.jpeg')} style={{ flex: 1, width: width, height: height, alignItems: 'center', resizeMode: 'cover' }}>
-      <Content style={{ width: '100%' }} >
-          <Input placeholder='Email' onChangeText={text => setEmail(text)} 
-          style={styles.textInput} placeholderTextColor='white' />
-          <Input
-            style={styles.textInput}
-            placeholderTextColor='white'
-            placeholder='Password'
-            onChangeText={text => setPassword(text)}
-            secureTextEntry={true}
-            />
+      <View style={{ 
+        flex: 1,
+        width: '100%', 
+        flexDirection: 'column',
+        alignItems: "center",
+        justifyContent: "center" }} 
+      >
+        <TextInput placeholder='Email' onChangeText={text => setEmail(text)} 
+        style={styles.textInput} placeholderTextColor='white' />
+        <TextInput
+          style={styles.textInput}
+          placeholderTextColor='white'
+          placeholder='Password'
+          onChangeText={text => setPassword(text)}
+          secureTextEntry={true}
+          />
         {errorMessage ? <Text>{errorMessage}</Text> : <Text />}
-        <Button onPress={() => _handleLogin()} block light style={styles.button}>
-          <Text>Login</Text>
-        </Button>
-        <Button onPress={() => navigation.navigate('SignUp')} block light
-        style={styles.button}>
-          <Text>Create Account</Text>
-        </Button>
-      </Content>
+        <TouchableOpacity onPress={() => _handleLogin()} style={styles.button} >
+          <Text style={styles.buttonText} >Login</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('SignUp')} style={styles.button} >
+          <Text style={styles.buttonText} >Create Account</Text>
+        </TouchableOpacity>
+      </View>
       </ImageBackground>
     </View>
   );
@@ -97,21 +97,34 @@ const styles = StyleSheet.create({
   container: {
     marginTop: Constants.statusBarHeight,
     flex: 1,
-    backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
     alignContent: 'center'
   },
   textInput: {
-    flex: 0.75,
+    height: 50,
     borderRadius: 10,
+    margin: 20,
+    padding: 20,
     backgroundColor: colors.text,
     borderWidth: 2,
     borderColor: colors.color3,
-    color: colors.color3
+    color: colors.color3,
+    width: '60%'
   },
   button: {
-    width: 250,
+    width: 200,
+    height: 60,
+    margin: 10,
     borderRadius: 10,
+    backgroundColor: colors.color1,
+    alignContent: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderColor: colors.text,
+    borderWidth: 1
+  },
+  buttonText: {
+    color: colors.text,
   }
 });
