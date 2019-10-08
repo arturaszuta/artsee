@@ -218,7 +218,7 @@ export const fetchAllComments = () => dispatch => {
   })
     .then(res =>
       res.json().then(data => {
-        console.log("==|==|> comments from fetch:",data)
+        // console.log("==|==|> comments from fetch:",data)
         dispatch(setComments(data));
       })
     )
