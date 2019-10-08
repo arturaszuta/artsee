@@ -59,6 +59,7 @@ export default function LoginScreen({navigation}) {
 
   return (
     <View style={styles.container}>
+      <Image style={{ flex: 1}} source={{ uri: "../../assets/auth.jpg"}} />
       <Content style={{ marginTop: 100, width: '100%' }}>
         <Item rounded>
           <Input placeholder='Email' onChangeText={text => setEmail(text)} />
