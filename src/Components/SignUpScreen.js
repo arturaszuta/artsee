@@ -16,7 +16,6 @@ export default function SignupScreen({navigation}) {
   var {height, width} = Dimensions.get('window');
 
   _handleSignup = () => {
-    console.log("=======handle signup", name, email, password, password_confirmation);
     if (password === password_confirmation) {
       fetch("https://artsee-back-end.herokuapp.com/users", {
         method: "POST",

@@ -54,7 +54,6 @@ export default class CameraScreen extends React.Component {
   async postData(data) {
     data.latitude = this.state.location.coords.latitude;
     data.longitude = this.state.location.coords.longitude;
-    console.log(data);
     fetch("https://artsee-back-end.herokuapp.com/arts", {
       method: "POST",
       headers: {
@@ -99,7 +98,6 @@ export default class CameraScreen extends React.Component {
     }       
 
     if (this.camera) {
-       console.log("Taking photo");
        const options = { 
          quality: 0.5, 
          base64: true, 
@@ -110,7 +108,6 @@ export default class CameraScreen extends React.Component {
       await this.camera.takePictureAsync(options).then(photo => {
           this.setState({ view: "success" }) ;
           photo.exif.Orientation = 1;
-          console.log(photo);
           data.file = photo.base64;
           this.setState({ data: data })
           this.setState({ photo: "data:image/jpg;base64," + photo.base64 })

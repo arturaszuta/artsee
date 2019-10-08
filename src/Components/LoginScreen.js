@@ -23,7 +23,7 @@ export default function LoginScreen({navigation}) {
   var {height, width} = Dimensions.get('window');
 
   _handleLogin = () => {
-    console.log("========handle login =====> ", email, password);
+
     fetch(`https://artsee-back-end.herokuapp.com/auth/login`,
       {
         method: "POST",
@@ -39,21 +39,13 @@ export default function LoginScreen({navigation}) {
     )
       .then(res => res.json())
       .then(data => {
-        // if (data.error === unauthorized) {
-        //   console.log('unauthorized login')
-        //   setErrorMessage("Invalid email or password");
-        //   return;
-        // } else {
-        //   _storeToken(data);
-        // }
         _storeToken(data);
       })
       .then(navigation.navigate("Splash"))
-      .catch(err => console.error(err));
+      .catch(err => err);
   };
 
   _storeToken = async data => {
-    console.log('===== data =====', data)
     try {
       await AsyncStorage.setItem('userId', (data.user_id).toString());
       await AsyncStorage.setItem('token', data.token);
