@@ -3,18 +3,21 @@ import {View, Text} from 'react-native';
 import moment from "moment";
 
 
-export default function Comment({comment}) {
+export default function Comment({comment, username}) {
+  const converted_date = moment(comment.created_at).format(
+    "YYYY-MM-DD HH:mm:ss"
+  );
+  const posted_at = moment(converted_date).fromNow();
+ 
   return (
     <View key={comment.id}>
       <View style={{flexDirection:"row"}}>
-        <Text style={{fontWeight:"bold", marginRight:10, marginLeft:10}}>{comment.user_id}</Text>
+        <Text style={{fontWeight:"bold", marginRight:10, marginLeft:10}}>{username}</Text>
         <Text>{comment.content}</Text>
       </View>
 
       <Text style={{marginLeft:10}}>
-        {moment.utc(comment.created_at)
-          .startOf("day")
-          .fromNow()}
+        {posted_at}
       </Text>
     </View>
   );
