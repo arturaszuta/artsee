@@ -3,7 +3,7 @@ import { View, Button, Text, Image, Dimensions, TouchableOpacity } from 'react-n
 import { withNavigation } from 'react-navigation';
 
 import { connect } from 'react-redux';
-import { setTag } from '../../actions';
+import { postTag } from '../../actions';
 
 import IconMat from "react-native-vector-icons/MaterialIcons";
 import Icon from "react-native-vector-icons/Ionicons";
@@ -49,7 +49,7 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  setTag: (id, opt, value) => dispatch(setTag(id, opt, value))
+  postTag: (id, opt, value, ) => dispatch(postTag(id, opt, value))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(withNavigation(ModalArt));

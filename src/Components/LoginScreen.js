@@ -77,64 +77,52 @@ export default function LoginScreen({navigation}) {
             backgroundColor: "rgba(52, 52, 52, 0.5)"
           }}
         >
-          <Text style={{ fontSize: 25, fontWeight: "bold", color: "white" }}>
-            Login
-          </Text>
-          <Icon
-            name="email-outline"
-            size={40}
-            style={{
-              paddingTop: 4.3,
-              paddingBottom: 4.3,
-              color: "black",
-              position: "absolute",
-              left: 30,
-              bottom: 390,
-              zIndex: 1
-            }}
-          />
-          <View style={{ alignItems: "center", flexDirection: "row" }}>
-            <TextInput
-              placeholder="Email"
-              onChangeText={text => setEmail(text)}
-              style={styles.textInput}
-              placeholderTextColor="grey"
+            <Text style={{ fontSize: 25, fontWeight: "bold", color: "white" }}>
+              Login
+            </Text>
+          <View>
+            <Icon
+              name="email-outline"
+              size={40}
+              style={styles.icon}
             />
+            <View style={{ alignItems: "center", flexDirection: "row" }}>
+              <TextInput
+                placeholder="Email"
+                onChangeText={text => setEmail(text)}
+                style={styles.textInput}
+                placeholderTextColor="grey"
+              />
+            </View>
           </View>
-          <Icon
-            name="lock"
-            size={40}
-            style={{
-              color: "black",
-              paddingTop: 4.3,
-              paddingBottom: 4.3,
-              position: "absolute",
-              bottom: 300,
-              left: 30,
-              zIndex: 1
-            }}
-          />
-          <View style={{ alignItems: "center", flexDirection: "row" }}>
-            <TextInput
-              style={styles.textInput}
-              placeholderTextColor="grey"
-              placeholder="Password"
-              onChangeText={text => setPassword(text)}
-              secureTextEntry={true}
+          <View>
+            <Icon
+              name="lock"
+              size={40}
+              style={styles.icon}
             />
+            <View style={{ alignItems: "center", flexDirection: "row" }}>
+              <TextInput
+                style={styles.textInput}
+                placeholderTextColor="grey"
+                placeholder="Password"
+                onChangeText={text => setPassword(text)}
+                secureTextEntry={true}
+              />
+            </View>
           </View>
           {errorMessage ? <Text>{errorMessage}</Text> : <Text />}
           <TouchableOpacity
             onPress={() => _handleLogin()}
             style={styles.button}
           >
-            <Text>Login</Text>
+            <Text style={{ color: 'white' }}>Login</Text>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => navigation.navigate("SignUp")}
             style={styles.button}
           >
-            <Text style={{ background: "#e3170a", borderRadius: 25 }}>
+            <Text style={{ color: 'white' }}>
               Create Account
             </Text>
           </TouchableOpacity>
@@ -153,18 +141,18 @@ const styles = StyleSheet.create({
     alignContent: "center"
   },
   textInput: {
-    paddingHorizontal: 55,
+    paddingHorizontal: 65,
     height: 50,
     borderRadius: 25,
     marginBottom: 20,
     marginTop: 20,
     // padding: 10,
-    backgroundColor: colors.text,
+    backgroundColor: 'black',
     // borderWidth: 2,
     borderColor: "white",
     // borderColor: colors.color3,
     color: colors.color3,
-    width: "85%"
+    width: 300
   },
   button: {
     width: 300,
@@ -179,5 +167,14 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: colors.text
+  },
+  icon: {
+    color: colors.text,
+    paddingTop: 4.3,
+    paddingBottom: 4.3,
+    position: "absolute",
+    left: 14,
+    top: 19,
+    zIndex: 1
   }
 });

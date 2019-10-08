@@ -1,4 +1,4 @@
-const text = '#000000';
+const text = '#f9f9f9';
 const color1 = '#512c96';
 const color2 = '#3c6f9c';
 const color3 = '#dd6892';
