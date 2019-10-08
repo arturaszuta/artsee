@@ -3,19 +3,25 @@ import {
   AsyncStorage,
   StyleSheet,
   Text,
-  View
+  View,
+  Image,
+  Dimensions,
+  ImageBackground
 } from 'react-native';
 import {
   Content,
   Item,
   Input,
   Button
+  
 } from 'native-base';
 
 export default function LoginScreen({navigation}) {
   let [email, setEmail] = useState("Email");
   let [password, setPassword] = useState("Password");
   let [errorMessage, setErrorMessage] = useState('');
+
+  var {height, width} = Dimensions.get('window');
 
   _handleLogin = () => {
     console.log("========handle login =====> ", email, password);
@@ -59,26 +65,31 @@ export default function LoginScreen({navigation}) {
 
   return (
     <View style={styles.container}>
-      <Image style={{ flex: 1}} source={{ uri: "../../assets/auth.jpg"}} />
-      <Content style={{ marginTop: 100, width: '100%' }}>
+      <ImageBackground source={require('../../assets/auth.jpg')} style={{ flex: 1, width: width, height: height, alignItems: 'center'}}>
+      <Content style={{ marginTop: 100, width: '100%' }} >
         <Item rounded>
-          <Input placeholder='Email' onChangeText={text => setEmail(text)} />
+          <Input placeholder='Email' onChangeText={text => setEmail(text)} 
+          style={styles.textInput} placeholderTextColor='white' />
         </Item>
         <Item rounded>
           <Input
+            style={styles.textInput}
+            placeholderTextColor='white'
             placeholder='Password'
             onChangeText={text => setPassword(text)}
             secureTextEntry={true}
-          />
+            />
         </Item>
         {errorMessage ? <Text>{errorMessage}</Text> : <Text />}
-        <Button onPress={() => _handleLogin()} block light>
+        <Button onPress={() => _handleLogin()} block light style={styles.button}>
           <Text>Login</Text>
         </Button>
-        <Button onPress={() => navigation.navigate('SignUp')} light>
+        <Button onPress={() => navigation.navigate('SignUp')} block light
+        style={styles.button}>
           <Text>Create Account</Text>
         </Button>
       </Content>
+      </ImageBackground>
     </View>
   );
 }
@@ -89,5 +100,20 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center"
+  },
+  textInput: {
+    flex: 0.75,
+    borderRadius: 20,
+    backgroundColor: 'lightgrey',
+    borderWidth: 2,
+    borderColor: 'white',
+    marginLeft: 10,
+    marginTop: 10
+  },
+  button: {
+    width: 250,
+    marginLeft: 10,
+    marginTop: 10,
+    borderRadius: 20,
   }
 });
