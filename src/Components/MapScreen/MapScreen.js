@@ -40,12 +40,12 @@ export default MapScreen = ({navigation, arts, currUserLocation, updateUserLocat
 
   return (
     <Container style={{ flex: 1, marginTop: Constants.statusBarHeight }}>
-       <Header style={{backgroundColor:colors.color2}}>
+       {/* <Header style={{backgroundColor:colors.color2}}>
         <Left style={{flex:1}}><Text style={{color:colors.text, fontWeight:'bold', fontSize:18}}>artsee</Text></Left>
         <Body style={{flex:1, alignItems:'center', justifyContent: "center"}}>
         </Body>
         <Right style={{flex:1}}/>
-      </Header>
+      </Header> */}
       <View style={{ flex: 1 }}>
         <MapView
           style={{ flex: 1 }}

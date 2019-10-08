@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Button, Text, Image, Dimensions } from 'react-native';
+import { View, Button, Text, Image, Dimensions, TouchableOpacity } from 'react-native';
 import { withNavigation } from 'react-navigation';
 
 import { connect } from 'react-redux';
@@ -19,8 +19,6 @@ const ModalArt = ({navigation, arts, setTag}) => {
   const map = (comp, setTag) => <Icon name={comp.visited ? 'ios-map' : 'ios-pin'} color={comp.visited ? colors.bookmark : colors.color1} size={50} artID={comp.id} userID={comp.user_id} onPress={() => setTag(comp.id, 'visited', !comp.visited)} style={modalStyle.icons} />;
   
   const artId = navigation.getParam("artId")
-  console.log("==|=> ModalArt, arts:",arts)
-  console.log("==|==> ModalArt, artId:",artId)
   let art = arts[artId];
 
   const imgUrl = 'https://arzmkdmkzm.cloudimg.io/width/' + Math.round(Dimensions.get('window').width) + '/x/' + art.img_url;
@@ -39,11 +37,9 @@ const ModalArt = ({navigation, arts, setTag}) => {
         {bookmark(art, setTag)}
       </View>
       <Text style={{ color: colors.color2, fontSize: 24, textAlign: 'center', flex: 1, justifyContent: 'center' }}>comments...</Text>
-      <View onPress={() => navigation.goBack()} >
-        <Text style={modalStyle.dismiss}>
-          X
-        </Text>
-      </View>
+      <Icon name="md-arrow-round-back" onPress={e => {
+        navigation.goBack();
+      }} size={40} color="red" title="endDirections" style={{ paddingBottom: 10 }} />
     </View>
   )
 }

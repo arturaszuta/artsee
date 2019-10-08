@@ -16,7 +16,7 @@ class CachedImage extends Component {
   async componentDidMount() {
     const extension = this.props.source.slice((this.props.source.lastIndexOf(".") - 1 >>> 0) + 2)
 
-    if ((extension.toLowerCase() !== 'jpg') && (extension.toLowerCase() !== 'png') && (extension.toLowerCase() !== 'gif')) {
+    if ((extension.toLowerCase() !== 'jpg') && (extension.toLowerCase() !== 'png') && (extension.toLowerCase() !== 'gif' && extension.toLowerCase() !== 'jpeg')) {
       this.setState({ loading: false, failed: true })
     }
 

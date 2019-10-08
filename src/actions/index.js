@@ -137,7 +137,6 @@ export const fetchUsers = (token) => dispatch => {
       }
     })
       .then(res => res.json().then(users => {
-        console.log("==|==> users:",users)
         dispatch(setUsers(users))
       }))
 }

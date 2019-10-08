@@ -5,7 +5,7 @@ import ProfileScreen from '../Components/ProfileScreen/ProfileScreen';
 
 const mapStateToProps = state => ({
   arts: state.arts,
-  user: state.users.user
+  users: state.users
 })
 
 const mapDispatchToProps = dispatch => ({

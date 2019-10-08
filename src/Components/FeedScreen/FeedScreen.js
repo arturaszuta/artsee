@@ -8,11 +8,10 @@ import Deck from './Deck';
 
 export default FeedScreen = ({navigation, arts, setTag, users}) => {
 
-  console.log("==|==|> FeedScreen. users:",users)
   return (
       <Container style={{ marginTop: Constants.statusBarHeight }}>
         <Content>
-          <Deck arts={arts} setTag={setTag} />
+          <Deck arts={arts} setTag={setTag} users={users} />
         </Content>
       </Container>
   );

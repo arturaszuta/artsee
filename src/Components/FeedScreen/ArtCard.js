@@ -19,7 +19,7 @@ const showInfographic = function(text) {
   })
 }
 
-export default ArtCard = ({comp, setTag}) => {
+export default ArtCard = ({comp, setTag, ogUser}) => {
   const imgUrl = 'https://arzmkdmkzm.cloudimg.io/width/' + screenWidth + '/x/' + comp.img_url;
 
   const bookmark = (comp, setTag) => <IconMat name={comp.seelist ? 'bookmark' : 'bookmark-border'} color={comp.seelist ? colors.seen : colors.color1} size={26} artID={comp.id} userID={comp.user_id} onPress={() => setTag(comp.id, 'seelist', !comp.seelist)} style={artCardStyle.icons} />;
@@ -28,9 +28,13 @@ export default ArtCard = ({comp, setTag}) => {
 
   return (
     <View style={artCardStyle.container}>
-      <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-        <Text style={artCardStyle.head}>{comp.title || 'Art peace!'}</Text>
-        <Text style={{...artCardStyle.head, fontSize: 22}}>{comp.user_id}</Text>
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignContent: 'center', alignItems: 'center' }}>
+        <Text style={artCardStyle.head}>{ogUser.name || 'Art peace!'}</Text>
+        {ogUser.avatar && <CachedImage style={{...artCardStyle.headImage, width: 35, height: 35, resizeMode: 'cover'}} 
+          source={ogUser.avatar}
+          title={ogUser.email}
+          height={35}
+        />}
       </View>
       {/* <Image source={{ uri: imgUrl }} style={{ width: screenWidth, height: screenWidth }} /> */}
       <CachedImage
@@ -39,13 +43,16 @@ export default ArtCard = ({comp, setTag}) => {
         style={{ width: screenWidth, height: screenWidth }}
         height={screenWidth}
       />
-      {/* <Image style={{ width: screenWidth, height: screenWidth }} {...{preview, imgUrl}} /> */}
+      <Text style={artCardStyle.title}>{comp.title || 'Art peace!'}</Text>
       <View style={artCardStyle.iconContainer}>
           {heart(comp, setTag)}
           {map(comp, setTag)}
           {bookmark(comp, setTag)}
       </View>
       <Text style={artCardStyle.comment}>comments...</Text>
+      {/* <View style={{ flex: 1, width: screenWidth, justifyContent: 'center', alignItems: 'center' }}>
+        <Text style={artCardStyle.line}>____________________________________</Text>
+      </View> */}
     </View>
   )
 }

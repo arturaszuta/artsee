@@ -6,7 +6,7 @@ import Section from './Section';
 import SectionButton from './SectionButton';
 import ProfileSection from './ProfileSection';
 
-export default ProfileScreen = ({navigation, arts, user, setTag}) => {
+export default ProfileScreen = ({navigation, arts, setTag, users}) => {
   
   let [followingComp, setFollowingComp] = useState([]);
   let [activeIndex, setActiveIndex] = useState(0);
@@ -22,7 +22,7 @@ export default ProfileScreen = ({navigation, arts, user, setTag}) => {
 
   // get seen, liked, and bookmarked art
   useEffect(() => {
-    if (user && arts) {
+    if (users.user && arts) {
       const liked = Object.keys(arts).filter(art => arts[art].liked).map(id => arts[id])
       const bookmarked = Object.keys(arts).filter(art => arts[art].seelist).map(id => arts[id])
       const seen = Object.keys(arts).filter(art => arts[art].visited).map(id => arts[id])
@@ -33,11 +33,11 @@ export default ProfileScreen = ({navigation, arts, user, setTag}) => {
     }
   }, [arts])
   
-  if (user) {
+  if (users.user) {
     return (
       <ScrollView style={{ marginTop: Constants.statusBarHeight }}>
         <View style={{ flex: 1 }}>
-          <ProfileSection user={user} followingComp={followingComp} />
+          <ProfileSection user={users.user} followingComp={followingComp} users={users} />
           <Button onPress={e => {
             AsyncStorage.clear();
             navigation.navigate('Auth');
