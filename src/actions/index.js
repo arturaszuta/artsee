@@ -25,6 +25,7 @@ const fetching = () => {
 }
 
 const resolveFetch = () => {
+  console.log("==|==> resolveFetch")
   return {
     type: SET_RESOLVED
   }
@@ -129,6 +130,7 @@ export const fetchToken = () => dispatch => {
 
 export const fetchUser = () => dispatch => {
   let token = null
+  dispatch(fetching())
   return AsyncStorage.getItem('token')
     .then(res => {
       token = res

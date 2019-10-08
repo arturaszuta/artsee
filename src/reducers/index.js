@@ -97,21 +97,13 @@ const comments = (state = [], action) => {
   }
 }
 
-const asyncFetches = (state = {
-  isFetching: false,
-  items: []
-}, action) => {
+const asyncFetches = (state = false, action) => {
   switch(action.type) {
     case SET_LOADING: {
-      return Object.assign({}, state, {
-        isFetching: true
-      })
+      return false
     }
     case SET_RESOLVED: {
-      return Object.assign({}, state, {
-        isFetching: false,
-        items: action.value
-      })
+      return true
     }
     default:
       return state

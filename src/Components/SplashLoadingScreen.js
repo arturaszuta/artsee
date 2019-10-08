@@ -1,24 +1,18 @@
 import React, { useEffect } from 'react';
 import {
-  ActivityIndicator,
-  AsyncStorage,
-  StatusBar,
   View,
-  Text,
   Image
 } from 'react-native';
 import { connect } from 'react-redux';
 import {
   fetchUser,
-  findUserLocation,
-  fetchToken,
-  fetchAllComments
+  findUserLocation
 } from '../actions'
 
 
 import { useApplicationData } from '../hooks/useApplicationData';
 
-function SplashLoadingScreen({navigation, user, isFetching, isResolved, dispatch, reduxState}) {
+function SplashLoadingScreen({navigation, doFetchUser, doFindUserLocation, resolved, dispatch}) {
 
   _getState = async () => {
     
@@ -26,7 +20,7 @@ function SplashLoadingScreen({navigation, user, isFetching, isResolved, dispatch
    
     const result = function() {
       setTimeout(() => {
-        navigation.navigate('App');  
+        
       }, 3000)
     }
    
@@ -38,12 +32,16 @@ function SplashLoadingScreen({navigation, user, isFetching, isResolved, dispatch
   };
 
   useEffect(() => {
-    dispatch(fetchUser())
-    dispatch(findUserLocation())
-
-    _getState();
   }, [])
-
+  
+  if (!resolved) {
+    dispatch(fetchUser()),
+    dispatch(findUserLocation())
+  } else {
+    setTimeout(() => {
+      navigation.navigate('App');  
+    }, 1000)
+  }
   return (
     <View style={{flex: 1}}>
       <Image source={require('../../assets/artseegif.gif')} style={{ flex: 1, width: undefined, height: undefined}}/>
@@ -51,18 +49,13 @@ function SplashLoadingScreen({navigation, user, isFetching, isResolved, dispatch
   )
 }
 
-function mapStateToProps(state) {
-  const { user } = state
-  const reduxState = state
-  const { isFetching, isResolved } = user ? { isFetching: false, isResolved: true } :{ isFetching: true, isResolved: false };
+const mapStateToProps = state => ({
+  resolved: state.asyncFetches
+}) 
 
-  return {
-    state,
-    reduxState,
-    user,
-    isFetching,
-    isResolved
-  }
-}
+const mapDispatchToProps = dispatch => ({
+  doFetchUser: dispatch(fetchUser()),
+  doFindUserLocation: dispatch(findUserLocation())
+})
 
 export default connect(mapStateToProps)(SplashLoadingScreen);

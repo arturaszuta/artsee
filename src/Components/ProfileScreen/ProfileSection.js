@@ -12,11 +12,12 @@ const userAvatar = (ogUser) => {
       source={ogUser.avatar}
       title={ogUser.email}
       height={32}
+      key={ogUser.id}
     />
   )
 }
 
-export default ProfileSection = ({user, followingComp, users}) => {
+export default ProfileSection = ({user, users}) => {
   return (
     <ImageBackground
       style={profileStyle.profileBG}
@@ -48,17 +49,6 @@ export default ProfileSection = ({user, followingComp, users}) => {
           </View>
         </View>
       </View>
-      {/* {followingComp.length > 0 ? (
-        <View style={profileStyle.following}>
-          <Text>Following</Text>
-          <View stype={{ flexDirection: "row" }}>{followingComp}</View>
-        </View>
-      ) : (
-        <View style={profileStyle.following}>
-          <Text>Following</Text>
-          <Text>No One</Text>
-        </View>
-      )} */}
     </ImageBackground>
   )
 }

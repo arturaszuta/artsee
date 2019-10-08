@@ -2,8 +2,6 @@ import React, { Component } from 'react'
 import { View, Image, ActivityIndicator, Dimensions, Platform } from 'react-native'
 import * as FileSystem from 'expo-file-system'
 
-// By Damien Mason
-
 class CachedImage extends Component {
   state = { 
     loading: true, 

@@ -49,7 +49,7 @@ export default Section = ({navigation, section, setTag}) => {
       numColumns={3}                   
       data={data}
       renderItem={({item}) => <Item imgUrl={item.imgUrl} art={item.art} idx={item.idx} setTag={setTag} />}
-      keyExtractor={(item) => item.id}
+      keyExtractor={(item) => 's' + item.id}
     />
   )
 }

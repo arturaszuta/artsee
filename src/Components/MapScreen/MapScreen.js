@@ -22,8 +22,8 @@ export default MapScreen = ({navigation, arts, currUserLocation, updateUserLocat
   const [region, setRegion] = useState({
     latitude: 43.644913,
     longitude: -79.402520,
-    latitudeDelta: 0.0522,
-    longitudeDelta: 0.0121,
+    latitudeDelta: 0.0422,
+    longitudeDelta: 0.0081,
   })
 
   navigationOptions = {

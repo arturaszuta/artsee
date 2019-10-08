@@ -14,6 +14,7 @@ import rootReducer from './src/reducers'
 import Icon from "react-native-vector-icons/FontAwesome5";
 import * as Font from "expo-font";
 import mainStyle from "./styles/main";
+import { colors } from './styles/variables';
 
 import LoginScreen from "./src/Components/LoginScreen";
 import SignUpScreen from "./src/Components/SignUpScreen";
@@ -61,7 +62,10 @@ const AppStack = createBottomTabNavigator(
             return;
         }
 
-        return <IconComponent name={iconName} navigation={navigation} size={25} color={tintColor} />;
+        return <IconComponent name={iconName} navigation={navigation} size={30} color={colors.tabButts} style={{
+          paddingTop: 10,
+          paddingBottom: 10
+        }} />;
       },
       headerStyle: {
         backgroundColor: '#f4511e',
@@ -72,6 +76,7 @@ const AppStack = createBottomTabNavigator(
       },
     }),
     tabBarOptions: {
+      showLabel: false,
       activeTintColor: "#39c2c9",
       inactiveTintColor: "#363a43",
       style: mainStyle.tabBar

@@ -15,12 +15,13 @@ export const marker = (mapMarkers, setRegion, region, navigation) => {
         <Marker draggable
           key = {marker}
           coordinate={mapMarkers[marker]}
+          pinColor={colors.color1}
           onPress={e => {
             setRegion({...region, ...mapMarkers[marker]})
             navigation.navigate('ArtModal', {artId: mapMarkers[marker].id})
           }}
         >
-          {spraycan}
+          {/* {spraycan} */}
         </Marker>
       )
     })
