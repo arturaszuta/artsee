@@ -4,7 +4,11 @@ import moment from "moment";
 
 
 export default function Comment({comment, username}) {
-  const date = moment().utc(comment.created_at).local().startOf('day').fromNow()
+  const converted_date = moment(comment.created_at).format(
+    "YYYY-MM-DD HH:mm:ss"
+  );
+  const posted_at = moment(converted_date).fromNow();
+ 
   return (
     <View key={comment.id}>
       <View style={{flexDirection:"row"}}>
@@ -13,7 +17,7 @@ export default function Comment({comment, username}) {
       </View>
 
       <Text style={{marginLeft:10}}>
-        {date}
+        {posted_at}
       </Text>
     </View>
   );

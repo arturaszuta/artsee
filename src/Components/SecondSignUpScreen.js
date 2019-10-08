@@ -3,13 +3,17 @@ import {
   AsyncStorage,
   StyleSheet,
   Text,
-  View
+  View,
+  Dimensions,
+  ImageBackground
 } from "react-native";
 import { Content, Item, Input, Button } from "native-base";
 
 export default function SecondSignUpScreen({navigation}, ) {
   let [errorMessage, setErrorMessage] = useState("");
   let city, tagline, avatar, background,email = '';
+
+  var {height, width} = Dimensions.get('window');
 
   
   
@@ -41,33 +45,44 @@ export default function SecondSignUpScreen({navigation}, ) {
 
   return (
     <View style={styles.container}>
+       <ImageBackground source={require('../../assets/auth.jpg')} style={{ flex: 1, width: width, height: height, alignItems: 'center'}}>
       <Content style={{ marginTop: 100, width: '100%' }}>
         <Item rounded>
-          <Input placeholder='city you live in' onChangeText={text => city = text} />
+          <Input 
+          placeholder='city you live in' 
+          onChangeText={text => city = text}
+          style={styles.textInput}
+          placeholderTextColor='white' />
         </Item>
         <Item rounded>
-          <Input placeholder='tagline...something quirky!' onChangeText={text => tagline = text } />
+          <Input 
+          placeholder='tagline...something quirky!' 
+          onChangeText={text => tagline = text }
+          style={styles.textInput}
+          placeholderTextColor='white' />
         </Item>
         <Item rounded>
           <Input
             placeholder='avatar url'
             onChangeText={text => avatarUrl = text}
+            style={styles.textInput}
+            placeholderTextColor='white'
           />
         </Item>
         <Item rounded>
           <Input
             placeholder='background url'
             onChangeText={text => backgroundUrl = text}
+            style={styles.textInput}
+            placeholderTextColor='white'
           />
         </Item>
         {errorMessage ? <Text>{errorMessage}</Text> : <Text />}
-        <Button onPress={() => _updateProfile()} block light>
-          <Text>Update Profile</Text>
-        </Button>
-        <Button onPress={() => navigation.navigate('Login')} block light>
-          <Text>Login</Text>
+        <Button onPress={() => _updateProfile()} block light style={styles.button}>
+          <Text>Finalize</Text>
         </Button>
       </Content>
+      </ImageBackground>
     </View>
   );
   }
@@ -79,5 +94,20 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center'
+  },
+  textInput: {
+    flex: 0.75,
+    borderRadius: 20,
+    backgroundColor: 'lightgrey',
+    borderWidth: 2,
+    borderColor: 'white',
+    marginLeft: 10,
+    marginTop: 10
+  },
+  button: {
+    width: 250,
+    marginLeft: 10,
+    marginTop: 10,
+    borderRadius: 20,
   }
 });
