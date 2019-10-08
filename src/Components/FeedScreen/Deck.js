@@ -21,7 +21,7 @@ export default Deck = ({arts, user, postNewComment, comments, postTag, filter, u
     return (
       <FlatList
         data={data}
-        renderItem={({item}) => <ArtCard comp={item.comp} postTag={postTag} postNewComment={postNewComment} user={user} ogUser={item.ogUser} comments={item.comments} users={users} />}
+        renderItem={({item}) => <ArtCard comp={item.comp} postTag={postTag} postNewComment={postNewComment} user={user} ogUser={item.ogUser} comments={item.comp.comments} users={users} />}
         keyExtractor={item => item.id}
       />
     )

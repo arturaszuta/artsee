@@ -147,7 +147,7 @@ export const fetchUser = () => dispatch => {
               return res.json()
                 .then(res => {
                   dispatch(setUser(res))
-                  dispatch(fetchAllComments())
+                  // dispatch(fetchAllComments())
                   dispatch(fetchArts(res.id))
                   dispatch(fetchUsers(token))
                   dispatch(resolveFetch())
@@ -190,10 +190,31 @@ export const fetchArts = (userId) => dispatch => {
           arts[art.id] = art
           art.latitude = Number(art.latitude);
           art.longitude = Number(art.longitude);
+          art.comments = []
         })
         dispatch(setFilterArray(filterArray));
-        dispatch(setArts(arts))
+        return arts
       })
+        .then(arts => {
+          fetch(`https://artsee-back-end.herokuapp.com/api/allComments`, {
+            method: "GET",
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json"
+            }
+          })
+            .then(res =>
+              res.json().then(data => {
+                data.forEach(comment => {
+                  arts[comment.art_id].comments.push(comment)
+                })
+
+                dispatch(setComments(data));
+                dispatch(setArts(arts))
+              })
+            )
+            .catch(err => console.error(err));
+        })
 }
 
 export const findUserLocation = () => async dispatch => {
@@ -208,22 +229,22 @@ export const findUserLocation = () => async dispatch => {
     })
 }
 
-export const fetchAllComments = () => dispatch => {
-  fetch(`https://artsee-back-end.herokuapp.com/api/allComments`, {
-    method: "GET",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json"
-    }
-  })
-    .then(res =>
-      res.json().then(data => {
-        console.log("==|==|> comments from fetch:",data)
-        dispatch(setComments(data));
-      })
-    )
-    .catch(err => console.error(err));
-}
+// export const fetchAllComments = () => dispatch => {
+//   fetch(`https://artsee-back-end.herokuapp.com/api/allComments`, {
+//     method: "GET",
+//     headers: {
+//       Accept: "application/json",
+//       "Content-Type": "application/json"
+//     }
+//   })
+//     .then(res =>
+//       res.json().then(data => {
+//         console.log("==|==|> comments from fetch:",data)
+//         dispatch(setComments(data));
+//       })
+//     )
+//     .catch(err => console.error(err));
+// }
 
 export const postNewComment = (art_id, user_id, newComment) => dispatch => {
   fetch(`https://artsee-back-end.herokuapp.com/arts/${art_id}/comments`, {
