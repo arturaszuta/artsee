@@ -13,13 +13,10 @@ const SET_LOADING = "SET_LOADING";
 const SET_RESOLVED = "SET_RESOLVED";
 const SET_USERS = "SET_USERS";
 const SET_TAG = "SET_TAG";
-<<<<<<< HEAD
 const APPLY_FILTER = "APPLY_FILTER";
 const SET_FILTER_ARRAY = "SET_FILTER_ARRAY";
-=======
 const SET_COMMENTS = "SET_COMMENTS";
 const SET_NEW_COMMENT = "SET_NEW_COMMENT";
->>>>>>> comments
 
 const fetching = () => {
   return {
@@ -97,12 +94,13 @@ export const setTag = (id, opt, value) => {
   }
 }
 
-<<<<<<< HEAD
 export const applyFilter = (filterArts) => {
   return {
     type: APPLY_FILTER,
     filterArts
-=======
+  }
+}
+
 export const setComments = (comments) => {
   return {
     type: SET_COMMENTS,
@@ -114,7 +112,6 @@ export const setNewComment = (newComment) => {
   return {
     type: SET_NEW_COMMENT,
     newComment
->>>>>>> comments
   }
 }
 
@@ -194,7 +191,6 @@ export const fetchArts = (userId) => dispatch => {
           art.latitude = Number(art.latitude);
           art.longitude = Number(art.longitude);
         })
-        console.log(filterArray)
         dispatch(setFilterArray(filterArray));
         dispatch(setArts(arts))
       })
@@ -212,15 +208,6 @@ export const findUserLocation = () => async dispatch => {
     })
 }
 
-<<<<<<< HEAD
-export const postTag = (id, opt, value, userID) => async dispatch => {
-  fetch(`https://artsee-back-end.herokuapp.com/tags/?user_id=${userID.id}&art_id=${id}&type=${opt}&value=${value}`, {
-            method: "POST"
-}).then(result => result.json()).then(res => res)
-  dispatch(setTag(id,
-    opt,
-    value))
-=======
 export const fetchAllComments = () => dispatch => {
   fetch(`https://artsee-back-end.herokuapp.com/api/allComments`, {
     method: "GET",
@@ -231,6 +218,7 @@ export const fetchAllComments = () => dispatch => {
   })
     .then(res =>
       res.json().then(data => {
+        console.log("==|==|> comments from fetch:",data)
         dispatch(setComments(data));
       })
     )
@@ -258,5 +246,13 @@ export const postNewComment = (art_id, user_id, newComment) => dispatch => {
       })
     )
     .catch(err => console.error(err));
->>>>>>> comments
+}
+
+export const postTag = (id, opt, value, userID) => async dispatch => {
+  fetch(`https://artsee-back-end.herokuapp.com/tags/?user_id=${userID.id}&art_id=${id}&type=${opt}&value=${value}`, {
+    method: "POST"
+  }).then(result => result.json()).then(res => res)
+    dispatch(setTag(id,
+      opt,
+      value))
 }

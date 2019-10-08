@@ -27,55 +27,16 @@ const showInfographic = function(text) {
   })
 }
 
-<<<<<<< HEAD
-export default ArtCard = ({comp, postTag, user}) => {
-  const imgUrl = 'https://arzmkdmkzm.cloudimg.io/width/' + screenWidth + '/x/' + comp.img_url;
-
-  const bookmark = (comp, postTag) => <IconMat name={comp.seelist ? 'bookmark' : 'bookmark-border'} color={comp.seelist ? colors.seen : colors.color1} size={26} artID={comp.id} userID={comp.user_id} onPress={() => postTag(comp.id, 'seelist', !comp.seelist, user)} style={artCardStyle.icons} />;
-  const heart = (comp, postTag) => <Icon name={comp.liked ? 'ios-heart' : 'ios-heart-empty'} color={comp.liked ? colors.like : colors.color1} size={26} artID={comp.id} userID={comp.user_id} onPress={() => postTag(comp.id, 'liked', !comp.liked, user)} style={artCardStyle.icons} />;
-  const map = (comp, postTag) => <Icon name={comp.visited ? 'ios-map' : 'ios-pin'} color={comp.visited ? colors.bookmark : colors.color1} size={26} artID={comp.id} userID={comp.user_id} onPress={() => postTag(comp.id, 'visited', !comp.visited, user)} style={artCardStyle.icons} />;
-
-  return (
-    <View style={artCardStyle.container}>
-      <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignContent: 'center', alignItems: 'center' }}>
-        <Text style={artCardStyle.head}>{ogUser.name || 'Art peace!'}</Text>
-        {ogUser.avatar && <CachedImage style={{...artCardStyle.headImage, width: 35, height: 35, resizeMode: 'cover'}} 
-          source={ogUser.avatar}
-          title={ogUser.email}
-          height={35}
-        />}
-      </View>
-      {/* <Image source={{ uri: imgUrl }} style={{ width: screenWidth, height: screenWidth }} /> */}
-      <CachedImage
-        source={imgUrl}
-        title={comp.id}
-        style={{ width: screenWidth, height: screenWidth }}
-        height={screenWidth}
-      />
-      <Text style={artCardStyle.title}>{comp.title || 'Art peace!'}</Text>
-      <View style={artCardStyle.iconContainer}>
-          {heart(comp, postTag)}
-          {map(comp, postTag)}
-          {bookmark(comp, postTag)}
-      </View>
-      <Text style={artCardStyle.comment}>comments...</Text>
-      {/* <View style={{ flex: 1, width: screenWidth, justifyContent: 'center', alignItems: 'center' }}>
-        <Text style={artCardStyle.line}>____________________________________</Text>
-      </View> */}
-    </View>
-  )
-=======
-export default ArtCard = ({comp, setTag, postNewComment, user}) => {;
+export default ArtCard = ({comp, postTag, user, postNewComment, ogUser, comments, users}) => {
   let [showComments, setShowComments] = useState(false);
   let [newComment, setNewComment] = useState('');
 
   const toggleComments = () => {
     setShowComments(!showComments);
   };
-
   const imgUrl = 'https://arzmkdmkzm.cloudimg.io/width/' + screenWidth + '/x/' + comp.img_url;
 
-  const bookmark = (comp, setTag) => {
+  const bookmark = (comp, postTag) => {
     return (
        <IconMat
         name={comp.seelist ? "bookmark" : "bookmark-border"}
@@ -83,13 +44,13 @@ export default ArtCard = ({comp, setTag, postNewComment, user}) => {;
         size={26}
         artID={comp.id}
         userID={comp.user_id}
-        onPress={() => setTag(comp.id, "seelist", !comp.seelist)}
+        onPress={() => postTag(comp.id, "seelist", !comp.seelist, user)}
         style={artCardStyle.icons}
       />
     )
   } 
 
-  const heart = (comp, setTag) => {
+  const heart = (comp, postTag) => {
     return (
       <Icon
       name={comp.liked ? "ios-heart" : "ios-heart-empty"}
@@ -97,13 +58,13 @@ export default ArtCard = ({comp, setTag, postNewComment, user}) => {;
       size={26}
       artID={comp.id}
       userID={comp.user_id}
-      onPress={() => setTag(comp.id, "liked", !comp.liked)}
+      onPress={() => postTag(comp.id, "liked", !comp.liked, user)}
       style={artCardStyle.icons}
     />
     )
   } 
 
-  const map = (comp, setTag) => {
+  const map = (comp, postTag) => {
     return (
       <Icon
         name={comp.visited ? "ios-map" : "ios-pin"}
@@ -111,7 +72,7 @@ export default ArtCard = ({comp, setTag, postNewComment, user}) => {;
         size={26}
         artID={comp.id}
         userID={comp.user_id}
-        onPress={() => setTag(comp.id, "visited", !comp.visited)}
+        onPress={() => postTag(comp.id, "visited", !comp.visited, user)}
         style={artCardStyle.icons}
       />
     )
@@ -132,11 +93,15 @@ export default ArtCard = ({comp, setTag, postNewComment, user}) => {;
   }
 
   const renderComments = () => {
-    return comp.comments.map((comment, idx) => {
-      return (
-        <Comment key={idx} comment={comment} />
-      )
-    })
+    if (comments) {
+      return comments.map((comment, idx) => {
+        return (
+          <Comment key={idx} comment={comment} username={users[comment.user_id].name} />
+        )
+      })
+    } else {
+      return null
+    }
   }
 
   return (
@@ -146,11 +111,13 @@ export default ArtCard = ({comp, setTag, postNewComment, user}) => {;
       enabled
     >
       <View style={artCardStyle.container}>
-        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-          <Text style={artCardStyle.head}>{comp.title || "Art peace!"}</Text>
-          <Text style={{ ...artCardStyle.head, fontSize: 22 }}>
-            {comp.user_id}
-          </Text>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignContent: 'center', alignItems: 'center' }}>
+          <Text style={artCardStyle.head}>{ogUser.name || 'Art peace!'}</Text>
+          {ogUser.avatar && <CachedImage style={{...artCardStyle.headImage, width: 35, height: 35, resizeMode: 'cover'}} 
+            source={ogUser.avatar}
+            title={ogUser.email}
+            height={35}
+          />}
         </View>
         {/* <Image source={{ uri: imgUrl }} style={{ width: screenWidth, height: screenWidth }} /> */}
         <CachedImage
@@ -159,7 +126,7 @@ export default ArtCard = ({comp, setTag, postNewComment, user}) => {;
           style={{ width: screenWidth, height: screenWidth }}
           height={screenWidth}
         />
-        {/* <Image style={{ width: screenWidth, height: screenWidth }} {...{preview, imgUrl}} /> */}
+        <Text style={artCardStyle.title}>{comp.title || 'Art peace!'}</Text>
         <View
           style={{
             flexDirection: "row",
@@ -168,9 +135,9 @@ export default ArtCard = ({comp, setTag, postNewComment, user}) => {;
           }}
         >
           <View style={artCardStyle.iconContainer}>
-            {heart(comp, setTag)}
-            {map(comp, setTag)}
-            {bookmark(comp, setTag)}
+            {heart(comp, postTag)}
+            {map(comp, postTag)}
+            {bookmark(comp, postTag)}
           </View>
           <View style={{ marginRight: 10 }}>{comment()}</View>
         </View>
@@ -200,7 +167,9 @@ export default ArtCard = ({comp, setTag, postNewComment, user}) => {;
           </View>
         )}
       </View>
+        {/* <View style={{ flex: 1, width: screenWidth, justifyContent: 'center', alignItems: 'center' }}>
+          <Text style={artCardStyle.line}>____________________________________</Text>
+        </View> */}
     </KeyboardAvoidingView>
-  );
->>>>>>> comments
+  )
 }
