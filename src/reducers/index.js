@@ -74,7 +74,7 @@ const comments = (state = [], action) => {
       return Object.assign([], state, action.comments)
     }
     case SET_NEW_COMMENT: {
-      return Object.assign([], state, {...state, comment: action.newComment})
+      return Object.assign([], state, [...state, action.newComment])
     }
     default:
       return state

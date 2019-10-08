@@ -13,8 +13,7 @@ export default Deck = ({arts, user, setTag, postNewComment, comments}) => {
 
   })
 
-  {data ? console.log("=============data==========", data) : null}
-  {comments ? console.log("===============comments===========", comments) : null}
+  // append comments to arts
   if (comments && data) {
     data.forEach((item, idx) => {
      item.comp.comments = comments.filter(comment => comment.art_id === item.comp.id );

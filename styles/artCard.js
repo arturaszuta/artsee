@@ -19,7 +19,7 @@ export default artCardStyle = StyleSheet.create({
     flexDirection: 'row'
   },
   icons: {
-    margin: 7,
+    margin: 15,
 
   },
   comment: {
