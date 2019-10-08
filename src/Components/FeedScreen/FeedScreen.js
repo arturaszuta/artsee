@@ -1,12 +1,5 @@
 import * as WebBrowser from 'expo-web-browser';
 import React, { useState, useEffect } from 'react';
-<<<<<<< HEAD
-import useApplicationData from '../../hooks/useApplicationData';
-
-import { Container, Header, Content, Root } from "native-base";
-
-import Deck from './Deck';
-=======
 import Constants from 'expo-constants';
 import filterArts from "../../helpers/filterArts"
 
@@ -14,7 +7,6 @@ import { Container, Content, Segment, Button, Text, Header, Body } from "native-
 
 import Deck from './Deck';
 import { setAutoFocusEnabled } from 'expo/build/AR';
->>>>>>> feature/feedfilter
 
 export default FeedScreen = ({navigation, arts, postTag, applyFilter, setFilterArray, filterArray, user }) => {
 
@@ -30,22 +22,6 @@ export default FeedScreen = ({navigation, arts, postTag, applyFilter, setFilterA
     setFilterArray(resolvedArray);
   }
 
-<<<<<<< HEAD
-export default function FeedScreen() {
-  
-  const {
-    state,
-    setTag
-  } = useApplicationData();
-
-   const stateArray = Object.keys(state.arts).map((el) => state.arts[el]);
-   const renderedCards = stateArray.slice(0,20);
-
-
-   
-=======
-
->>>>>>> feature/feedfilter
 
   return (
   
