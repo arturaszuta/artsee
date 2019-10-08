@@ -6,7 +6,8 @@ import FeedScreen from '../Components/FeedScreen/FeedScreen'
 const mapStateToProps = (state) => ({
   arts:  state.arts,
   user: state.users.user,
-  filterArray: state.filterArray
+  filterArray: state.filterArray,
+  users: state.users
 })
 
 const mapDispatchToProps = dispatch => ({

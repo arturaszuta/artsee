@@ -36,6 +36,7 @@ export default Section = ({navigation, section, setTag}) => {
           <CachedImage
             style={{ flex: 1, resizeMode: 'cover', width: "100%" }}
             source={imgUrl}
+            title={art.id}
           />
         </TouchableHighlight>
       </View>

@@ -15,7 +15,6 @@ import Icon from "react-native-vector-icons/FontAwesome5";
 import * as Font from "expo-font";
 import mainStyle from "./styles/main";
 
-import CameraScreen from "./src/Components/CameraScreen";
 import LoginScreen from "./src/Components/LoginScreen";
 import SignUpScreen from "./src/Components/SignUpScreen";
 import AuthLoadingScreen from "./src/Components/AuthLoadingScreen";
@@ -23,6 +22,7 @@ import SplashLoadingScreen from "./src/Components/SplashLoadingScreen";
 import SecondSignUpScreen from "./src/Components/SecondSignUpScreen";
 import ModalArt from './src/Components/ModalArt/ModalArt';
 
+import cameraScreen from "./src/containers/cameraScreen";
 import mapScreen from "./src/containers/mapScreen";
 import profileScreen from "./src/containers/profileScreen";
 import feedScreen from "./src/containers/feedScreen";
@@ -34,7 +34,7 @@ const AppStack = createBottomTabNavigator(
   {
     Map: mapScreen,
     Feed: feedScreen,
-    Camera: CameraScreen,
+    Camera: cameraScreen,
     Profile: profileScreen
   },
   {

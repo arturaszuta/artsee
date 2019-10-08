@@ -1,14 +1,12 @@
 import * as WebBrowser from 'expo-web-browser';
 import React, { useState, useEffect } from 'react';
-import Constants from 'expo-constants';
 import filterArts from "../../helpers/filterArts"
 
 import { Container, Content, Segment, Button, Text, Header, Body } from "native-base";
 
 import Deck from './Deck';
-import { setAutoFocusEnabled } from 'expo/build/AR';
 
-export default FeedScreen = ({navigation, arts, postTag, applyFilter, setFilterArray, filterArray, user }) => {
+export default FeedScreen = ({navigation, arts, postTag, setFilterArray, filterArray, user }) => {
 
   const [activeFilter, setActiveFilter] = useState('default');
 

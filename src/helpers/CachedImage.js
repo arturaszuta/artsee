@@ -12,24 +12,33 @@ class CachedImage extends Component {
     width: this.props.width, 
     height: this.props.height
   }
-async componentDidMount() {
+
+  async componentDidMount() {
     const extension = this.props.source.slice((this.props.source.lastIndexOf(".") - 1 >>> 0) + 2)
-    if ((extension.toLowerCase() !== 'jpg') && (extension.toLowerCase() !== 'png') && (extension.toLowerCase() !== 'gif')) {
+
+    if ((extension.toLowerCase() !== 'jpg') && (extension.toLowerCase() !== 'png') && (extension.toLowerCase() !== 'gif' && extension.toLowerCase() !== 'jpeg')) {
       this.setState({ loading: false, failed: true })
     }
-    await FileSystem.downloadAsync(
-        this.props.source,
-    `${FileSystem.cacheDirectory + this.props.title}.${ extension }`
-    )
-    .then(({ uri }) => {
-      this.loadLocal(Platform.OS === 'ios'? uri : this.props.source);
-    })
-    .catch(e => {
-      console.log('Image loading error:', e);
-      // if the online download fails, load the local version
+
+    const file = await FileSystem.getInfoAsync(`${FileSystem.cacheDirectory + this.props.title}.${ extension }`)
+    if (!file.exists) {
+      await FileSystem.downloadAsync(
+          this.props.source,
+      `${FileSystem.cacheDirectory + this.props.title}.${ extension }`
+      )
+      .then(({ uri }) => {
+        this.loadLocal(Platform.OS === 'ios'? uri : this.props.source);
+      })
+      .catch(e => {
+        console.log('Image loading error:', e);
+        // if the online download fails, load the local version
+        this.loadLocal(`${FileSystem.cacheDirectory + this.props.title}.${ extension }`);
+      });
+    } else {
       this.loadLocal(`${FileSystem.cacheDirectory + this.props.title}.${ extension }`);
-    });
+    }
   }
+
   loadLocal(uri) {
     Image.getSize(uri, (width, height) => {
       // once we have the original image dimensions, set the state to the relative ones
@@ -40,6 +49,7 @@ async componentDidMount() {
       this.setState({ loading: false, failed: true })
     })
   }
+
   render() {
     const { style } = this.props
     {

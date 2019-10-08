@@ -35,6 +35,13 @@ const setUser = (user) => {
   }
 }
 
+const setUsers = users => {
+  return {
+    type: SET_USERS,
+    users
+  }
+}
+
 const setToken = (token) => {
   return {
     type: SET_TOKEN,
@@ -105,6 +112,7 @@ export const fetchUser = () => dispatch => {
   return AsyncStorage.getItem('token')
     .then(res => {
       token = res
+      console.log("==|==> token:",token)
       return AsyncStorage.getItem('userId')
         .then(userId => {
           return fetch(`https://artsee-back-end.herokuapp.com/users/${userId}`, {
@@ -120,6 +128,7 @@ export const fetchUser = () => dispatch => {
                 .then(res => {
                   dispatch(setUser(res))
                   dispatch(fetchArts(res.id))
+                  dispatch(fetchUsers(token))
                   dispatch(resolveFetch())
                 })
             })
@@ -129,6 +138,20 @@ export const fetchUser = () => dispatch => {
             })
         })
     })
+}
+
+export const fetchUsers = (token) => dispatch => {
+  return fetch('https://artsee-back-end.herokuapp.com/users', {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        Authorization: token
+      }
+    })
+      .then(res => res.json().then(users => {
+        dispatch(setUsers(users))
+      }))
 }
 
 export const fetchArts = (userId) => dispatch => {

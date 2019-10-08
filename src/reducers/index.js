@@ -33,7 +33,12 @@ const users = (state = {}, action) => {
       return Object.assign({}, state, {token: action.token})
     }
     case SET_USERS: {
-      return action.value
+      let users = {}
+      action.users.forEach(user => {
+        users[user.id] = user
+      })
+
+      return Object.assign({}, state, {...users})
     }
     default:
       return state

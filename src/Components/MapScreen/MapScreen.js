@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Text, View } from 'react-native';
-import { Container, Header, Left, Body, Right } from 'native-base';
+import { View } from 'react-native';
+import { Container } from 'native-base';
 import MapView from 'react-native-maps';
 import Constants from 'expo-constants';
 
 import useApplicationData from '../../hooks/useApplicationData';
-
-import { colors } from '../../../styles/variables';
 
 import CenterOnMe from './CenterOnMe';
 import { NearestArtButton, NearestArtsButton, NearestArtDirections, Duration } from './Nearest';
@@ -40,12 +38,12 @@ export default MapScreen = ({navigation, arts, currUserLocation, updateUserLocat
 
   return (
     <Container style={{ flex: 1, marginTop: Constants.statusBarHeight }}>
-       <Header style={{backgroundColor:colors.color2}}>
+       {/* <Header style={{backgroundColor:colors.color2}}>
         <Left style={{flex:1}}><Text style={{color:colors.text, fontWeight:'bold', fontSize:18}}>artsee</Text></Left>
         <Body style={{flex:1, alignItems:'center', justifyContent: "center"}}>
         </Body>
         <Right style={{flex:1}}/>
-      </Header>
+      </Header> */}
       <View style={{ flex: 1 }}>
         <MapView
           style={{ flex: 1 }}
@@ -54,7 +52,7 @@ export default MapScreen = ({navigation, arts, currUserLocation, updateUserLocat
           ref={c => setMapview(c)}
         >
           {marker(arts, setRegion, region, navigation)}
-          {userLocation(currUserLocation)}
+          {currUserLocation && userLocation(currUserLocation)}
           <NearestArtDirections userLocation={currUserLocation} destination={state.destination} setDuration={setDuration} setRegion={setRegion} directionOn={directionOn} setDirectionState={setDirectionState} />
         </MapView>
         <NearestArtButton getNearestArt={getNearestArt} setDirectionState={setDirectionState} userLocation={currUserLocation} />

@@ -8,7 +8,8 @@ export default Deck = ({arts, postTag, filter, user }) => {
 
     return {
       id: artId,
-      comp: arts[artId]
+      comp: arts[artId],
+      ogUser: users[arts[artId].user_id]
     }
 
   })

@@ -6,6 +6,7 @@ const color4 = '#43ab92';
 const like = '#ce2e6c';
 const seen = '#3c9d9b';
 const bookmark = '#3c70a4';
+const bottLine = "#f7e8f6";
 const directionPath = '#42b883';
 
 export const colors = {
@@ -17,5 +18,6 @@ export const colors = {
   like,
   seen,
   bookmark,
+  bottLine,
   directionPath
 }
