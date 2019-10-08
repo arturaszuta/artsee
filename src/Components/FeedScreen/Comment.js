@@ -12,7 +12,7 @@ export default function Comment({comment}) {
       </View>
 
       <Text style={{marginLeft:10}}>
-        {moment(comment.created_at)
+        {moment.utc(comment.created_at)
           .startOf("day")
           .fromNow()}
       </Text>

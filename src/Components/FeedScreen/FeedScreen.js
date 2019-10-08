@@ -22,7 +22,6 @@ export default FeedScreen = ({navigation, arts, postTag, setFilterArray, filterA
 
 
   return (
-  
         <Container>
           <Header style={{ marginTop: 20 }}>
           <Container>
