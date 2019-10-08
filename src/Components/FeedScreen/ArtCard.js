@@ -48,7 +48,7 @@ export default ArtCard = ({comp, postTag, user, postNewComment, ogUser, comments
         style={artCardStyle.icons}
       />
     )
-  } 
+  };
 
   const heart = (comp, postTag) => {
     return (
@@ -127,6 +127,7 @@ export default ArtCard = ({comp, postTag, user, postNewComment, ogUser, comments
           height={screenWidth}
         />
         <Text style={artCardStyle.title}>{comp.title || 'Art peace!'}</Text>
+        {/* <Image style={{ width: screenWidth, height: screenWidth }} {...{preview, imgUrl}} /> */}
         <View
           style={{
             flexDirection: "row",
@@ -171,5 +172,5 @@ export default ArtCard = ({comp, postTag, user, postNewComment, ogUser, comments
           <Text style={artCardStyle.line}>____________________________________</Text>
         </View> */}
     </KeyboardAvoidingView>
-  )
+  );
 }
