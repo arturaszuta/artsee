@@ -1,5 +1,5 @@
 import React from 'react';
-import { Animated, View } from 'react-native';
+import { Animated } from 'react-native';
 
 export default FadeInView = (props) => {
   const [fadeAnim] = React.useState(new Animated.Value(0))  // Initial value for opacity: 0

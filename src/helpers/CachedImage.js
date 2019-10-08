@@ -2,8 +2,6 @@ import React, { Component } from 'react'
 import { View, Image, ActivityIndicator, Dimensions, Platform } from 'react-native'
 import * as FileSystem from 'expo-file-system'
 
-// By Damien Mason
-
 class CachedImage extends Component {
   state = { 
     loading: true, 
@@ -30,7 +28,6 @@ class CachedImage extends Component {
         this.loadLocal(Platform.OS === 'ios'? uri : this.props.source);
       })
       .catch(e => {
-        console.log('Image loading error:', e);
         // if the online download fails, load the local version
         this.loadLocal(`${FileSystem.cacheDirectory + this.props.title}.${ extension }`);
       });
@@ -45,7 +42,7 @@ class CachedImage extends Component {
       this.setState({ imguri: uri, loading: false, width: Dimensions.get('window').width, height: (height/width)*Dimensions.get('window').width });
     }, (e) => { 
       // As always include an error fallback
-      console.log('getSize error:', e);
+      console.error('getSize error:', e);
       this.setState({ loading: false, failed: true })
     })
   }

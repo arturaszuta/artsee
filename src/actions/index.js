@@ -123,7 +123,6 @@ export const fetchToken = () => dispatch => {
     })
     .catch(err => {
       AsyncStorage.clear();
-      console.log("==||==> error from fetchToken:", err);
     });
 }
 
@@ -132,7 +131,6 @@ export const fetchUser = () => dispatch => {
   return AsyncStorage.getItem('token')
     .then(res => {
       token = res
-      console.log("==|==> token:",token)
       return AsyncStorage.getItem('userId')
         .then(userId => {
           return fetch(`https://artsee-back-end.herokuapp.com/users/${userId}`, {
@@ -155,7 +153,6 @@ export const fetchUser = () => dispatch => {
             })
             .catch(err => {
               AsyncStorage.clear()
-              console.log("==||==> error from getUser:",err)
             })
         })
     })
@@ -213,14 +210,13 @@ export const fetchArts = (userId) => dispatch => {
                 dispatch(setArts(arts))
               })
             )
-            .catch(err => console.error(err));
+            .catch(err => err);
         })
 }
 
 export const findUserLocation = () => async dispatch => {
   let { status } = await Permissions.askAsync(Permissions.LOCATION);
   if (status !== 'granted') {
-    console.log('Permission to access location was denied')
   };
 
   return Location.getCurrentPositionAsync({})
@@ -228,23 +224,6 @@ export const findUserLocation = () => async dispatch => {
       dispatch(setUserLocation(location.coords));
     })
 }
-
-// export const fetchAllComments = () => dispatch => {
-//   fetch(`https://artsee-back-end.herokuapp.com/api/allComments`, {
-//     method: "GET",
-//     headers: {
-//       Accept: "application/json",
-//       "Content-Type": "application/json"
-//     }
-//   })
-//     .then(res =>
-//       res.json().then(data => {
-//         console.log("==|==|> comments from fetch:",data)
-//         dispatch(setComments(data));
-//       })
-//     )
-//     .catch(err => console.error(err));
-// }
 
 export const postNewComment = (art_id, user_id, newComment) => dispatch => {
   fetch(`https://artsee-back-end.herokuapp.com/arts/${art_id}/comments`, {
@@ -266,7 +245,7 @@ export const postNewComment = (art_id, user_id, newComment) => dispatch => {
         dispatch(setNewComment(newComment));
       })
     )
-    .catch(err => console.error(err));
+    .catch(err => err);
 }
 
 export const postTag = (id, opt, value, userID) => async dispatch => {
