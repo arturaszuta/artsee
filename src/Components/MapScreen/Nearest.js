@@ -69,12 +69,8 @@ export const NearestArtDirections = ({userLocation, destination, setDuration, se
           strokeColor={colors.directionPath}
           optimizeWaypoints={true}
             onStart={(params) => {
-              console.log(`Started routing between "${params.origin}" and "${params.destination}"`);
             }}
             onReady={result => {
-              console.log(`Distance: ${result.distance} km`)
-              console.log(`Duration: ${result.duration} min.`)
-              console.log("Coordinates: ",result.coordinates[0])
               setDuration(result.duration)
 
               const pathRegion = {
@@ -92,7 +88,7 @@ export const NearestArtDirections = ({userLocation, destination, setDuration, se
               setRegion(pathRegion);
             }}
             onError={(errorMessage) => {
-              console.log("we got an error during directing these kind folks:", errorMessage);
+              console.error("we got an error during directing these kind folks:", errorMessage);
             }}
         />
       </View>

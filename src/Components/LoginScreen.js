@@ -10,6 +10,7 @@ import {
   TextInput
 } from 'react-native';
 import Constants from 'expo-constants';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import { colors } from '../../styles/variables';
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -22,7 +23,7 @@ export default function LoginScreen({navigation}) {
   var {height, width} = Dimensions.get('window');
 
   _handleLogin = () => {
-    console.log("========handle login =====> ", email, password);
+
     fetch(`https://artsee-back-end.herokuapp.com/auth/login`,
       {
         method: "POST",
@@ -38,21 +39,13 @@ export default function LoginScreen({navigation}) {
     )
       .then(res => res.json())
       .then(data => {
-        // if (data.error === unauthorized) {
-        //   console.log('unauthorized login')
-        //   setErrorMessage("Invalid email or password");
-        //   return;
-        // } else {
-        //   _storeToken(data);
-        // }
         _storeToken(data);
       })
       .then(navigation.navigate("Splash"))
-      .catch(err => console.error(err));
+      .catch(err => err);
   };
 
   _storeToken = async data => {
-    console.log('===== data =====', data)
     try {
       await AsyncStorage.setItem('userId', (data.user_id).toString());
       await AsyncStorage.setItem('token', data.token);
@@ -63,31 +56,89 @@ export default function LoginScreen({navigation}) {
 
   return (
     <View style={styles.container}>
-      <ImageBackground source={require('../../assets/auth_2.jpeg')} style={{ flex: 1, width: width, height: height, alignItems: 'center', resizeMode: 'cover' }}>
-      <View style={{ 
-        flex: 1,
-        width: '100%', 
-        flexDirection: 'column',
-        alignItems: "center",
-        justifyContent: "center" }} 
+      <ImageBackground
+        source={require("../../assets/auth_2.jpeg")}
+        style={{
+          flex: 1,
+          width: width,
+          height: height,
+          alignItems: "center",
+          resizeMode: "cover"
+        }}
       >
-        <TextInput placeholder='Email' onChangeText={text => setEmail(text)} 
-        style={styles.textInput} placeholderTextColor='white' />
-        <TextInput
-          style={styles.textInput}
-          placeholderTextColor='white'
-          placeholder='Password'
-          onChangeText={text => setPassword(text)}
-          secureTextEntry={true}
+        <View
+          style={{
+            flex: 1,
+            width: "90%",
+            height: "50%",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            backgroundColor: "rgba(52, 52, 52, 0.5)"
+          }}
+        >
+          <Text style={{ fontSize: 25, fontWeight: "bold", color: "white" }}>
+            Login
+          </Text>
+          <Icon
+            name="email-outline"
+            size={40}
+            style={{
+              paddingTop: 4.3,
+              paddingBottom: 4.3,
+              color: "black",
+              position: "absolute",
+              left: 30,
+              bottom: 390,
+              zIndex: 1
+            }}
           />
-        {errorMessage ? <Text>{errorMessage}</Text> : <Text />}
-        <TouchableOpacity onPress={() => _handleLogin()} style={styles.button} >
-          <Text style={styles.buttonText} >Login</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('SignUp')} style={styles.button} >
-          <Text style={styles.buttonText} >Create Account</Text>
-        </TouchableOpacity>
-      </View>
+          <View style={{ alignItems: "center", flexDirection: "row" }}>
+            <TextInput
+              placeholder="Email"
+              onChangeText={text => setEmail(text)}
+              style={styles.textInput}
+              placeholderTextColor="grey"
+            />
+          </View>
+          <Icon
+            name="lock"
+            size={40}
+            style={{
+              color: "black",
+              paddingTop: 4.3,
+              paddingBottom: 4.3,
+              position: "absolute",
+              bottom: 300,
+              left: 30,
+              zIndex: 1
+            }}
+          />
+          <View style={{ alignItems: "center", flexDirection: "row" }}>
+            <TextInput
+              style={styles.textInput}
+              placeholderTextColor="grey"
+              placeholder="Password"
+              onChangeText={text => setPassword(text)}
+              secureTextEntry={true}
+            />
+          </View>
+          {errorMessage ? <Text>{errorMessage}</Text> : <Text />}
+          <TouchableOpacity
+            onPress={() => _handleLogin()}
+            style={styles.button}
+          >
+            <Text>Login</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("SignUp")}
+            style={styles.button}
+          >
+            <Text style={{ background: "#e3170a", borderRadius: 25 }}>
+              Create Account
+            </Text>
+          </TouchableOpacity>
+        </View>
       </ImageBackground>
     </View>
   );
@@ -99,32 +150,34 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    alignContent: 'center'
+    alignContent: "center"
   },
   textInput: {
+    paddingHorizontal: 55,
     height: 50,
-    borderRadius: 10,
-    margin: 20,
-    padding: 20,
+    borderRadius: 25,
+    marginBottom: 20,
+    marginTop: 20,
+    // padding: 10,
     backgroundColor: colors.text,
-    borderWidth: 2,
-    borderColor: colors.color3,
+    // borderWidth: 2,
+    borderColor: "white",
+    // borderColor: colors.color3,
     color: colors.color3,
-    width: '60%'
+    width: "85%"
   },
   button: {
-    width: 200,
-    height: 60,
+    width: 300,
+    height: 50,
     margin: 10,
-    borderRadius: 10,
-    backgroundColor: colors.color1,
-    alignContent: 'center',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderColor: colors.text,
-    borderWidth: 1
+    borderRadius: 25,
+    backgroundColor: colors.color5,
+    alignContent: "center",
+    alignItems: "center",
+    justifyContent: "center",
+    // borderColor: colors.text,
   },
   buttonText: {
-    color: colors.text,
+    color: colors.text
   }
 });
