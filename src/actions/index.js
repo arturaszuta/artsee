@@ -13,6 +13,8 @@ const SET_LOADING = "SET_LOADING";
 const SET_RESOLVED = "SET_RESOLVED";
 const SET_USERS = "SET_USERS";
 const SET_TAG = "SET_TAG";
+const SET_COMMENTS = "SET_COMMENTS";
+const SET_NEW_COMMENT = "SET_NEW_COMMENT";
 
 const fetching = () => {
   return {
@@ -79,12 +81,30 @@ export const setTag = (id, opt, value) => {
   }
 }
 
+export const setComments = (comments) => {
+  return {
+    type: SET_COMMENTS,
+    comments
+  }
+}
+
+export const setNewComment = (newComment) => {
+  return {
+    type: SET_NEW_COMMENT,
+    newComment
+  }
+}
+
 export const fetchToken = () => dispatch => {
   dispatch(fetching())
   return AsyncStorage.getItem('token')
     .then(res => {
       dispatch(setToken(res))
     })
+    .catch(err => {
+      AsyncStorage.clear();
+      console.log("==||==> error from fetchToken:", err);
+    });
 }
 
 export const fetchUser = () => dispatch => {
@@ -106,6 +126,7 @@ export const fetchUser = () => dispatch => {
               return res.json()
                 .then(res => {
                   dispatch(setUser(res))
+                  dispatch(fetchAllComments())
                   dispatch(fetchArts(res.id))
                   dispatch(resolveFetch())
                 })
@@ -146,4 +167,43 @@ export const findUserLocation = () => async dispatch => {
     .then(location => {
       dispatch(setUserLocation(location.coords));
     })
+}
+
+export const fetchAllComments = () => dispatch => {
+  fetch(`https://7256d0e9.ngrok.io/api/allComments`, {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json"
+    }
+  })
+    .then(res =>
+      res.json().then(data => {
+        dispatch(setComments(data));
+      })
+    )
+    .catch(err => console.error(err));
+}
+
+export const postNewComment = (art_id, user_id, newComment) => dispatch => {
+  fetch(`https://7256d0e9.ngrok.io/arts/${art_id}/comments`, {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      comment: {
+        art_id,
+        user_id,
+        content: newComment
+      }
+    })
+  })
+    .then(res =>
+      res.json().then(newComment => {
+        dispatch(setNewComment(newComment));
+      })
+    )
+    .catch(err => console.error(err));
 }

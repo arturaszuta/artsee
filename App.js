@@ -124,6 +124,21 @@ let Navigation = createAppContainer(
   ));
 
 export default App = ({navigation}) => {
+  const [fontLoaded, setLoaded] = useState(false);
+  const [user, setUser] = useState({});
+
+  useEffect(() => {
+    loadFonts();
+  }, []);
+
+  const loadFonts = async () => {
+    await Font.loadAsync({
+      Roboto: require("native-base/Fonts/Roboto.ttf"),
+      Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf")
+    });
+    setLoaded(true);
+  };
+
   return (
     <Provider store={store}>
       <Navigation />

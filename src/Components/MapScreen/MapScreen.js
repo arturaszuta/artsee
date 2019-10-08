@@ -40,11 +40,18 @@ export default MapScreen = ({navigation, arts, currUserLocation, updateUserLocat
 
   return (
     <Container style={{ flex: 1, marginTop: Constants.statusBarHeight }}>
-       <Header style={{backgroundColor:colors.color2}}>
-        <Left style={{flex:1}}><Text style={{color:colors.text, fontWeight:'bold', fontSize:18}}>artsee</Text></Left>
-        <Body style={{flex:1, alignItems:'center', justifyContent: "center"}}>
-        </Body>
-        <Right style={{flex:1}}/>
+      <Header style={{ backgroundColor: colors.color2 }}>
+        <Left style={{ flex: 1 }}>
+          <Text
+            style={{ color: colors.text, fontWeight: "bold", fontSize: 18 }}
+          >
+            artsee
+          </Text>
+        </Left>
+        <Body
+          style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
+        ></Body>
+        <Right style={{ flex: 1 }} />
       </Header>
       <View style={{ flex: 1 }}>
         <MapView
@@ -55,15 +62,41 @@ export default MapScreen = ({navigation, arts, currUserLocation, updateUserLocat
         >
           {marker(arts, setRegion, region, navigation)}
           {userLocation(currUserLocation)}
-          <NearestArtDirections userLocation={currUserLocation} destination={state.destination} setDuration={setDuration} setRegion={setRegion} directionOn={directionOn} setDirectionState={setDirectionState} />
+          <NearestArtDirections
+            userLocation={currUserLocation}
+            destination={state.destination}
+            setDuration={setDuration}
+            setRegion={setRegion}
+            directionOn={directionOn}
+            setDirectionState={setDirectionState}
+          />
         </MapView>
-        <NearestArtButton getNearestArt={getNearestArt} setDirectionState={setDirectionState} userLocation={currUserLocation} />
-        <NearestArtsButton setNearestArts={setNearestArts} userLocation={currUserLocation} arts={arts} />
-        <Duration duration={duration} setDuration={setDuration} setDirectionState={setDirectionState} setRegion={setRegion} userLocation={currUserLocation} />
-        <CenterOnMe setRegion={setRegion} coordinates={{
-          latitude: currUserLocation.latitude,
-          longitude: currUserLocation.longitude
-        }} />
+        <NearestArtButton
+          getNearestArt={getNearestArt}
+          setDirectionState={setDirectionState}
+          userLocation={currUserLocation}
+        />
+        <NearestArtsButton
+          setNearestArts={setNearestArts}
+          userLocation={currUserLocation}
+          arts={arts}
+        />
+        <Duration
+          duration={duration}
+          setDuration={setDuration}
+          setDirectionState={setDirectionState}
+          setRegion={setRegion}
+          userLocation={currUserLocation}
+        />
+        <CenterOnMe
+          setRegion={setRegion}
+          coordinates={{
+            latitude:
+              (currUserLocation && currUserLocation.latitude) || 43.644913,
+            longitude:
+              (currUserLocation && currUserLocation.longitude) || -79.40252
+          }}
+        />
       </View>
     </Container>
   );
