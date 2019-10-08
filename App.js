@@ -5,26 +5,37 @@ import { createBottomTabNavigator } from "react-navigation-tabs";
 import { View, Header } from "react-native";
 import { AppLoading, SplashScreen } from "expo";
 
+import { Provider } from 'react-redux'
+import { createStore, applyMiddleware } from 'redux'
+import thunkMiddleware from 'redux-thunk'
+
+import rootReducer from './src/reducers'
+
 import Icon from "react-native-vector-icons/FontAwesome5";
 import * as Font from "expo-font";
 import mainStyle from "./styles/main";
 
-import MapScreen from "./src/Components/MapScreen/MapScreen";
-import ProfileScreen from "./src/Components/ProfileScreen/ProfileScreen";
-import FeedScreen from "./src/Components/FeedScreen/FeedScreen";
 import CameraScreen from "./src/Components/CameraScreen";
 import LoginScreen from "./src/Components/LoginScreen";
 import SignUpScreen from "./src/Components/SignUpScreen";
 import AuthLoadingScreen from "./src/Components/AuthLoadingScreen";
 import SplashLoadingScreen from "./src/Components/SplashLoadingScreen";
 import SecondSignUpScreen from "./src/Components/SecondSignUpScreen";
+import ModalArt from './src/Components/ModalArt/ModalArt';
+
+import mapScreen from "./src/containers/mapScreen";
+import profileScreen from "./src/containers/profileScreen";
+import feedScreen from "./src/containers/feedScreen";
+
+
+const store = createStore(rootReducer, applyMiddleware(thunkMiddleware));
 
 const AppStack = createBottomTabNavigator(
   {
-    Map: MapScreen,
-    Feed: FeedScreen,
+    Map: mapScreen,
+    Feed: feedScreen,
     Camera: CameraScreen,
-    Profile: ProfileScreen
+    Profile: profileScreen
   },
   {
     defaultNavigationOptions: ({ navigation }) => ({
@@ -50,8 +61,15 @@ const AppStack = createBottomTabNavigator(
             return;
         }
 
-        return <IconComponent name={iconName} size={25} color={tintColor} />;
-      }
+        return <IconComponent name={iconName} navigation={navigation} size={25} color={tintColor} />;
+      },
+      headerStyle: {
+        backgroundColor: '#f4511e',
+      },
+      headerTintColor: '#fff',
+      headerTitleStyle: {
+        fontWeight: 'bold',
+      },
     }),
     tabBarOptions: {
       activeTintColor: "#39c2c9",
@@ -61,20 +79,20 @@ const AppStack = createBottomTabNavigator(
   }
 );
 
-const Foot = createAppContainer(AppStack);
-
-const Main = () => {
-  return (
-    <View style={mainStyle.container}>
-      {/* <Header 
-        leftComponent={{
-            text: "artsee"
-        }}
-      /> */}
-      <Foot />
-    </View>
-  )
-}
+const RootStack = createStackNavigator(
+  {
+    Main: {
+      screen: AppStack,
+    },
+    ArtModal: {
+      screen: ModalArt,
+    },
+  },
+  {
+    mode: 'modal',
+    headerMode: 'none',
+  }
+);
 
 const AuthStack = createStackNavigator({
   Login: {
@@ -91,42 +109,11 @@ const AuthStack = createStackNavigator({
   }
 });
 
-const App = () => {
-  const [fontLoaded, setLoaded] = useState(false);
-  
-
-  useEffect(() => {
-    loadFonts();
-  }, []);
-
-  const loadFonts = async () => {
-
-    await Font.loadAsync({
-      Roboto: require("native-base/Fonts/Roboto.ttf"),
-      Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf")
-    });
-    setTimeout(() => {
-      setLoaded(true);
-
-    },2000)
-  };
-
-  
-  
-  return !fontLoaded ? <AppLoading>
-    <View>
-      <Text>
-        Hello?
-      </Text>
-    </View>
-  </AppLoading> : Main();
-};
-
-export default createAppContainer(
+let Navigation = createAppContainer(
   createSwitchNavigator(
     {
       AuthLoading: AuthLoadingScreen,
-      App: AppStack,
+      App: RootStack,
       Auth: AuthStack,
       Splash: SplashLoadingScreen,
       SecondSignup: SecondSignUpScreen
@@ -134,5 +121,12 @@ export default createAppContainer(
     {
       initialRouteName: "AuthLoading"
     }
+  ));
+
+export default App = ({navigation}) => {
+  return (
+    <Provider store={store}>
+      <Navigation />
+    </Provider>
   )
-);
+}

@@ -1,42 +1,31 @@
 import React, { useState, useEffect } from 'react';
-import { Text, View, Dimensions } from 'react-native';
-import { Container, Header, Left, Body, Right, Content } from 'native-base';
-import MapView, { Marker } from 'react-native-maps';
+import { Text, View } from 'react-native';
+import { Container, Header, Left, Body, Right } from 'native-base';
+import MapView from 'react-native-maps';
+import Constants from 'expo-constants';
 
 import useApplicationData from '../../hooks/useApplicationData';
 
-import mapStyles from '../../../styles/map';
 import { colors } from '../../../styles/variables';
 
 import CenterOnMe from './CenterOnMe';
 import { NearestArtButton, NearestArtsButton, NearestArtDirections, Duration } from './Nearest';
-import { marker, Popup, userLocation } from './MapWidgets';
+import { marker, userLocation } from './MapWidgets';
 
-const { width, height } = Dimensions.get('window');
-
-const MapScreen = ({navigation}) => {
+export default MapScreen = ({navigation, arts, currUserLocation, updateUserLocation, setNearestArts}) => {
   const {
     state,
-    getUserLocation,
-    getNearestArts,
-    getNearestArt,
-    setTag
+    getNearestArt
   } = useApplicationData();
 
   const [duration, setDuration] = useState(null);
   const [mapview, setMapview] = useState(null);
   const [directionOn, setDirectionState] = useState(false)
-  const [artPopup, setArtPopup] = useState({
-    component: null,
-    componentTitle: null,
-    componentUrl: null,
-    artId: null
-  });
   const [region, setRegion] = useState({
     latitude: 43.644913,
     longitude: -79.402520,
-    latitudeDelta: 0.0922,
-    longitudeDelta: 0.0421,
+    latitudeDelta: 0.0522,
+    longitudeDelta: 0.0121,
   })
 
   navigationOptions = {
@@ -50,7 +39,7 @@ const MapScreen = ({navigation}) => {
   }, [region])
 
   return (
-    <Container style={{ flex: 1 }}>
+    <Container style={{ flex: 1, marginTop: Constants.statusBarHeight }}>
        <Header style={{backgroundColor:colors.color2}}>
         <Left style={{flex:1}}><Text style={{color:colors.text, fontWeight:'bold', fontSize:18}}>artsee</Text></Left>
         <Body style={{flex:1, alignItems:'center', justifyContent: "center"}}>
@@ -61,23 +50,26 @@ const MapScreen = ({navigation}) => {
         <MapView
           style={{ flex: 1 }}
           region={region}
+          onUserLocationChange={event => updateUserLocation()}
           ref={c => setMapview(c)}
         >
-          {marker(state.arts, setArtPopup)}
-          {userLocation(state.userLocation)}
-          <NearestArtDirections userLocation={state.userLocation} destination={state.destination} setDuration={setDuration} setRegion={setRegion} directionOn={directionOn} />
+          {marker(arts, setRegion, region, navigation)}
+          {userLocation(currUserLocation)}
+          <NearestArtDirections userLocation={currUserLocation} destination={state.destination} setDuration={setDuration} setRegion={setRegion} directionOn={directionOn} setDirectionState={setDirectionState} />
         </MapView>
-        <NearestArtButton getNearestArt={getNearestArt} setDirectionState={setDirectionState} />
-        <NearestArtsButton getNearestArts={getNearestArts} />
-        <Duration duration={duration} setDuration={setDuration} setDirectionState={setDirectionState} setRegion={setRegion} />
-        <CenterOnMe setRegion={setRegion} coordinates={{
-          latitude: state.userLocation.latitude,
-          longitude: state.userLocation.longitude
-        }} />
-        <Popup artPopup={artPopup} setArtPopup={setArtPopup} setTag={setTag} />
+        <NearestArtButton getNearestArt={getNearestArt} setDirectionState={setDirectionState} userLocation={currUserLocation} />
+        <NearestArtsButton setNearestArts={setNearestArts} userLocation={currUserLocation} arts={arts} />
+        <Duration duration={duration} setDuration={setDuration} setDirectionState={setDirectionState} setRegion={setRegion} userLocation={currUserLocation} />
+        <CenterOnMe
+         setRegion={setRegion}
+         coordinates={{
+           latitude:
+             (currUserLocation && currUserLocation.latitude) || 43.644913,
+           longitude:
+             (currUserLocation && currUserLocation.longitude) || -79.40252
+         }}
+       />
       </View>
     </Container>
   );
 };
-
-export default MapScreen;

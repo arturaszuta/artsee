@@ -1,16 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { View, ScrollView } from "react-native";
+import { View, ScrollView, Button, AsyncStorage } from "react-native";
+import Constants from 'expo-constants';
 
-import useApplicationData from '../../hooks/useApplicationData';
 import Section from './Section';
 import SectionButton from './SectionButton';
 import ProfileSection from './ProfileSection';
 
-const ProfileScreen = ({navigation}) => {
-  const {
-    state,
-    userLogout
-  } = useApplicationData();
+export default ProfileScreen = ({navigation, arts, user, setTag}) => {
   
   let [followingComp, setFollowingComp] = useState([]);
   let [activeIndex, setActiveIndex] = useState(0);
@@ -26,22 +22,26 @@ const ProfileScreen = ({navigation}) => {
 
   // get seen, liked, and bookmarked art
   useEffect(() => {
-    if (state.user && state.arts) {
-      const liked = Object.keys(state.arts).filter(art => state.arts[art].liked).map(id => state.arts[id])
-      const bookmarked = Object.keys(state.arts).filter(art => state.arts[art].seelist).map(id => state.arts[id])
-      const seen = Object.keys(state.arts).filter(art => state.arts[art].visited).map(id => state.arts[id])
+    if (user && arts) {
+      const liked = Object.keys(arts).filter(art => arts[art].liked).map(id => arts[id])
+      const bookmarked = Object.keys(arts).filter(art => arts[art].seelist).map(id => arts[id])
+      const seen = Object.keys(arts).filter(art => arts[art].visited).map(id => arts[id])
 
       setLikedArt(liked);
       setBookmarkedArt(bookmarked);
       setSeenArt(seen);
     }
-  }, [state.arts])
+  }, [arts])
   
-  if (state.user) {
+  if (user) {
     return (
-      <ScrollView>
+      <ScrollView style={{ marginTop: Constants.statusBarHeight }}>
         <View style={{ flex: 1 }}>
-          <ProfileSection user={state.user} followingComp={followingComp} />
+          <ProfileSection user={user} followingComp={followingComp} />
+          <Button onPress={e => {
+            AsyncStorage.clear();
+            navigation.navigate('Auth');
+          }} title="logout" />
           <View style={{ flex: 1 }}>
             <View
               style={{
@@ -57,7 +57,7 @@ const ProfileScreen = ({navigation}) => {
               <SectionButton setActiveIndex={setActiveIndex} activeIndex={activeIndex} sectionNum={2} icon={'bookmark'} />
               
             </View>
-            <Section section={screens[activeIndex]} />
+            <Section section={screens[activeIndex]} navigation={navigation} setTag={setTag} />
           </View>
         </View>
       </ScrollView>
@@ -66,5 +66,3 @@ const ProfileScreen = ({navigation}) => {
     return null
   }
 };
-
-export default ProfileScreen;
