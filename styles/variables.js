@@ -1,4 +1,4 @@
-const text = '#f9f9f9';
+const text = '#000000';
 const color1 = '#512c96';
 const color2 = '#3c6f9c';
 const color3 = '#dd6892';
@@ -8,6 +8,8 @@ const seen = '#3c9d9b';
 const bookmark = '#3c70a4';
 const bottLine = "#f7e8f6";
 const directionPath = '#42b883';
+const color5 = "#42b883";
+
 
 export const colors = {
   text,
@@ -19,5 +21,6 @@ export const colors = {
   seen,
   bookmark,
   bottLine,
-  directionPath
+  directionPath,
+  color5
 }
