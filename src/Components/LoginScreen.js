@@ -28,6 +28,7 @@ export default function LoginScreen({navigation}) {
 
   _handleLogin = () => {
     console.log("========handle login =====> ", email, password);
+
     fetch(`https://artsee-back-end.herokuapp.com/auth/login`,
       {
         method: "POST",
@@ -50,6 +51,7 @@ export default function LoginScreen({navigation}) {
         // } else {
         //   _storeToken(data);
         // }
+        console.log(data);
         _storeToken(data);
       })
       .then(navigation.navigate("Splash"))
