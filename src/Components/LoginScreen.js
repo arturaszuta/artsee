@@ -15,6 +15,9 @@ import {
   Button
   
 } from 'native-base';
+import Constants from 'expo-constants';
+
+import { colors } from '../../styles/variables';
 
 export default function LoginScreen({navigation}) {
   let [email, setEmail] = useState("Email");
@@ -65,13 +68,10 @@ export default function LoginScreen({navigation}) {
 
   return (
     <View style={styles.container}>
-      <ImageBackground source={require('../../assets/auth.jpg')} style={{ flex: 1, width: width, height: height, alignItems: 'center'}}>
-      <Content style={{ marginTop: 100, width: '100%' }} >
-        <Item rounded>
+      <ImageBackground source={require('../../assets/auth_2.jpeg')} style={{ flex: 1, width: width, height: height, alignItems: 'center', resizeMode: 'cover' }}>
+      <Content style={{ width: '100%' }} >
           <Input placeholder='Email' onChangeText={text => setEmail(text)} 
           style={styles.textInput} placeholderTextColor='white' />
-        </Item>
-        <Item rounded>
           <Input
             style={styles.textInput}
             placeholderTextColor='white'
@@ -79,7 +79,6 @@ export default function LoginScreen({navigation}) {
             onChangeText={text => setPassword(text)}
             secureTextEntry={true}
             />
-        </Item>
         {errorMessage ? <Text>{errorMessage}</Text> : <Text />}
         <Button onPress={() => _handleLogin()} block light style={styles.button}>
           <Text>Login</Text>
@@ -96,24 +95,23 @@ export default function LoginScreen({navigation}) {
 
 const styles = StyleSheet.create({
   container: {
+    marginTop: Constants.statusBarHeight,
     flex: 1,
     backgroundColor: "#fff",
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
+    alignContent: 'center'
   },
   textInput: {
     flex: 0.75,
-    borderRadius: 20,
-    backgroundColor: 'lightgrey',
+    borderRadius: 10,
+    backgroundColor: colors.text,
     borderWidth: 2,
-    borderColor: 'white',
-    marginLeft: 10,
-    marginTop: 10
+    borderColor: colors.color3,
+    color: colors.color3
   },
   button: {
     width: 250,
-    marginLeft: 10,
-    marginTop: 10,
-    borderRadius: 20,
+    borderRadius: 10,
   }
 });
