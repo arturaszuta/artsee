@@ -63,6 +63,8 @@ export default ProfileScreen = ({navigation, arts, setTag, users}) => {
       </ScrollView>
     );
   } else {
+    AsyncStorage.clear();
+    navigation.navigate('Auth');
     return null
   }
 };

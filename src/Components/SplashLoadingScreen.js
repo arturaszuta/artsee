@@ -11,7 +11,8 @@ import { connect } from 'react-redux';
 import {
   fetchUser,
   findUserLocation,
-  fetchToken
+  fetchToken,
+  fetchAllComments
 } from '../actions'
 
 
@@ -40,7 +41,6 @@ function SplashLoadingScreen({navigation, user, isFetching, isResolved, dispatch
     // dispatch(fetchToken())
     dispatch(fetchUser())
     dispatch(findUserLocation())
-    
     _getState();
   }, [])
 

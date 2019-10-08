@@ -11,6 +11,8 @@ const SET_RESOLVED = "SET_RESOLVED";
 const SET_USERS = "SET_USERS";
 const SET_TAG = "SET_TAG";
 const SET_FILTER_ARRAY = "SET_FILTER_ARRAY";
+const SET_COMMENTS = "SET_COMMENTS";
+const SET_NEW_COMMENT = "SET_NEW_COMMENT";
 
 const initialState = {
   user: null,
@@ -21,7 +23,8 @@ const initialState = {
   mapMarkers: [],
   destination: {},
   loading: false,
-  resolved: false
+  resolved: false,
+  comments: null
 };
 
 const users = (state = {}, action) => {
@@ -81,6 +84,19 @@ const maps = (state = {}, action) => {
   }
 }
 
+const comments = (state = [], action) => {
+  switch(action.type) {
+    case SET_COMMENTS: {
+      return Object.assign([], state, action.comments)
+    }
+    case SET_NEW_COMMENT: {
+      return Object.assign([], state, [...state, action.newComment])
+    }
+    default:
+      return state
+  }
+}
+
 const asyncFetches = (state = {
   isFetching: false,
   items: []
@@ -107,5 +123,6 @@ export default combineReducers({
   arts,
   maps,
   filterArray,
-  asyncFetches
+  asyncFetches,
+  comments
 })

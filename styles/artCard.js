@@ -31,8 +31,8 @@ export default artCardStyle = StyleSheet.create({
     flexDirection: 'row'
   },
   icons: {
-    margin: 7,
-    marginTop: 0
+    margin: 15,
+
   },
   comment: {
     color: colors.color2,
