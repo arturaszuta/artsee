@@ -58,7 +58,6 @@ const arts = (state = {}, action) => {
       return Object.assign({}, action.arts)
     }
     case UPDATE_ART_COMMENTS: {
-      console.log("==|==> updateArtComments:",action.id," ",action.comment)
       return Object.assign({}, state, {[action.id]: {...state[action.id], ['comments']: [...state[action.id].comments, action.comment]}})
     }
     default:

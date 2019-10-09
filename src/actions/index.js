@@ -194,10 +194,10 @@ export const fetchArts = (userId) => dispatch => {
         let filterArray = [];
         response.data.forEach(art => {
           filterArray.push(art.id)
-          arts[art.id] = art
           art.latitude = Number(art.latitude);
           art.longitude = Number(art.longitude);
           art.comments = []
+          arts[art.id] = art
         })
         dispatch(setFilterArray(filterArray));
         return arts
@@ -213,10 +213,9 @@ export const fetchArts = (userId) => dispatch => {
             .then(res =>
               res.json().then(data => {
                 data.forEach(comment => {
-                  arts[comment.art_id].comments.push(comment)
+                  if (arts[comment.art_id]) arts[comment.art_id].comments.push(comment)
                 })
 
-                dispatch(setComments(data));
                 dispatch(setArts(arts))
               })
             )

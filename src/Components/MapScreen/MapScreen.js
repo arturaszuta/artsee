@@ -11,6 +11,7 @@ import { NearestArtButton, NearestArtsButton, NearestArtDirections, Duration } f
 import { marker, userLocation } from './MapWidgets';
 
 export default MapScreen = ({navigation, arts, currUserLocation, updateUserLocation, setNearestArts}) => {
+
   const {
     state,
     getNearestArt
