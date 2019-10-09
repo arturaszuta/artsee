@@ -24,7 +24,7 @@ export default function SignupScreen({navigation}) {
   var {height, width} = Dimensions.get('window');
 
   _handleSignup = () => {
-    if (password === password_confirmation) {
+    if (password && password_confirmation) {
       fetch("https://artsee-back-end.herokuapp.com/users", {
         method: "POST",
         headers: {
@@ -40,10 +40,12 @@ export default function SignupScreen({navigation}) {
           }
         })
       })
-        .then(navigation.navigate('SecondSignup', { email }))
-        .catch(err => console.error(err));
-    } else {
+      .then(navigation.navigate('SecondSignup', { email }))
+      .catch(err => console.error(err));
+    } else if (password !== password_confirmation) {
       setErrorMessage('Passwords do not match');
+    } else {
+      setErrorMessage('Please fill in all the fields')
     }
     
   };
@@ -115,7 +117,7 @@ export default function SignupScreen({navigation}) {
               placeholderTextColor="grey"
             />
           </View>
-          {errorMessage ? <Text>{errorMessage}</Text> : <Text />}
+          {errorMessage ? <Text style={{color:"white"}}>{errorMessage}</Text> : <Text />}
         </View>
         <TouchableOpacity
           onPress={() => _handleSignup()}

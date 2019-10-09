@@ -16,33 +16,35 @@ import { colors } from '../../styles/variables';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 export default function LoginScreen({navigation}) {
-  let [email, setEmail] = useState("Email");
-  let [password, setPassword] = useState("Password");
+  let [email, setEmail] = useState(null);
+  let [password, setPassword] = useState(null);
   let [errorMessage, setErrorMessage] = useState('');
 
   var {height, width} = Dimensions.get('window');
 
   _handleLogin = () => {
-
-    fetch(`https://artsee-back-end.herokuapp.com/auth/login`,
-      {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          email,
-          password
-        })
-      }
-    )
-      .then(res => res.json())
-      .then(data => {
-        _storeToken(data);
-      })
-      .then(navigation.navigate("Splash"))
-      .catch(err => err);
+    if (email && password) {
+       fetch(`https://artsee-back-end.herokuapp.com/auth/login`, {
+         method: "POST",
+         headers: {
+           Accept: "application/json",
+           "Content-Type": "application/json"
+         },
+         body: JSON.stringify({
+           email,
+           password
+         })
+       })
+         .then(res => res.json())
+         .then(data => {
+           _storeToken(data);
+         })
+         .then(navigation.navigate("Splash"))
+         .catch(err => err);
+    } else {
+      setErrorMessage("Email and/or password missing")
+    }
+   
   };
 
   _storeToken = async data => {
@@ -111,7 +113,7 @@ export default function LoginScreen({navigation}) {
               />
             </View>
           </View>
-          {errorMessage ? <Text>{errorMessage}</Text> : <Text />}
+          {errorMessage ? <Text style={{color: 'white'}}>{errorMessage}</Text> : <Text />}
           <TouchableOpacity
             onPress={() => _handleLogin()}
             style={styles.button}
