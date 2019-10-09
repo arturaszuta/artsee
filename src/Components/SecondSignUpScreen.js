@@ -5,9 +5,15 @@ import {
   Text,
   View,
   Dimensions,
-  ImageBackground
+  ImageBackground,
+  TextInput
 } from "react-native";
-import { Content, Item, Input, Button } from "native-base";
+import Constants from "expo-constants";
+import IconFont5 from 'react-native-vector-icons/FontAwesome5';
+import { colors } from '../../styles/variables';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 export default function SecondSignUpScreen({navigation}, ) {
   let [errorMessage, setErrorMessage] = useState("");
@@ -45,43 +51,71 @@ export default function SecondSignUpScreen({navigation}, ) {
 
   return (
     <View style={styles.container}>
-       <ImageBackground source={require('../../assets/auth.jpg')} style={{ flex: 1, width: width, height: height, alignItems: 'center'}}>
-      <Content style={{ marginTop: 100, width: '100%' }}>
-        <Item rounded>
-          <Input 
-          placeholder='city you live in' 
-          onChangeText={text => city = text}
-          style={styles.textInput}
-          placeholderTextColor='white' />
-        </Item>
-        <Item rounded>
-          <Input 
-          placeholder='tagline...something quirky!' 
-          onChangeText={text => tagline = text }
-          style={styles.textInput}
-          placeholderTextColor='white' />
-        </Item>
-        <Item rounded>
-          <Input
-            placeholder='avatar url'
-            onChangeText={text => avatarUrl = text}
-            style={styles.textInput}
-            placeholderTextColor='white'
-          />
-        </Item>
-        <Item rounded>
-          <Input
-            placeholder='background url'
-            onChangeText={text => backgroundUrl = text}
-            style={styles.textInput}
-            placeholderTextColor='white'
-          />
-        </Item>
-        {errorMessage ? <Text>{errorMessage}</Text> : <Text />}
-        <Button onPress={() => _updateProfile()} block light style={styles.button}>
-          <Text>Finalize</Text>
-        </Button>
-      </Content>
+      <ImageBackground
+        source={require("../../assets/auth_2.jpeg")}
+        style={{
+          flex: 1,
+          width: width,
+          height: height,
+          alignItems: "center",
+          resizeMode: "cover"
+        }}
+      >
+        <View
+          style={{
+            flex: 1,
+            width: "90%",
+            height: "50%",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            backgroundColor: "rgba(52, 52, 52, 0.5)"
+          }}
+        >
+          <View style={{ alignItems: "center", flexDirection: "row" }}>
+            <Icon name="city-variant-outline" size={40} style={styles.icon} />
+            <TextInput
+              placeholder="City"
+              onChangeText={text => (city = text)}
+              style={styles.textInput}
+              placeholderTextColor="grey"
+            />
+          </View>
+          <View style={{ alignItems: "center", flexDirection: "row" }}>
+            <Icon name="grease-pencil" size={40} style={styles.icon} />
+            <TextInput
+              placeholder="Tagline...make it quirky!"
+              onChangeText={text => (tagline = text)}
+              style={styles.textInput}
+              placeholderTextColor="grey"
+            />
+          </View>
+          <View style={{ alignItems: "center", flexDirection: "row" }}>
+            <Icon name="face-recognition" size={40} style={styles.icon} />
+            <TextInput
+              placeholder="Avatar URL"
+              onChangeText={text => (avatarUrl = text)}
+              style={styles.textInput}
+              placeholderTextColor="grey"
+            />
+          </View>
+          <View style={{ alignItems: "center", flexDirection: "row" }}>
+            <Icon name="image-area" size={40} style={styles.icon} />
+            <TextInput
+              placeholder="Background URL"
+              onChangeText={text => (backgroundUrl = text)}
+              style={styles.textInput}
+              placeholderTextColor="grey"
+            />
+          </View>
+          {errorMessage ? <Text>{errorMessage}</Text> : <Text />}
+          <TouchableOpacity
+            onPress={() => _updateProfile()}
+            style={styles.button}
+          >
+            <Text style={{ color: "white" }}>Finalize</Text>
+          </TouchableOpacity>
+        </View>
       </ImageBackground>
     </View>
   );
@@ -90,24 +124,47 @@ export default function SecondSignUpScreen({navigation}, ) {
 
 const styles = StyleSheet.create({
   container: {
+    marginTop: Constants.statusBarHeight,
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center'
+    alignItems: "center",
+    justifyContent: "center",
+    alignContent: "center"
   },
   textInput: {
-    flex: 0.75,
-    borderRadius: 20,
-    backgroundColor: 'lightgrey',
-    borderWidth: 2,
-    borderColor: 'white',
-    marginLeft: 10,
-    marginTop: 10
+    paddingHorizontal: 65,
+    height: 50,
+    borderRadius: 25,
+    marginBottom: 20,
+    marginTop: 20,
+    // padding: 10,
+    backgroundColor: 'black',
+    // borderWidth: 2,
+    borderColor: "white",
+    // borderColor: colors.color3,
+    color: colors.color3,
+    width: 300
   },
   button: {
-    width: 250,
-    marginLeft: 10,
-    marginTop: 10,
-    borderRadius: 20,
+    width: 300,
+    height: 50,
+    margin: 10,
+    borderRadius: 25,
+    backgroundColor: colors.color5,
+    alignContent: "center",
+    alignItems: "center",
+    justifyContent: "center",
+    // borderColor: colors.text,
+  },
+  buttonText: {
+    color: colors.text
+  },
+  icon: {
+    color: colors.text,
+    paddingTop: 4.3,
+    paddingBottom: 4.3,
+    position: "absolute",
+    left: 14,
+    top: 19,
+    zIndex: 1
   }
 });

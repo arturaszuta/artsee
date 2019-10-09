@@ -5,9 +5,17 @@ import {
   Text,
   View,
   Dimensions,
-  ImageBackground
+  ImageBackground,
+  TextInput
 } from "react-native";
-import { Content, Item, Input, Button } from "native-base";
+
+import Constants from "expo-constants";
+
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+
+import { colors } from "../../styles/variables";
+
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 export default function SignupScreen({navigation}) {
   let [errorMessage, setErrorMessage] = useState("");
@@ -42,45 +50,80 @@ export default function SignupScreen({navigation}) {
 
   return (
     <View style={styles.container}>
-      <ImageBackground source={require('../../assets/auth.jpg')} style={{ flex: 1, width: width, height: height, alignItems: 'center'}}>
-      <Content style={{ marginTop: 100, width: '100%' }}>
-        <Item rounded>
-          <Input 
-          placeholder='name' 
-          onChangeText={text => name = text} 
-          placeholderTextColor='white' 
-          style={styles.textInput}/>
-        </Item>
-        <Item rounded>
-          <Input 
-          placeholder='Email' 
-          onChangeText={text => email = text } 
-          style={styles.textInput} 
-          placeholderTextColor='white' />
-        </Item>
-        <Item rounded>
-          <Input
-            placeholder='Password'
-            onChangeText={text => password = text}
-            secureTextEntry={true}
-            style={styles.textInput}
-            placeholderTextColor='white'
-          />
-        </Item>
-        <Item rounded>
-          <Input
-            placeholder='Password Confirmation'
-            onChangeText={text => password_confirmation = text}
-            secureTextEntry={true}
-            placeholderTextColor='white'
-            style={styles.textInput}
-          />
-        </Item>
-        {errorMessage ? <Text>{errorMessage}</Text> : <Text />}
-        <Button onPress={() => _handleSignup()} block light style={styles.button}>
-          <Text>Create An Account</Text>
-        </Button>
-      </Content>
+      <ImageBackground
+        source={require("../../assets/auth_2.jpeg")}
+        style={{
+          flex: 1,
+          width: width,
+          height: height,
+          alignItems: "center",
+          resizeMode: "cover"
+        }}
+      >
+        <View
+          style={{
+            flex: 1,
+            width: "90%",
+            height: "50%",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            backgroundColor: "rgba(52, 52, 52, 0.5)"
+          }}
+        >
+          <Text style={{ fontSize: 25, fontWeight: "bold", color: "white" }}>
+            Create Account
+          </Text>
+          <View style={{ alignItems: "center", flexDirection: "row" }}>
+            <Icon name="account-circle" size={40} style={styles.icon} />
+            <TextInput
+              placeholder="Name"
+              onChangeText={text => (name = text)}
+              placeholderTextColor="white"
+              style={styles.textInput}
+              placeholderTextColor="grey"
+            />
+          </View>
+
+          <View style={{ alignItems: "center", flexDirection: "row" }}>
+            <Icon name="email-outline" size={40} style={styles.icon} />
+            <TextInput
+              placeholder="Email"
+              onChangeText={text => (email = text)}
+              placeholderTextColor="white"
+              style={styles.textInput}
+              placeholderTextColor="grey"
+            />
+          </View>
+          <View style={{ alignItems: "center", flexDirection: "row" }}>
+            <Icon name="lock" size={40} style={styles.icon} />
+            <TextInput
+              placeholder="Password"
+              onChangeText={text => (password = text)}
+              placeholderTextColor="white"
+              style={styles.textInput}
+              placeholderTextColor="grey"
+            />
+          </View>
+          <View style={{ alignItems: "center", flexDirection: "row" }}>
+            <Icon name="lock" size={40} style={styles.icon} />
+            <TextInput
+              placeholder="Password Confirmation"
+              onChangeText={text => (password_confirmation = text)}
+              placeholderTextColor="white"
+              style={styles.textInput}
+              placeholderTextColor="grey"
+            />
+          </View>
+          {errorMessage ? <Text>{errorMessage}</Text> : <Text />}
+        </View>
+        <TouchableOpacity
+          onPress={() => _handleSignup()}
+          style={styles.button}
+        >
+          <Text style={{ color: "white" }}>Create Account</Text>
+        </TouchableOpacity>
+  
       </ImageBackground>
     </View>
   );
@@ -88,24 +131,47 @@ export default function SignupScreen({navigation}) {
 
 const styles = StyleSheet.create({
   container: {
+    marginTop: Constants.statusBarHeight,
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center'
+    alignItems: "center",
+    justifyContent: "center",
+    alignContent: "center"
   },
   textInput: {
-    flex: 0.75,
-    borderRadius: 20,
-    backgroundColor: 'lightgrey',
-    borderWidth: 2,
-    borderColor: 'white',
-    marginLeft: 10,
-    marginTop: 10
+    paddingHorizontal: 65,
+    height: 50,
+    borderRadius: 25,
+    marginBottom: 20,
+    marginTop: 20,
+    // padding: 10,
+    backgroundColor: "black",
+    // borderWidth: 2,
+    borderColor: "white",
+    // borderColor: colors.color3,
+    color: colors.color3,
+    width: 300
   },
   button: {
-    width: 250,
-    marginLeft: 10,
-    marginTop: 10,
-    borderRadius: 20,
+    width: 300,
+    height: 50,
+    margin: 10,
+    borderRadius: 25,
+    backgroundColor: colors.color5,
+    alignContent: "center",
+    alignItems: "center",
+    justifyContent: "center"
+    // borderColor: colors.text,
+  },
+  buttonText: {
+    color: colors.text
+  },
+  icon: {
+    color: colors.text,
+    paddingTop: 4.3,
+    paddingBottom: 4.3,
+    position: "absolute",
+    left: 14,
+    top: 19,
+    zIndex: 1
   }
 });
