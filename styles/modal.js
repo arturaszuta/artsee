@@ -22,7 +22,7 @@ export default modalStyle = StyleSheet.create({
     flex: 1,
     color: colors.color1,
     textAlignVertical: 'center',
-    fontSize: 30,
+    fontSize: 23,
     textAlign: 'center',
     width: "100%",
     padding: 10,
@@ -37,10 +37,10 @@ export default modalStyle = StyleSheet.create({
     alignItems: 'center', 
     alignContent: 'center',
     justifyContent: 'space-between',
-    padding: 20,
+    padding: 5,
+    paddingRight: 15,
     textAlign: 'center',
-    flex: 1,
-    flexDirection: 'row'
+    flexDirection: 'column'
   },
   dismiss: {
     color: colors.color3,

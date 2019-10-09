@@ -9,6 +9,8 @@ import Deck from './Deck';
 
 export default FeedScreen = ({ navigation, arts, postTag, setFilterArray, filterArray, user, comments, postNewComment, users }) => {
 
+  console.log("==|==|> arts[35]:",arts[35])
+
   const [activeFilter, setActiveFilter] = useState('default');
 
   const changeFeed = async function(param) {

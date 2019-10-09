@@ -13,6 +13,7 @@ const SET_TAG = "SET_TAG";
 const SET_FILTER_ARRAY = "SET_FILTER_ARRAY";
 const SET_COMMENTS = "SET_COMMENTS";
 const SET_NEW_COMMENT = "SET_NEW_COMMENT";
+const UPDATE_ART_COMMENTS = "UPDATE_ART_COMMENTS";
 
 const initialState = {
   user: null,
@@ -55,6 +56,10 @@ const arts = (state = {}, action) => {
     }
     case SET_ARTS_DATA: {
       return Object.assign({}, action.arts)
+    }
+    case UPDATE_ART_COMMENTS: {
+      console.log("==|==> updateArtComments:",action.id," ",action.comment)
+      return Object.assign({}, state, {[action.id]: {...state[action.id], ['comments']: [...state[action.id].comments, action.comment]}})
     }
     default:
       return state

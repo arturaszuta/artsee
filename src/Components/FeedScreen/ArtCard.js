@@ -44,7 +44,7 @@ export default ArtCard = ({comp, postTag, user, postNewComment, ogUser, comments
         size={26}
         artID={comp.id}
         userID={comp.user_id}
-        onPress={() => postTag(comp.id, "seelist", !comp.seelist, user)}
+        onPress={() => postTag(comp.id, "seelist", !comp.seelist, user.id)}
         style={artCardStyle.icons}
       />
     )
@@ -58,7 +58,7 @@ export default ArtCard = ({comp, postTag, user, postNewComment, ogUser, comments
       size={26}
       artID={comp.id}
       userID={comp.user_id}
-      onPress={() => postTag(comp.id, "liked", !comp.liked, user)}
+      onPress={() => postTag(comp.id, "liked", !comp.liked, user.id)}
       style={artCardStyle.icons}
     />
     )
@@ -72,7 +72,7 @@ export default ArtCard = ({comp, postTag, user, postNewComment, ogUser, comments
         size={26}
         artID={comp.id}
         userID={comp.user_id}
-        onPress={() => postTag(comp.id, "visited", !comp.visited, user)}
+        onPress={() => postTag(comp.id, "visited", !comp.visited, user.id)}
         style={artCardStyle.icons}
       />
     )

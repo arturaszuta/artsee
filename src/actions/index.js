@@ -17,6 +17,7 @@ const APPLY_FILTER = "APPLY_FILTER";
 const SET_FILTER_ARRAY = "SET_FILTER_ARRAY";
 const SET_COMMENTS = "SET_COMMENTS";
 const SET_NEW_COMMENT = "SET_NEW_COMMENT";
+const UPDATE_ART_COMMENTS = "UPDATE_ART_COMMENTS";
 
 const fetching = () => {
   return {
@@ -25,7 +26,6 @@ const fetching = () => {
 }
 
 const resolveFetch = () => {
-  console.log("==|==> resolveFetch")
   return {
     type: SET_RESOLVED
   }
@@ -56,6 +56,14 @@ const setArts = (arts) => {
   return {
     type: SET_ARTS_DATA,
     arts
+  }
+}
+
+const updateArtComments = (id, comment) => {
+  return {
+    type: UPDATE_ART_COMMENTS,
+    id,
+    comment
   }
 }
 
@@ -244,14 +252,14 @@ export const postNewComment = (art_id, user_id, newComment) => dispatch => {
   })
     .then(res =>
       res.json().then(newComment => {
-        dispatch(setNewComment(newComment));
+        dispatch(updateArtComments(art_id, newComment));
       })
     )
     .catch(err => err);
 }
 
 export const postTag = (id, opt, value, userID) => async dispatch => {
-  fetch(`https://artsee-back-end.herokuapp.com/tags/?user_id=${userID.id}&art_id=${id}&type=${opt}&value=${value}`, {
+  fetch(`https://artsee-back-end.herokuapp.com/tags/?user_id=${userID}&art_id=${id}&type=${opt}&value=${value}`, {
     method: "POST"
   }).then(result => result.json()).then(res => res)
     dispatch(setTag(id,
